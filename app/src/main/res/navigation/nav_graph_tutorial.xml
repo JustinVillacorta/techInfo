@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_tutorial"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.techinfo.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash" >
+        <action
+            android:id="@+id/action_splashFragment_to_viewPageFragment"
+            app:destination="@id/viewPageFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_buildPC"
+            app:destination="@id/buildPC" />
+    </fragment>
+    <fragment
+        android:id="@+id/viewPageFragment"
+        android:name="com.example.techinfo.onBoarding.ViewPageFragment"
+        android:label="fragment_view_page"
+        tools:layout="@layout/fragment_view_page" >
+        <action
+            android:id="@+id/action_viewPageFragment_to_buildPC"
+            app:destination="@id/buildPC" />
+    </fragment>
+    <fragment
+        android:id="@+id/firstScreen"
+        android:name="com.example.techinfo.onBoarding.Screen.FirstScreen"
+        android:label="fragment_first_screen"
+        tools:layout="@layout/fragment_first_screen" />
+    <fragment
+        android:id="@+id/secondScreen"
+        android:name="com.example.techinfo.onBoarding.Screen.SecondScreen"
+        android:label="fragment_second_screen"
+        tools:layout="@layout/fragment_second_screen" />
+    <fragment
+        android:id="@+id/thirdScreen"
+        android:name="com.example.techinfo.onBoarding.Screen.ThirdScreen"
+        android:label="fragment_third_screen"
+        tools:layout="@layout/fragment_third_screen" />
+    <fragment
+        android:id="@+id/fourthScreen2"
+        android:name="com.example.techinfo.onBoarding.Screen.FourthScreen"
+        android:label="fragment_fourth_screen"
+        tools:layout="@layout/fragment_fourth_screen" />
+    <fragment
+        android:id="@+id/buildPC"
+        android:name="com.example.techinfo.BuildPC"
+        android:label="fragment_build_p_c"
+        tools:layout="@layout/fragment_build_p_c" />
+</navigation>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".onBoarding.Screen.FourthScreen">
+
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="141dp"
+        android:src="@drawable/troubleshoot"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/TvTitle4"
+        android:layout_width="171dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="56dp"
+        android:text="Trouble Shoot"
+        android:textSize="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
+    <TextView
+        android:id="@+id/TvDescription4"
+        android:layout_width="259dp"
+        android:layout_height="96dp"
+        android:layout_marginTop="44dp"
+        android:text="allow you to build your dream pc"
+        android:textSize="19dp"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TvTitle4" />
+
+    <TextView
+        android:id="@+id/Next4"
+        android:layout_width="77dp"
+        android:layout_height="26dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="40dp"
+        android:gravity="center"
+        android:text="finish"
+        android:textColor="#03A9F4"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
