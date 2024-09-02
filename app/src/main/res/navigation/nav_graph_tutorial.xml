@@ -51,4 +51,34 @@
         android:name="com.example.techinfo.BuildPC"
         android:label="fragment_build_p_c"
         tools:layout="@layout/fragment_build_p_c" />
+    <fragment
+        android:id="@+id/admin"
+        android:name="com.example.techinfo.Admin"
+        android:label="fragment_admin"
+        tools:layout="@layout/fragment_admin" />
+    <fragment
+        android:id="@+id/bottleNeck"
+        android:name="com.example.techinfo.BottleNeck"
+        android:label="fragment_bottle_neck"
+        tools:layout="@layout/fragment_bottle_neck" />
+    <fragment
+        android:id="@+id/navigationBar"
+        android:name="com.example.techinfo.NavigationBar"
+        android:label="fragment_navigation_bar"
+        tools:layout="@layout/fragment_navigation_bar" />
+    <fragment
+        android:id="@+id/pcComparison"
+        android:name="com.example.techinfo.PcComparison"
+        android:label="fragment_pc_comparison"
+        tools:layout="@layout/fragment_pc_comparison" />
+    <fragment
+        android:id="@+id/troubleShoot"
+        android:name="com.example.techinfo.TroubleShoot"
+        android:label="fragment_trouble_shoot"
+        tools:layout="@layout/fragment_trouble_shoot" />
+    <activity
+        android:id="@+id/mainNavigation"
+        android:name="com.example.techinfo.MainNavigation"
+        android:label="activity_main_navigation"
+        tools:layout="@layout/activity_main_navigation" />
 </navigation>

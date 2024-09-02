@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <!-- Main navigable items -->
+    <group
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_buildpc"
+            android:icon="@drawable/baseline_buildpc_24"
+            android:title="Build your PC" />
+
+        <item
+            android:id="@+id/nav_bottleneck"
+            android:icon="@drawable/bottleneck_24"
+            android:title="Bottleneck Calculator" />
+
+        <item
+            android:id="@+id/nav_pc_compare"
+            android:icon="@drawable/pc_comparison_24"
+            android:title="PC Compare" />
+
+        <item
+            android:id="@+id/nav_troubleshoot"
+            android:icon="@drawable/baseline_troubleshoot_24"
+            android:title="Troubleshoot and Solutions" />
+    </group>
+
+    <!-- Additional menu item for admin -->
+    <item
+        android:id="@+id/nav_admin"
+        android:icon="@drawable/baseline_person_24"
+        android:title="Admin" />
+
+</menu>

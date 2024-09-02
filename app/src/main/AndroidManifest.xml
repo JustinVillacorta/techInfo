@@ -13,6 +13,13 @@
         android:theme="@style/Theme.TechInfo"
         tools:targetApi="31">
         <activity
+            android:name=".MainNavigation"
+            android:exported="false" />
+        <activity
+            android:name=".main_navigation"
+            android:exported="false"
+            android:theme="@style/Theme.TechInfo" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
