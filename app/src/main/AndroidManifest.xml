@@ -13,6 +13,9 @@
         android:theme="@style/Theme.TechInfo"
         tools:targetApi="31">
         <activity
+            android:name=".ItemsDrawer"
+            android:exported="false" />
+        <activity
             android:name=".MainNavigation"
             android:exported="false" />
         <activity
