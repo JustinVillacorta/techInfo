@@ -1,7 +1,5 @@
-
 package com.example.techinfo.Fragments
 
-import com.example.techinfo.Fragments.BuilcPCmodules.Adapter
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -9,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.academic.ItemCatalog
 import com.example.techinfo.Fragments.BuilcPCmodules.ComponentData
+import com.example.techinfo.Fragments.BuildPCmodules.Adapter
 import com.example.techinfo.R
 
 class BuildPC : Fragment() {
@@ -38,7 +38,14 @@ class BuildPC : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView = view.findViewById(R.id.componentsRecyclerView)
-        componentAdapter = Adapter(componentDataList)
+        componentAdapter = Adapter(componentDataList) { component ->
+            // Handle the click here
+            val partCatalogFragment = ItemCatalog.newInstance(component.name)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, partCatalogFragment)
+                .addToBackStack(null) // Add this transaction to the back stack
+                .commit()
+        }
 
         recyclerView.apply {
             adapter = componentAdapter

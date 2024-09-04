@@ -1,5 +1,4 @@
 package com.example.techinfo.MainNavigation
-
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
