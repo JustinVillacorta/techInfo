@@ -1,4 +1,4 @@
-package com.example.techinfo.Fragments.BuilcPCmodules.ItemCatalog
+package com.example.techinfo.Fragments.ItemCatalog
 
 import android.view.LayoutInflater
 import android.view.View
