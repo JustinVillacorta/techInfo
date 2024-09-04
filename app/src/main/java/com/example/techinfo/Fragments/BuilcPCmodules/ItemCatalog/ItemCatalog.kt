@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.techinfo.Fragments.ItemCatalog.PartCatalogAdapter
+import com.example.techinfo.Fragments.BuilcPCmodules.ItemCatalog.PartCatalogAdapter
 import com.example.techinfo.R
-import com.example.techinfo.Fragments.ItemCatalog.Parts
+import com.example.techinfo.Fragments.BuilcPCmodules.ItemCatalog.Parts
 
 class ItemCatalog : Fragment() {
 
