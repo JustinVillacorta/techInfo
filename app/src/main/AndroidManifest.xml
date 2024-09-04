@@ -16,7 +16,7 @@
             android:name=".ItemsDrawer"
             android:exported="false" />
         <activity
-            android:name=".MainNavigation"
+            android:name=".MainNavigation.MainNavigation"
             android:exported="false" />
         <activity
             android:name=".main_navigation"

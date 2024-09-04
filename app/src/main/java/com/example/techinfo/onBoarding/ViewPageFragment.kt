@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
-import com.example.techinfo.MainNavigation
+import com.example.techinfo.MainNavigation.MainNavigation
 import com.example.techinfo.R
 import com.example.techinfo.onBoarding.Screen.FirstScreen
 import com.example.techinfo.onBoarding.Screen.FourthScreen
@@ -28,7 +28,7 @@ class ViewPageFragment : Fragment() {
             FirstScreen(),
             SecondScreen(),
             ThirdScreen(),
-            FourthScreen(),
+            FourthScreen()
         )
 
         val adapter = ViewPagerAdapter(
@@ -40,31 +40,9 @@ class ViewPageFragment : Fragment() {
         val viewPager = view.findViewById<ViewPager2>(R.id.viewPager)
         viewPager.adapter = adapter
 
-        // Add a listener to check when the user reaches the last page
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                super.onPageSelected(position)
-                // If it's the last page, navigate to MainNavigation
-                if (position == fragmentList.size - 1) {
-                    onOnboardingComplete()
-                }
-            }
-        })
+        // Remove any automatic page change callback
+        // viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() { ... })
 
         return view
-    }
-
-    private fun onOnboardingComplete() {
-        // Save onboarding completion status
-        val sharedPref = requireActivity().getSharedPreferences("onBoarding", Context.MODE_PRIVATE)
-        with(sharedPref.edit()) {
-            putBoolean("Finished", true)
-            apply()
-        }
-
-        // Navigate to MainNavigation Activity
-        val intent = Intent(activity, MainNavigation::class.java)
-        startActivity(intent)
-        activity?.finish() // Close the current activity to prevent going back
     }
 }

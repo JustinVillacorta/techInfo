@@ -1,4 +1,4 @@
-package com.example.techinfo
+package com.example.techinfo.MainNavigation
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -8,9 +8,14 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
+import com.example.techinfo.Fragments.Admin
+import com.example.techinfo.Fragments.BottleNeck
+import com.example.techinfo.Fragments.BuildPC
+import com.example.techinfo.Fragments.PcComparison
+import com.example.techinfo.Fragments.TroubleShoot
+import com.example.techinfo.R
 import com.google.android.material.navigation.NavigationView
-
+// Main Navigation Drawer For Tech Info
 class MainNavigation : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView

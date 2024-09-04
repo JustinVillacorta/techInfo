@@ -1,19 +1,17 @@
 package com.example.techinfo.onBoarding.Screen
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.navigation.fragment.findNavController
-import androidx.viewpager2.widget.ViewPager2
+import androidx.fragment.app.Fragment
+import com.example.techinfo.MainNavigation.MainNavigation
 import com.example.techinfo.R
 
-
 class FourthScreen : Fragment() {
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,20 +20,26 @@ class FourthScreen : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_fourth_screen, container, false)
 
-
-        view.findViewById<TextView>(R.id.Next4).setOnClickListener{
-
-            findNavController().navigate(R.id.action_viewPageFragment_to_buildPC)
-            onBoardingFinished()
+        // Find the "Next4" TextView and set up the click listener
+        val finishButton = view.findViewById<TextView>(R.id.Next4)
+        finishButton.setOnClickListener {
+            onFinishClicked()
         }
+
         return view
     }
 
-    private fun onBoardingFinished(){
+    private fun onFinishClicked() {
+        // Save onboarding completion status
         val sharedPref = requireActivity().getSharedPreferences("onBoarding", Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
-        editor.putBoolean("Finished", true)
-        editor.apply()
-    }
+        with(sharedPref.edit()) {
+            putBoolean("Finished", true)
+            apply()
+        }
 
+        // Navigate to MainNavigation Activity
+        val intent = Intent(activity, MainNavigation::class.java)
+        startActivity(intent)
+        activity?.finish() // Close the current activity to prevent going back
+    }
 }

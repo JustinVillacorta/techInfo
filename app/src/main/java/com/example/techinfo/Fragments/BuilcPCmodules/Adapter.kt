@@ -1,12 +1,13 @@
+package com.example.techinfo.Fragments.BuilcPCmodules
+
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.techinfo.ComponentData
 import com.example.techinfo.R
-
+//recyclerview com.example.techinfo.Fragments.BuilcPCmodules.Adapter for Build PC
 class Adapter(
     private val componentList: List<ComponentData>
 ) : RecyclerView.Adapter<Adapter.ComponentViewHolder>() {
