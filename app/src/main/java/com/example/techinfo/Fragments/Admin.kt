@@ -7,11 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.example.techinfo.R
 
-/**
- * A simple [Fragment] subclass.
- * Use the [Admin.newInstance] factory method to
- * create an instance of this fragment.
- */
+
 class Admin : Fragment() {
 
 
