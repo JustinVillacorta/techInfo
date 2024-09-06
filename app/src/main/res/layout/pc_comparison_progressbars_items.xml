@@ -1,0 +1,88 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <!-- Metric Name -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/metricName"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="COMPUTING"
+        android:textColor="@android:color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <!-- Horizontal Layout for Left and Right Progress Bars -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="2">
+
+        <!-- Left Side (Build 1) -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <!-- Left Progress Bar -->
+            <ProgressBar
+                android:id="@+id/progressLeft"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100"
+                android:progress="23"
+                android:progressTint="@android:color/holo_red_light" />
+
+            <!-- Left Percentage -->
+            <TextView
+                android:id="@+id/percentageLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingTop="4dp"
+                android:text="-23%"
+                android:textColor="@android:color/holo_red_light"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Right Side (Build 2) -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <!-- Right Progress Bar -->
+            <ProgressBar
+                android:id="@+id/progressRight"
+                style="@android:style/Widget.ProgressBar.Horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:max="100"
+                android:progress="31"
+                android:progressTint="@android:color/holo_green_light" />
+
+            <!-- Right Percentage -->
+            <TextView
+                android:id="@+id/percentageRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:paddingTop="4dp"
+                android:text="+31%"
+                android:textColor="@android:color/holo_green_light"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>
