@@ -13,7 +13,7 @@
         style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
         android:layout_width="143dp"
         android:layout_height="64dp"
-        android:layout_marginStart="59dp"
+        android:layout_marginStart="34dp"
         android:layout_marginTop="54dp"
         android:layout_marginBottom="30dp"
         android:hint="Builds"
