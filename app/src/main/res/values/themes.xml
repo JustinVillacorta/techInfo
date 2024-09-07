@@ -6,4 +6,9 @@
     </style>
 
     <style name="Theme.TechInfo" parent="Base.Theme.TechInfo" />
+
+    <style name="CircularProgressBar">
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:progressDrawable">@drawable/semi_circle_determinate</item>
+    </style>
 </resources>
