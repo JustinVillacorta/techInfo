@@ -29,3 +29,4 @@ class PartCatalogAdapter(private val items: List<Parts>) :
 
     override fun getItemCount() = items.size
 }
+

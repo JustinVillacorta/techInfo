@@ -15,6 +15,17 @@
         <item>Build3</item>
     </string-array>
 
+    <string-array name="Models">
+        <item>Ryzen 7</item>
+        <item>Intel I5</item>
+        <item>Ryzen 69</item>
+    </string-array>
+
+    <string-array name="Chipset">
+        <item>Amd</item>
+        <item>intel</item>
+    </string-array>
+
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
