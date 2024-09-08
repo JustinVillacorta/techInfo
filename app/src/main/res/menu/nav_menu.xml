@@ -25,12 +25,14 @@
             android:id="@+id/nav_troubleshoot"
             android:icon="@drawable/baseline_troubleshoot_24"
             android:title="Troubleshoot and Solutions" />
+
+        <item
+            android:id="@+id/nav_admin"
+            android:icon="@drawable/baseline_person_24"
+            android:title="Admin" />
     </group>
 
     <!-- Additional menu item for admin -->
-    <item
-        android:id="@+id/nav_admin"
-        android:icon="@drawable/baseline_person_24"
-        android:title="Admin" />
+
 
 </menu>
