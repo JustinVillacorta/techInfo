@@ -60,11 +60,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_marginBottom="74dp"
         android:background="@android:color/transparent"
         android:contentDescription="Back"
         android:src="@android:drawable/ic_menu_revert"
-        app:layout_constraintBottom_toTopOf="@+id/searchView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.048"
         app:layout_constraintStart_toStartOf="parent"
@@ -74,7 +72,7 @@
         android:id="@+id/recyclerViewPartCatalog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="316dp"
+        android:layout_marginBottom="280dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -82,13 +80,14 @@
 
     <SearchView
         android:id="@+id/searchView"
-        android:layout_width="367dp"
-        android:layout_height="43dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="37dp"
         android:layout_marginBottom="40dp"
         app:layout_constraintBottom_toTopOf="@+id/recyclerViewPartCatalog"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/Chipset"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.437" />
 </androidx.constraintlayout.widget.ConstraintLayout>
