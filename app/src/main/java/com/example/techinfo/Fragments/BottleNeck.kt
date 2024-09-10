@@ -4,9 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.academic.ItemCatalog
+import com.example.techinfo.Fragments.BuildPCmodules.Adapter
 import com.example.techinfo.R
 
 class BottleNeck : Fragment() {
@@ -40,6 +43,14 @@ class BottleNeck : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = itemAdapter
 
+        val ButtonIn : Button = view.findViewById(R.id.button)
+        ButtonIn.setOnClickListener{
+            val fragment = bottleneck_calculator()
+            val transaction = fragmentManager?.beginTransaction()
+            transaction?.replace(R.id.fragment_container, fragment)?.commit()
+        }
+
         return view
     }
+
 }
