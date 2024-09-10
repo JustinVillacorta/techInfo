@@ -16,8 +16,8 @@ import com.example.techinfo.R
 class BottleNeck : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-   // private lateinit var itemAdapter: BottleneckAdaptor
-    private lateinit var bottleArrayList: ArrayList<BottleneckData>
+    private lateinit var itemAdapter: BottleneckAdaptor
+    private lateinit var bottleList: List<BottleneckData>
 
     //private lateinit var textId: Array<String>
 
@@ -26,42 +26,30 @@ class BottleNeck : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_bottle_neck_option, container, false)
+        val view = inflater.inflate(R.layout.fragment_bottle_neck_option, container, false)
+
+
+        recyclerView = view.findViewById(R.id.bottleneck_recycler)
+
+        // Sample data list
+        bottleList = listOf(
+            BottleneckData("CPU"),
+            BottleneckData("GPU")
+        )
+
+        // Initialize the adapter and set it to the RecyclerView
+        itemAdapter = BottleneckAdaptor(bottleList)
+        recyclerView.adapter = itemAdapter
+
+        return view
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val drop = arrayOf("Example 1", "Example 2", "Example 3" )
+        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, drop)
+        view.findViewById<AutoCompleteTextView>(R.id.dropdown).setAdapter(arrayAdapter)
 
-        recyclerView = view.findViewById(R.id.bottleneck_recycler)
-
-        val drop = listOf("Example1", "Example2")
-
-        val dropItem: AutoCompleteTextView = view.findViewById(R.id.title)
-
-        //val adapter = ArrayAdapter(this, R.layout.dropdown_item, drop)
-
-        //dropItem.setAdapter(adapter)
-
-        dropItem.onItemClickListener = AdapterView.OnItemClickListener { adapterView, view, i, l ->
-
-            val itemSelect = adapterView.getItemAtPosition(i)
-            //Toast.makeText(this, "Item: $itemSelect", Toast.LENGTH_SHORT).show()
-
-            val currentItems = arrayOf(
-                ("CPU"),
-                ("GPU"),
-                ("RAM"),
-                ("HDD"),
-                ("SDD")
-            )
-
-            for (i in currentItems.indices) {
-
-                val current = BottleneckData(currentItems[i])
-                bottleArrayList.add(current)
-
-            }
-            recyclerView.adapter = BottleneckAdaptor(bottleArrayList)
         }
     }
-}
