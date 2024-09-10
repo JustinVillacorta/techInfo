@@ -8,7 +8,8 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.techinfo.Fragments.Admin
-import com.example.techinfo.Fragments.BottleNeck
+
+import com.example.techinfo.Fragments.BottleneckModules.BottleNeck
 import com.example.techinfo.Fragments.BuildPC
 import com.example.techinfo.Fragments.PcComparison
 import com.example.techinfo.Fragments.TroubleShoot
