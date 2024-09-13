@@ -15,11 +15,20 @@ class Troubleshoot_content : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_troubleshoot_content, container, false)
-
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val title = arguments?.getString("ITEM_TITLE")
+        val content = arguments?.getString("ITEM_CONTENT")
+
+        val titleTextView: TextView = view.findViewById(R.id.itemTitleTextView)
+        val contentTextView: TextView = view.findViewById(R.id.itemContentTextView)
+
+        titleTextView.text = title
+        contentTextView.text = content
+
         val backButton: View = view.findViewById(R.id.btnBack)
         backButton.setOnClickListener {
             parentFragmentManager.popBackStack() // Navigate back to the previous fragment
@@ -27,15 +36,13 @@ class Troubleshoot_content : Fragment() {
     }
 
     companion object {
-        // Function to create a new instance of the fragment with the passed data
-        fun newInstance(itemName: String): Troubleshoot_content {
+        fun newInstance(title: String, content: String): Troubleshoot_content {
             val fragment = Troubleshoot_content()
             val args = Bundle()
-            args.putString("ITEM_NAME", itemName)
+            args.putString("ITEM_TITLE", title)
+            args.putString("ITEM_CONTENT", content)
             fragment.arguments = args
             return fragment
         }
-
-
     }
 }
