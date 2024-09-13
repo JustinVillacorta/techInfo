@@ -61,6 +61,9 @@ dependencies {
     // Retrofit and Gson
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
+
+
 
     // SQLite library for Android
     implementation("androidx.sqlite:sqlite:2.1.0")

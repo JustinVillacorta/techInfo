@@ -26,7 +26,7 @@ class TroubleShoot_adapter(
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = itemList[position]
-        holder.titleTextView.text = item.name
+        holder.titleTextView.text = item.title
         holder.imageView.setImageResource(R.drawable.ic_launcher_foreground)
 
         // Set up click listener
