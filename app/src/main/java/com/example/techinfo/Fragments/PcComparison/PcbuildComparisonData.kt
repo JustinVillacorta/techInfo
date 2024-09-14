@@ -1,4 +1,4 @@
-package com.example.techinfo.Fragments.PcComparisonModules
+package com.example.techinfo.Fragments.PcComparison
 
 data class PcbuildComparisonData(
     val metricName: String,

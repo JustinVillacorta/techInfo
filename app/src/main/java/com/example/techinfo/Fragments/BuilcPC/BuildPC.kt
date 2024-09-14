@@ -1,4 +1,4 @@
-package com.example.techinfo.Fragments
+package com.example.techinfo.Fragments.BuilcPC
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.academic.ItemCatalog
-import com.example.techinfo.Fragments.BuilcPCmodules.ComponentData
 import com.example.techinfo.Fragments.BuildPCmodules.Adapter
 import com.example.techinfo.R
 

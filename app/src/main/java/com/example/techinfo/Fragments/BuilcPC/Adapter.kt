@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.techinfo.Fragments.BuilcPCmodules.ComponentData
+import com.example.techinfo.Fragments.BuilcPC.ComponentData
 import com.example.techinfo.R
 
 class Adapter(

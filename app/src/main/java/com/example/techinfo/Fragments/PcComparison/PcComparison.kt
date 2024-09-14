@@ -1,4 +1,4 @@
-package com.example.techinfo.Fragments
+package com.example.techinfo.Fragments.PcComparison
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,8 +9,6 @@ import android.widget.AutoCompleteTextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.techinfo.Fragments.PcComparisonModules.PCBuildComparisonAdapter
-import com.example.techinfo.Fragments.PcComparisonModules.PcbuildComparisonData
 import com.example.techinfo.R
 
 class PcComparison : Fragment() {

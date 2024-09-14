@@ -1,4 +1,4 @@
-package com.example.techinfo.Fragments
+package com.example.techinfo.Fragments.Troubleshoot
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,8 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.techinfo.Fragments.Troubleshoot_modules.TroubleShoot_adapter
-import com.example.techinfo.Fragments.Troubleshoot_modules.TroubleShoot_data
+import com.example.techinfo.Fragments.Troubleshoot_content
 import com.example.techinfo.R
 
 class TroubleShoot : Fragment() {

@@ -9,10 +9,10 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.techinfo.Fragments.Admin
 
-import com.example.techinfo.Fragments.BottleneckModules.BottleNeck
-import com.example.techinfo.Fragments.BuildPC
-import com.example.techinfo.Fragments.PcComparison
-import com.example.techinfo.Fragments.TroubleShoot
+import com.example.techinfo.Fragments.Bottleneck.BottleNeck
+import com.example.techinfo.Fragments.BuilcPC.BuildPC
+import com.example.techinfo.Fragments.PcComparison.PcComparison
+import com.example.techinfo.Fragments.Troubleshoot.TroubleShoot
 import com.example.techinfo.R
 import com.google.android.material.navigation.NavigationView
 // Main Navigation Drawer For Tech Info

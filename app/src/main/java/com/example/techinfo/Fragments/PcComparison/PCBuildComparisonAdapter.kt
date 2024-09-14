@@ -1,4 +1,4 @@
-package com.example.techinfo.Fragments.PcComparisonModules
+package com.example.techinfo.Fragments.PcComparison
 
 import android.view.LayoutInflater
 import android.view.View

@@ -1,4 +1,4 @@
-package com.example.techinfo.Fragments.BottleneckModules
+package com.example.techinfo.Fragments.Bottleneck
 
 data class BottleneckData(
     val name: String,

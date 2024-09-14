@@ -1,4 +1,4 @@
-package com.example.techinfo.Fragments.BottleneckModules
+package com.example.techinfo.Fragments.Bottleneck
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,8 +8,6 @@ import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.academic.ItemCatalog
-import com.example.techinfo.Fragments.BuildPCmodules.Adapter
 import com.example.techinfo.R
 
 class BottleNeck : Fragment() {
