@@ -7,12 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
-import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.techinfo.Fragments.BuilcPCmodules.ItemCatalog.PartCatalogAdapter
+import com.example.techinfo.Fragments.BuilcPC.ItemCatalog.PartCatalogAdapter
 import com.example.techinfo.R
-import com.example.techinfo.Fragments.BuilcPCmodules.ItemCatalog.Parts
+import com.example.techinfo.Fragments.BuilcPC.ItemCatalog.Parts
 
 class ItemCatalog : Fragment() {
 

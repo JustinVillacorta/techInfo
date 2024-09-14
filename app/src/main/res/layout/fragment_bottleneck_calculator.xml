@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragments.BottleneckModules.bottleneck_calculator">
+    tools:context=".Fragments.Bottleneck.bottleneck_calculator">
 
     <!-- TODO: Update blank fragment layout -->
 

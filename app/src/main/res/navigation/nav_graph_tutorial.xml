@@ -48,7 +48,7 @@
         tools:layout="@layout/fragment_fourth_screen" />
     <fragment
         android:id="@+id/buildPC"
-        android:name="com.example.techinfo.Fragments.BuildPC"
+        android:name="com.example.techinfo.Fragments.BuilcPC.BuildPC"
         android:label="fragment_build_p_c"
         tools:layout="@layout/fragment_build_p_c" />
     <fragment
@@ -68,12 +68,12 @@
         tools:layout="@layout/fragment_navigation_bar" />
     <fragment
         android:id="@+id/pcComparison"
-        android:name="com.example.techinfo.Fragments.PcComparison"
+        android:name="com.example.techinfo.Fragments.PcComparison.PcComparison"
         android:label="fragment_pc_comparison"
         tools:layout="@layout/fragment_pc_comparison" />
     <fragment
         android:id="@+id/troubleShoot"
-        android:name="com.example.techinfo.Fragments.TroubleShoot"
+        android:name="com.example.techinfo.Fragments.Troubleshoot.TroubleShoot"
         android:label="fragment_trouble_shoot"
         tools:layout="@layout/fragment_trouble_shoot" />
     <activity

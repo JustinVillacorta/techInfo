@@ -1,4 +1,4 @@
-package com.example.techinfo.Fragments.Troubleshoot_modules
+package com.example.techinfo.Fragments.Troubleshoot
 
 import android.view.LayoutInflater
 import android.view.View

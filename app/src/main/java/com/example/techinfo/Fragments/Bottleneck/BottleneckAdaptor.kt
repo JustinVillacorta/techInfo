@@ -1,4 +1,4 @@
-package com.example.techinfo.Fragments.BottleneckModules
+package com.example.techinfo.Fragments.Bottleneck
 
 import android.view.LayoutInflater
 import android.view.View
