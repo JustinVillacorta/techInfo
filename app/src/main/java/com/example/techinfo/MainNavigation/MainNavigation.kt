@@ -7,7 +7,7 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import com.example.techinfo.Fragments.Admin
+import com.example.techinfo.Fragments.Admin.Admin
 
 import com.example.techinfo.Fragments.Bottleneck.BottleNeck
 import com.example.techinfo.Fragments.BuilcPC.BuildPC
