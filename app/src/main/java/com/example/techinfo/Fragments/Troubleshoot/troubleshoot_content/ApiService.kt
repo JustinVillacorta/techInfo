@@ -9,6 +9,6 @@ interface ApiService {
     @GET("troubleshoot_articles.php")
     fun getTroubleshootArticles(): Call<List<TroubleshootContent>>
 
-    @GET("troubleshoot_articles.php")  // No path parameter needed
-    fun getTroubleshootArticle(@Query("id") id: Int): Call<TroubleshootContent>  // Use @Query for query parameter
+    @GET("troubleshoot_articles.php")
+    fun getTroubleshootArticle(@Query("id") id: Int): Call<TroubleshootContent> // Use Int here
 }

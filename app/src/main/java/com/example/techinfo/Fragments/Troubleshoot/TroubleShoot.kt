@@ -41,7 +41,7 @@ class TroubleShoot : Fragment() {
 
     private fun fetchArticles() {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.11/") // Correct server IP
+            .baseUrl("http://192.168.1.10/") // Ensure this is your correct server IP
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -57,10 +57,10 @@ class TroubleShoot : Fragment() {
                     if (!articles.isNullOrEmpty()) {
                         items.clear()
                         articles.forEach { article ->
-                            items.add(TroubleShoot_data(article.title, article.id)) // Include ID
+                            items.add(TroubleShoot_data(article.title, article.id)) // Use String ID
                         }
                         itemAdapter = TroubleShoot_adapter(items) { item ->
-                            val fragment = TroubleshootContentFragment.newInstance(item.id) // Pass article ID
+                            val fragment = TroubleshootContentFragment.newInstance(item.id) // Pass String ID
                             parentFragmentManager.beginTransaction()
                                 .replace(R.id.fragment_container, fragment)
                                 .addToBackStack(null)

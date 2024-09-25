@@ -13,7 +13,7 @@ class TroubleShoot_adapter(
 ) : RecyclerView.Adapter<TroubleShoot_adapter.ItemViewHolder>() {
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val titleTextView: TextView = itemView.findViewById(R.id.title) // Only TextView now
+        val titleTextView: TextView = itemView.findViewById(R.id.title)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -24,10 +24,10 @@ class TroubleShoot_adapter(
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = itemList[position]
-        holder.titleTextView.text = item.title // Set title in TextView
+        holder.titleTextView.text = item.title
 
         holder.itemView.setOnClickListener {
-            onItemClick(item) // Handle click event
+            onItemClick(item)
         }
     }
 

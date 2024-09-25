@@ -35,19 +35,19 @@ class TroubleshootContentFragment : Fragment() {
             parentFragmentManager.popBackStack()
         }
 
-        val articleId = arguments?.getInt("ARTICLE_ID") ?: 0
+        val articleId = arguments?.getString("ARTICLE_ID") ?: "" // Retrieve as String
         fetchArticleContent(articleId) // Fetch article content using ID
     }
 
-    private fun fetchArticleContent(id: Int) {
+    private fun fetchArticleContent(id: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.11/") // Adjust to match your IP address
+            .baseUrl("http://192.168.1.10/") // Adjust to match your IP address
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
         val apiService = retrofit.create(ApiService::class.java)
 
-        apiService.getTroubleshootArticle(id).enqueue(object : Callback<TroubleshootContent> {
+        apiService.getTroubleshootArticle(id.toInt()).enqueue(object : Callback<TroubleshootContent> { // Convert to Int if needed
             override fun onResponse(
                 call: Call<TroubleshootContent>,
                 response: Response<TroubleshootContent>
@@ -55,7 +55,7 @@ class TroubleshootContentFragment : Fragment() {
                 if (response.isSuccessful) {
                     val article = response.body()
                     if (article != null) {
-                        // Display title and content (no more null)
+                        // Display title and content
                         detailTextView.text = "${article.title}\n\n${article.content}"
                     }
                 } else {
@@ -70,10 +70,10 @@ class TroubleshootContentFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(articleId: Int): TroubleshootContentFragment {
+        fun newInstance(articleId: String): TroubleshootContentFragment {
             val fragment = TroubleshootContentFragment()
             val args = Bundle()
-            args.putInt("ARTICLE_ID", articleId)
+            args.putString("ARTICLE_ID", articleId) // Use putString
             fragment.arguments = args
             return fragment
         }
