@@ -36,12 +36,6 @@ class ItemCatalog : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerViewPartCatalog)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
-        // Set up the back button
-        val backButton: View = view.findViewById(R.id.btnBack)
-        backButton.setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
-
         // Load the catalog and set up the click listener
         loadCatalog(partType)
     }
@@ -63,10 +57,11 @@ class ItemCatalog : Fragment() {
                     putInt("position", selectedPart.position) // Ensure the correct position is passed
                 }
             )
+            // Optionally refresh the catalog or do something else after selection
+            refreshCatalog() // If you want to refresh the catalog after a selection
             parentFragmentManager.popBackStack()
         }
     }
-
 
     private fun refreshCatalog() {
         // Reload the items and notify the adapter
@@ -74,10 +69,19 @@ class ItemCatalog : Fragment() {
             "CPU" -> getCpuList()
             "GPU" -> getGpuList()
             "RAM" -> getRamList()
+            "SSD" -> getSSDList()
             else -> emptyList()
         }
+
         recyclerView.adapter = PartCatalogAdapter(items) { selectedPart ->
-            // Handle new selection
+            parentFragmentManager.setFragmentResult(
+                "selectedPart", Bundle().apply {
+                    putString("partName", selectedPart.name)
+                    putString("partDetails", selectedPart.details)
+                    putInt("position", selectedPart.position) // Ensure the correct position is passed
+                }
+            )
+            parentFragmentManager.popBackStack()
         }
     }
 
@@ -103,8 +107,8 @@ class ItemCatalog : Fragment() {
         )
     }
 
-    private fun getSSDList(): List<Parts>{
-        return  listOf(
+    private fun getSSDList(): List<Parts> {
+        return listOf(
             Parts("Kingston 1tb", "goods", 3)
         )
     }

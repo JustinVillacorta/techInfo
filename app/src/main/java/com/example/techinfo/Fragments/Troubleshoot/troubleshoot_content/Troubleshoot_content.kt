@@ -20,10 +20,7 @@ class Troubleshoot_content : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val backButton: View = view.findViewById(R.id.btnBack)
-        backButton.setOnClickListener {
-            parentFragmentManager.popBackStack() // Navigate back to the previous fragment
-        }
+
     }
 
     companion object {
