@@ -6,16 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Fragments.Troubleshoot_content">
 
-    <ImageButton
-        android:id="@+id/btnBack"
-        android:layout_width="55dp"
-        android:layout_height="49dp"
-        android:background="@android:color/transparent"
-        android:contentDescription="Back"
-        android:src="@android:drawable/ic_menu_revert"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <TextView
         android:id="@+id/detailTextView"
         android:layout_width="wrap_content"
@@ -24,8 +14,8 @@
         android:text="Content"
         android:textColor="@color/black"
         android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/btnBack"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        tools:layout_editor_absoluteY="65dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
