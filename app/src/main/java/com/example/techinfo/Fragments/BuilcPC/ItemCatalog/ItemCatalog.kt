@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.techinfo.Fragments.BuilcPC.ItemCatalog.PartCatalogAdapter
@@ -32,6 +34,13 @@ class ItemCatalog : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val models = resources.getStringArray(R.array.Models)
+        val chipset = resources.getStringArray(R.array.Chipset)
+        val arrayAdapter1 = ArrayAdapter(requireContext(), R.layout.buildpc_filter, chipset)
+        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.buildpc_filter, models)
+        view.findViewById<AutoCompleteTextView>(R.id.chipset_info).setAdapter(arrayAdapter1)
+        view.findViewById<AutoCompleteTextView>(R.id.Models_info).setAdapter(arrayAdapter)
 
         recyclerView = view.findViewById(R.id.recyclerViewPartCatalog)
         recyclerView.layoutManager = LinearLayoutManager(context)
