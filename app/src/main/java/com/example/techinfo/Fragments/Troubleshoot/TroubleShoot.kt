@@ -7,21 +7,13 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.techinfo.Fragments.Troubleshoot.troubleshoot_content.TroubleshootContentFragment
-import com.example.techinfo.Fragments.Troubleshoot.troubleshootContent.TroubleshootContent
-import com.example.techinfo.Fragments.Troubleshoot.troubleshoot_content.ApiService
+import com.example.techinfo.Fragments.Troubleshoot_content
 import com.example.techinfo.R
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class TroubleShoot : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var itemAdapter: TroubleShoot_adapter
-    private val items = mutableListOf<TroubleShoot_data>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,46 +26,29 @@ class TroubleShoot : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView = view.findViewById(R.id.troubleShootRecycler)
+
+        // Sample data list
+        val items = listOf(
+            TroubleShoot_data("Article 1"),
+            TroubleShoot_data("Article 2"),
+            TroubleShoot_data("Article 3"),
+            TroubleShoot_data("Article 4"),
+            TroubleShoot_data("Article 5"),
+            TroubleShoot_data("Article 6"),
+            TroubleShoot_data("Article 7"),
+            TroubleShoot_data("Article 8")
+        )
+
+        // Setup adapter and RecyclerView
+        itemAdapter = TroubleShoot_adapter(items) { item ->
+            // Handle item click
+            val fragment = Troubleshoot_content.newInstance(item.name)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
+        recyclerView.adapter = itemAdapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-
-        fetchArticles()
-    }
-
-    private fun fetchArticles() {
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.11/") // Correct server IP
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val apiService = retrofit.create(ApiService::class.java)
-
-        apiService.getTroubleshootArticles().enqueue(object : Callback<List<TroubleshootContent>> {
-            override fun onResponse(
-                call: Call<List<TroubleshootContent>>,
-                response: Response<List<TroubleshootContent>>
-            ) {
-                if (response.isSuccessful) {
-                    val articles = response.body()
-                    if (!articles.isNullOrEmpty()) {
-                        items.clear()
-                        articles.forEach { article ->
-                            items.add(TroubleShoot_data(article.title, article.id)) // Include ID
-                        }
-                        itemAdapter = TroubleShoot_adapter(items) { item ->
-                            val fragment = TroubleshootContentFragment.newInstance(item.id) // Pass article ID
-                            parentFragmentManager.beginTransaction()
-                                .replace(R.id.fragment_container, fragment)
-                                .addToBackStack(null)
-                                .commit()
-                        }
-                        recyclerView.adapter = itemAdapter
-                    }
-                }
-            }
-
-            override fun onFailure(call: Call<List<TroubleshootContent>>, t: Throwable) {
-                // Handle network failure
-            }
-        })
     }
 }

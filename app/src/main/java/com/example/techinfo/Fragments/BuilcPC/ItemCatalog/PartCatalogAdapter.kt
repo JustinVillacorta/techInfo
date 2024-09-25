@@ -29,7 +29,7 @@ class PartCatalogAdapter(
 
     override fun onBindViewHolder(holder: PartViewHolder, position: Int) {
         holder.bind(items[position])
-
+        
     }
 
 
