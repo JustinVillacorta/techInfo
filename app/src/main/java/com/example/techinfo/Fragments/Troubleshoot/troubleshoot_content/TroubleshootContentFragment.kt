@@ -41,7 +41,7 @@ class TroubleshootContentFragment : Fragment() {
 
     private fun fetchArticleContent(id: String) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.10/") // Adjust to match your IP address
+            .baseUrl("http://192.168.226.205/") // Adjust to match your IP address
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 

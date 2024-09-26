@@ -41,7 +41,7 @@ class TroubleShoot : Fragment() {
 
     private fun fetchArticles() {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.1.10/") // Ensure this is your correct server IP
+            .baseUrl("http://192.168.226.205/") // Ensure this is your correct server IP
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
