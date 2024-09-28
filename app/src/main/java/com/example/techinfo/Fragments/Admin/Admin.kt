@@ -1,5 +1,6 @@
 package com.example.techinfo.Fragments.Admin
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import com.example.techinfo.R
 
 class Admin : Fragment() {
 
+    private lateinit var datapass : PassInt
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,9 +44,26 @@ class Admin : Fragment() {
                     .replace(R.id.fragment_container, adminViewFragment)
                     .addToBackStack(null)
                     .commit()
+                sendData()
             } else {
+                usernameInput.error = "Input username"
+                passwordInput.error = "Input password"
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    interface PassInt {
+        fun PassInt(data: Int)
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        datapass = context as PassInt
+    }
+
+    private fun sendData() {
+        val datasending = 0
+        datapass.PassInt(datasending)
     }
 }
