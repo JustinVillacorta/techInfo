@@ -55,9 +55,9 @@ class MainNavigation : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             R.id.nav_troubleshoot -> replaceFragment(TroubleShoot())
             R.id.nav_admin -> {if (recievedData == 0){
                 replaceFragment(AdminView())
-                }              else {
+            }              else {
                 replaceFragment(Admin())
-                }
+            }
             }
         }
         drawerLayout.closeDrawer(GravityCompat.START)

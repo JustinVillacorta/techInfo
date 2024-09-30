@@ -2,7 +2,6 @@ package com.example.techinfo.api_connector
 
 import retrofit2.Call
 import retrofit2.http.GET
-import retrofit2.http.Path
 import com.google.gson.annotations.SerializedName
 
 data class TroubleShoot_data(
@@ -15,22 +14,25 @@ data class TroubleshootContent(
     val title: String,
     val content: String,
 
-    // Use SerializedName to map JSON field to Kotlin property
-    @SerializedName("video_embed") val videoEmbed: String?, // Correct the property name
-    @SerializedName("created_at") val createdAt: String,   // Correct the property name
-    @SerializedName("updated_at") val updatedAt: String    // Correct the property name
+    @SerializedName("video_embed") val videoEmbed: String?,
+    @SerializedName("created_at") val createdAt: String,
+    @SerializedName("updated_at") val updatedAt: String
 )
 
-data class ApiResponse(
-    val status: Boolean,
-    val message: String,
-    val data: TroubleshootContent // `data` contains the article object
+// New data class for user authentication
+data class User(
+    val id: Int,
+    val username: String,
+    val password: String,
+    val createdAt: String,
+    val updatedAt: String
 )
 
 interface ApiService {
     @GET("troubleshoot_articles")
     fun getTroubleshootArticles(): Call<List<TroubleshootContent>>
 
-    @GET("troubleshoot_articles/{id}") // Change to fetch single article by ID
-    fun getTroubleshootArticle(@Path("id") id: String): Call<ApiResponse> // Return ApiResponse
+    // New endpoint to fetch user data
+    @GET("accounts") // Adjust the endpoint according to your API
+    fun getUsers(): Call<List<User>>
 }

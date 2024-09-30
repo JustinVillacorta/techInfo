@@ -56,7 +56,7 @@ class BuildPC : Fragment() {
         parentFragmentManager.setFragmentResultListener("selectedPart", this) { _, bundle ->
             val partName = bundle.getString("partName")
             val partDetails = bundle.getString("partDetails")
-            val position = bundle.getInt("position") // Get the position
+            val   position = bundle.getInt("position") // Get the position
 
             // Replace the item in the component data list at the specified position
             if (partName != null && partDetails != null) {

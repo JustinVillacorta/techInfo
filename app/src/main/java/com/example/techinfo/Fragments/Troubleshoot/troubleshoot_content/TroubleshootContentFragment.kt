@@ -8,7 +8,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.example.techinfo.R
 import com.example.techinfo.api_connector.ApiService
@@ -18,8 +20,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import okhttp3.OkHttpClient
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 class TroubleshootContentFragment : Fragment() {
     private lateinit var articleTitleTextView: TextView
@@ -27,6 +31,8 @@ class TroubleshootContentFragment : Fragment() {
     private lateinit var contentTextView: TextView
     private lateinit var createdTimeTextView: TextView
     private lateinit var updatedTimeTextView: TextView
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private var articleId: Int? = null // Store article ID
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,21 +52,37 @@ class TroubleshootContentFragment : Fragment() {
         contentTextView = view.findViewById(R.id.contentTextView)
         createdTimeTextView = view.findViewById(R.id.createdTimeTextView)
         updatedTimeTextView = view.findViewById(R.id.updatedTimeTextView)
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
 
         // Get the article ID from arguments
-        val articleId = arguments?.getString("ARTICLE_ID")?.toIntOrNull()
+        articleId = arguments?.getString("ARTICLE_ID")?.toIntOrNull()
 
-        if (articleId != null) {
-            fetchArticlesAndDisplay(articleId)
-        } else {
-            contentTextView.text = "Article ID is missing or invalid."
+        // Fetch and display articles
+        articleId?.let { fetchArticlesAndDisplay(it) }
+
+        // Set up swipe refresh layout
+        swipeRefreshLayout.setOnRefreshListener {
+            articleId?.let { id ->
+                fetchArticlesAndDisplay(id)
+            }
         }
     }
 
     private fun fetchArticlesAndDisplay(articleId: Int) {
+        // Show the refresh indicator
+        swipeRefreshLayout.isRefreshing = true
+
+        // Create a custom OkHttpClient with timeout settings
+        val okHttpClient = OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS) // Connection timeout
+            .readTimeout(30, TimeUnit.SECONDS)    // Read timeout
+            .writeTimeout(30, TimeUnit.SECONDS)   // Write timeout
+            .build()
+
         val retrofit = Retrofit.Builder()
             .baseUrl("http://192.168.100.74:8000/api/")
             .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient) // Set the custom OkHttpClient
             .build()
 
         val apiService = retrofit.create(ApiService::class.java)
@@ -71,6 +93,9 @@ class TroubleshootContentFragment : Fragment() {
                 call: Call<List<TroubleshootContent>>,
                 response: Response<List<TroubleshootContent>>
             ) {
+                // Stop the refresh indicator
+                swipeRefreshLayout.isRefreshing = false
+
                 if (response.isSuccessful) {
                     val articles = response.body()
                     if (articles != null) {
@@ -79,22 +104,12 @@ class TroubleshootContentFragment : Fragment() {
                         if (article != null) {
                             // Update UI with article title
                             articleTitleTextView.text = article.title
-
-                            // Load thumbnail into ImageView
-                            val videoUrl = article.videoEmbed // Access the videoEmbed property
+                            val videoUrl = article.videoEmbed
                             loadThumbnail(videoUrl)
-
-                            // Set the article content to the TextView
                             contentTextView.text = article.content
+                            createdTimeTextView.text = "Created: ${formatDate(article.createdAt)}"
+                            updatedTimeTextView.text = "Updated: ${formatDate(article.updatedAt)}"
 
-                            // Format and display the created and updated times
-                            val createdAtFormatted = formatDate(article.createdAt)
-                            val updatedAtFormatted = formatDate(article.updatedAt)
-
-                            createdTimeTextView.text = "Created: $createdAtFormatted"
-                            updatedTimeTextView.text = "Updated: $updatedAtFormatted"
-
-                            // Set up the thumbnail click listener to open the YouTube video
                             videoThumbnailImageView.setOnClickListener {
                                 openYouTubeVideo(videoUrl)
                             }
@@ -110,7 +125,10 @@ class TroubleshootContentFragment : Fragment() {
             }
 
             override fun onFailure(call: Call<List<TroubleshootContent>>, t: Throwable) {
-                contentTextView.text = "Failed to load articles: ${t.message}"
+                // Stop the refresh indicator
+                swipeRefreshLayout.isRefreshing = false
+                // Show a Toast message for network failure
+                Toast.makeText(requireContext(), "No connection or server error", Toast.LENGTH_LONG).show()
             }
         })
     }
