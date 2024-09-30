@@ -8,8 +8,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.techinfo.Fragments.Troubleshoot.troubleshoot_content.TroubleshootContentFragment
-import com.example.techinfo.Fragments.Troubleshoot.troubleshootContent.TroubleshootContent
 import com.example.techinfo.Fragments.Troubleshoot.troubleshoot_content.ApiService
+import com.example.techinfo.Fragments.Troubleshoot.troubleshoot_content.TroubleshootContent
 import com.example.techinfo.R
 import retrofit2.Call
 import retrofit2.Callback
@@ -41,7 +41,7 @@ class TroubleShoot : Fragment() {
 
     private fun fetchArticles() {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.226.205/") // Ensure this is your correct server IP
+            .baseUrl("http://192.168.100.74:8000/api/") // Ensure this is your correct server IP
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -57,7 +57,7 @@ class TroubleShoot : Fragment() {
                     if (!articles.isNullOrEmpty()) {
                         items.clear()
                         articles.forEach { article ->
-                            items.add(TroubleShoot_data(article.title, article.id)) // Use String ID
+                            items.add(TroubleShoot_data(article.title, article.id.toString())) // Convert Int to String
                         }
                         itemAdapter = TroubleShoot_adapter(items) { item ->
                             val fragment = TroubleshootContentFragment.newInstance(item.id) // Pass String ID

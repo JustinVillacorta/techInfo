@@ -3,19 +3,17 @@ package com.example.techinfo.Fragments.Troubleshoot
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.techinfo.R
 
 class TroubleShoot_adapter(
     private val itemList: List<TroubleShoot_data>,
-    private val onItemClick: (TroubleShoot_data) -> Unit // Add this line
+    private val onItemClick: (TroubleShoot_data) -> Unit
 ) : RecyclerView.Adapter<TroubleShoot_adapter.ItemViewHolder>() {
 
     class ItemViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleTextView: TextView = itemView.findViewById(R.id.title)
-        val imageView: ImageView = itemView.findViewById(R.id.image)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -26,10 +24,8 @@ class TroubleShoot_adapter(
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
         val item = itemList[position]
-        holder.titleTextView.text = item.name
-        holder.imageView.setImageResource(R.drawable.ic_launcher_foreground)
+        holder.titleTextView.text = item.title
 
-        // Set up click listener
         holder.itemView.setOnClickListener {
             onItemClick(item)
         }

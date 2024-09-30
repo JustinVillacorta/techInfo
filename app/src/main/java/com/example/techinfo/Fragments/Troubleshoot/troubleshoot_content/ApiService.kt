@@ -2,13 +2,19 @@ package com.example.techinfo.Fragments.Troubleshoot.troubleshoot_content
 
 import retrofit2.Call
 import retrofit2.http.GET
-import retrofit2.http.Query
-import com.example.techinfo.Fragments.Troubleshoot.troubleshootContent.TroubleshootContent
+import retrofit2.http.Path
+
+
+data class ApiResponse(
+    val status: Boolean,
+    val message: String,
+    val data: TroubleshootContent // `data` contains the article object
+)
 
 interface ApiService {
-    @GET("troubleshoot_articles.php")
+    @GET("troubleshoot_articles")
     fun getTroubleshootArticles(): Call<List<TroubleshootContent>>
 
-    @GET("troubleshoot_articles.php")
-    fun getTroubleshootArticle(@Query("id") id: Int): Call<TroubleshootContent> // Use Int here
+    @GET("troubleshoot_articles/{id}") // Change to fetch single article by ID
+    fun getTroubleshootArticle(@Path("id") id: String): Call<ApiResponse> // Return ApiResponse
 }
