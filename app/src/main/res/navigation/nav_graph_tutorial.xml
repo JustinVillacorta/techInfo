@@ -73,7 +73,7 @@
         tools:layout="@layout/fragment_pc_comparison" />
     <fragment
         android:id="@+id/troubleShoot"
-        android:name="com.example.techinfo.Fragments.Troubleshoot.TroubleShoot"
+        android:name="com.example.techinfo.Fragments.Troubleshoot.troubleshoot_content.TroubleShoot"
         android:label="fragment_trouble_shoot"
         tools:layout="@layout/fragment_trouble_shoot" />
     <activity

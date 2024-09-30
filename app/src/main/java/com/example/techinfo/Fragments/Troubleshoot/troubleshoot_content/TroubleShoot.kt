@@ -1,4 +1,4 @@
-package com.example.techinfo.Fragments.Troubleshoot
+package com.example.techinfo.Fragments.Troubleshoot.troubleshoot_content
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.techinfo.Fragments.Troubleshoot.troubleshoot_content.TroubleshootContentFragment
-import com.example.techinfo.Fragments.Troubleshoot.troubleshoot_content.ApiService
-import com.example.techinfo.Fragments.Troubleshoot.troubleshoot_content.TroubleshootContent
 import com.example.techinfo.R
+import com.example.techinfo.api_connector.ApiService
+import com.example.techinfo.api_connector.TroubleshootContent
+import com.example.techinfo.api_connector.TroubleShoot_data
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response

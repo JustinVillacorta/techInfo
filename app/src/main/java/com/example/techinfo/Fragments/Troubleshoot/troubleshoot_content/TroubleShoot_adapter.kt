@@ -1,4 +1,4 @@
-package com.example.techinfo.Fragments.Troubleshoot
+package com.example.techinfo.Fragments.Troubleshoot.troubleshoot_content
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.techinfo.R
+import com.example.techinfo.api_connector.TroubleShoot_data
 
 class TroubleShoot_adapter(
     private val itemList: List<TroubleShoot_data>,

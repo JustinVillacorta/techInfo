@@ -13,7 +13,7 @@ import com.example.techinfo.Fragments.Admin.AdminView
 import com.example.techinfo.Fragments.Bottleneck.BottleNeck
 import com.example.techinfo.Fragments.BuilcPC.BuildPC
 import com.example.techinfo.Fragments.PcComparison.PcComparison
-import com.example.techinfo.Fragments.Troubleshoot.TroubleShoot
+import com.example.techinfo.Fragments.Troubleshoot.troubleshoot_content.TroubleShoot
 import com.example.techinfo.R
 import com.google.android.material.navigation.NavigationView
 // Main Navigation Drawer For Tech Info

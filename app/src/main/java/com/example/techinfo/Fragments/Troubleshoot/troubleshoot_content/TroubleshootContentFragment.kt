@@ -11,16 +11,22 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.techinfo.R
+import com.example.techinfo.api_connector.ApiService
+import com.example.techinfo.api_connector.TroubleshootContent
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.util.*
 
 class TroubleshootContentFragment : Fragment() {
     private lateinit var articleTitleTextView: TextView
     private lateinit var videoThumbnailImageView: ImageView
     private lateinit var contentTextView: TextView
+    private lateinit var createdTimeTextView: TextView
+    private lateinit var updatedTimeTextView: TextView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,6 +44,8 @@ class TroubleshootContentFragment : Fragment() {
         articleTitleTextView = view.findViewById(R.id.articleTitleTextView)
         videoThumbnailImageView = view.findViewById(R.id.videoThumbnailImageView)
         contentTextView = view.findViewById(R.id.contentTextView)
+        createdTimeTextView = view.findViewById(R.id.createdTimeTextView)
+        updatedTimeTextView = view.findViewById(R.id.updatedTimeTextView)
 
         // Get the article ID from arguments
         val articleId = arguments?.getString("ARTICLE_ID")?.toIntOrNull()
@@ -51,7 +59,7 @@ class TroubleshootContentFragment : Fragment() {
 
     private fun fetchArticlesAndDisplay(articleId: Int) {
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.100.74:8000/api/") // Ensure this matches your server
+            .baseUrl("http://192.168.100.74:8000/api/")
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
@@ -79,6 +87,13 @@ class TroubleshootContentFragment : Fragment() {
                             // Set the article content to the TextView
                             contentTextView.text = article.content
 
+                            // Format and display the created and updated times
+                            val createdAtFormatted = formatDate(article.createdAt)
+                            val updatedAtFormatted = formatDate(article.updatedAt)
+
+                            createdTimeTextView.text = "Created: $createdAtFormatted"
+                            updatedTimeTextView.text = "Updated: $updatedAtFormatted"
+
                             // Set up the thumbnail click listener to open the YouTube video
                             videoThumbnailImageView.setOnClickListener {
                                 openYouTubeVideo(videoUrl)
@@ -98,6 +113,23 @@ class TroubleshootContentFragment : Fragment() {
                 contentTextView.text = "Failed to load articles: ${t.message}"
             }
         })
+    }
+
+    private fun formatDate(dateString: String): String {
+        // Input format: "yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'"
+        val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'", Locale.getDefault())
+        val outputFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
+
+        return try {
+            val date = inputFormat.parse(dateString)
+            if (date != null) {
+                outputFormat.format(date)
+            } else {
+                "Unknown"
+            }
+        } catch (e: Exception) {
+            "Unknown"
+        }
     }
 
     private fun loadThumbnail(videoUrl: String?) {
