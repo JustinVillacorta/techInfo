@@ -80,8 +80,8 @@ class Admin : Fragment() {
                     if (user != null) {
                         Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT).show()
 
-                        // Call the function to hide the Admin fragment
-                        hideAdminFragment()
+                        // Navigate to AdminView after successful login
+                        navigateToAdminView()
 
                         sendData()
                     } else {
@@ -98,10 +98,14 @@ class Admin : Fragment() {
         })
     }
 
-    private fun hideAdminFragment() {
-        // Hide or remove the fragment from the back stack
+    private fun navigateToAdminView() {
+        // Create an instance of AdminView fragment
+        val adminViewFragment = AdminView()
+
+        // Replace the current Admin fragment with AdminView
         parentFragmentManager.beginTransaction()
-            .remove(this@Admin)  // Remove this Admin fragment
+            .replace(R.id.fragment_container, adminViewFragment) // Use your actual container ID
+            .addToBackStack(null) // Add to back stack for navigation
             .commit()
     }
 
