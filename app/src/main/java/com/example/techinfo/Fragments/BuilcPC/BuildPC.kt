@@ -15,7 +15,7 @@ class BuildPC : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var componentAdapter: Adapter
-    private val componentDataList = listOf(
+    private val componentDataList = mutableListOf<ComponentData>(
         ComponentData("CPU"),
         ComponentData("GPU"),
         ComponentData("RAM"),
@@ -23,6 +23,7 @@ class BuildPC : Fragment() {
         ComponentData("HDD"),
         ComponentData("PSU"),
         ComponentData("Case"),
+        ComponentData("MotherBoard"),
         ComponentData("CPU Cooler")
     )
 
@@ -49,6 +50,20 @@ class BuildPC : Fragment() {
         recyclerView.apply {
             adapter = componentAdapter
             layoutManager = LinearLayoutManager(requireContext())
+        }
+
+        // Set up the fragment result listener to receive selected parts from ItemCatalog
+        parentFragmentManager.setFragmentResultListener("selectedPart", this) { _, bundle ->
+            val partName = bundle.getString("partName")
+            val partDetails = bundle.getString("partDetails")
+            val position = bundle.getInt("position") // Get the position
+
+            // Replace the item in the component data list at the specified position
+            if (partName != null && partDetails != null) {
+                // Update the existing component at the given position
+                componentDataList[position] = ComponentData(partName, partDetails)
+                componentAdapter.notifyItemChanged(position) // Notify the adapter about the change
+            }
         }
     }
 }
