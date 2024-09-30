@@ -8,6 +8,7 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.techinfo.Fragments.Admin.Admin
+import com.example.techinfo.Fragments.Admin.AdminView
 
 import com.example.techinfo.Fragments.Bottleneck.BottleNeck
 import com.example.techinfo.Fragments.BuilcPC.BuildPC
@@ -16,9 +17,11 @@ import com.example.techinfo.Fragments.Troubleshoot.TroubleShoot
 import com.example.techinfo.R
 import com.google.android.material.navigation.NavigationView
 // Main Navigation Drawer For Tech Info
-class MainNavigation : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainNavigation : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, Admin.PassInt {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
+
+    var recievedData: Int? = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,15 +47,25 @@ class MainNavigation : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
+
         when (item.itemId) {
             R.id.nav_buildpc -> replaceFragment(BuildPC())
             R.id.nav_pc_compare -> replaceFragment(PcComparison())
             R.id.nav_bottleneck -> replaceFragment(BottleNeck())
             R.id.nav_troubleshoot -> replaceFragment(TroubleShoot())
-            R.id.nav_admin -> replaceFragment(Admin())
+            R.id.nav_admin -> {if (recievedData == 0){
+                replaceFragment(AdminView())
+                }              else {
+                replaceFragment(Admin())
+                }
+            }
         }
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
+    }
+
+    override fun PassInt(data: Int){
+        recievedData = data
     }
 
     private fun replaceFragment(fragment: Fragment) {
