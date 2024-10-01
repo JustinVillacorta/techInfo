@@ -2,6 +2,7 @@ package com.example.techinfo.Fragments.Admin
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,15 +11,11 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.example.techinfo.R
-import com.example.techinfo.api_connector.ApiService
+import com.example.techinfo.api_connector.RetrofitInstance
 import com.example.techinfo.api_connector.User
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import okhttp3.OkHttpClient
-import java.util.concurrent.TimeUnit
 
 class Admin : Fragment() {
 
@@ -40,64 +37,69 @@ class Admin : Fragment() {
 
         // Handle login button click
         loginButton.setOnClickListener {
-            val username = usernameInput.text.toString()
-            val password = passwordInput.text.toString()
+            val username = usernameInput.text.toString().trim()
+            val password = passwordInput.text.toString().trim()
 
             if (username.isNotEmpty() && password.isNotEmpty()) {
                 authenticateUser(username, password)
             } else {
-                usernameInput.error = "Input username"
-                passwordInput.error = "Input password"
+                if (username.isEmpty()) usernameInput.error = "Input username"
+                if (password.isEmpty()) passwordInput.error = "Input password"
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
+    // Moved the authentication logic to use RetrofitInstance
     private fun authenticateUser(username: String, password: String) {
-        // Create a custom OkHttpClient with timeout settings
-        val okHttpClient = OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS) // Connection timeout
-            .readTimeout(30, TimeUnit.SECONDS)    // Read timeout
-            .writeTimeout(30, TimeUnit.SECONDS)   // Write timeout
-            .build()
+        Log.d("Admin", "Authenticating user...")
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.100.74:8000/api/") // Update with your base URL
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
-            .build()
-
-        val apiService = retrofit.create(ApiService::class.java)
+        // Fetch API service from RetrofitInstance
+        val apiService = RetrofitInstance.getApiService()
 
         // Fetch users from the API
         apiService.getUsers().enqueue(object : Callback<List<User>> {
             override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
-                if (response.isSuccessful && response.body() != null) {
-                    val users = response.body()!!
+                Log.d("Admin", "Received API response")
 
-                    // Check if username and password match
-                    val user = users.find { it.username == username && it.password == password }
-                    if (user != null) {
-                        Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT).show()
+                if (response.isSuccessful) {
+                    val users = response.body()
 
-                        // Navigate to AdminView after successful login
-                        navigateToAdminView()
+                    if (users != null) {
+                        Log.d("Admin", "User list: $users")
 
-                        sendData()
+                        // Check if username and password match
+                        val user = users.find { it.username == username && it.password == password }
+                        if (user != null) {
+                            Log.d("Admin", "Login successful for user: $username")
+                            Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT).show()
+
+                            // Navigate to AdminView after successful login
+                            navigateToAdminView()
+
+                            sendData()
+                        } else {
+                            Log.d("Admin", "Invalid username or password")
+                            Toast.makeText(requireContext(), "Invalid username or password", Toast.LENGTH_SHORT).show()
+                        }
                     } else {
-                        Toast.makeText(requireContext(), "Invalid username or password", Toast.LENGTH_SHORT).show()
+                        Log.e("Admin", "Response body is null")
+                        Toast.makeText(requireContext(), "Error fetching users", Toast.LENGTH_SHORT).show()
                     }
                 } else {
+                    Log.e("Admin", "Error response: ${response.code()}")
                     Toast.makeText(requireContext(), "Error fetching users", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<List<User>>, t: Throwable) {
-                Toast.makeText(requireContext(), "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
+                Log.e("Admin", "API call failed: ${t.message}")
+                Toast.makeText(requireContext(), "Network error: No Connection or Server Error", Toast.LENGTH_SHORT).show()
             }
         })
     }
 
+    // Navigate to the AdminView fragment after login success
     private fun navigateToAdminView() {
         // Create an instance of AdminView fragment
         val adminViewFragment = AdminView()
@@ -115,7 +117,11 @@ class Admin : Fragment() {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        datapass = context as PassInt
+        try {
+            datapass = context as PassInt
+        } catch (e: ClassCastException) {
+            throw ClassCastException("$context must implement PassInt")
+        }
     }
 
     private fun sendData() {

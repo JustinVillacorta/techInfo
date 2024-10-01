@@ -29,7 +29,7 @@ class PartCatalogAdapter(
 
     override fun onBindViewHolder(holder: PartViewHolder, position: Int) {
         holder.bind(items[position])
-        
+
     }
 
 
@@ -37,5 +37,3 @@ class PartCatalogAdapter(
 
     override fun getItemCount() = items.size
 }
-
-

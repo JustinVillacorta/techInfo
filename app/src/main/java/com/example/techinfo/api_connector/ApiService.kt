@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName
 
 data class TroubleShoot_data(
     val title: String,
-    val id: String  // Change to String
+    val id: String  // Changed to String
 )
 
 data class TroubleshootContent(

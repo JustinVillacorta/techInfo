@@ -11,16 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.techinfo.R
-import com.example.techinfo.api_connector.ApiService
+import com.example.techinfo.api_connector.RetrofitInstance // Import RetrofitInstance
 import com.example.techinfo.api_connector.TroubleshootContent
 import com.example.techinfo.api_connector.TroubleShoot_data
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import okhttp3.OkHttpClient
-import java.util.concurrent.TimeUnit
 
 class TroubleShoot : Fragment() {
 
@@ -63,20 +59,8 @@ class TroubleShoot : Fragment() {
     }
 
     private fun fetchArticles() {
-        // Create a custom OkHttpClient with timeout settings
-        val okHttpClient = OkHttpClient.Builder()
-            .connectTimeout(30, TimeUnit.SECONDS) // Connection timeout
-            .readTimeout(30, TimeUnit.SECONDS)    // Read timeout
-            .writeTimeout(30, TimeUnit.SECONDS)   // Write timeout
-            .build()
-
-        val retrofit = Retrofit.Builder()
-            .baseUrl("http://192.168.100.74:8000/api/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient) // Set the custom OkHttpClient
-            .build()
-
-        val apiService = retrofit.create(ApiService::class.java)
+        // Use RetrofitInstance to get the ApiService
+        val apiService = RetrofitInstance.getApiService()
 
         // Asynchronous call to fetch articles
         apiService.getTroubleshootArticles().enqueue(object : Callback<List<TroubleshootContent>> {

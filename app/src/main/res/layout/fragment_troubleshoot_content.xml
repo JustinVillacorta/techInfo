@@ -11,8 +11,6 @@
         android:orientation="vertical"
         android:gravity="center">
 
-        <!-- Article Title -->
-
         <ImageView
             android:id="@+id/videoThumbnailImageView"
             android:layout_width="match_parent"
@@ -31,9 +29,6 @@
             android:layout_marginBottom="8dp"
             android:gravity="center" />
 
-        <!-- Video Thumbnail -->
-
-        <!-- Article Content -->
         <TextView
             android:id="@+id/contentTextView"
             android:layout_width="match_parent"
@@ -41,14 +36,12 @@
             android:textSize="16sp"
             android:layout_marginBottom="8dp" />
 
-        <!-- Timestamps Layout -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingTop="8dp">
 
-            <!-- Created Time -->
             <TextView
                 android:id="@+id/createdTimeTextView"
                 android:layout_width="0dp"
@@ -57,7 +50,6 @@
                 android:textColor="@android:color/darker_gray"
                 android:layout_weight="1" />
 
-            <!-- Updated Time -->
             <TextView
                 android:id="@+id/updatedTimeTextView"
                 android:layout_width="0dp"
@@ -66,7 +58,6 @@
                 android:textColor="@android:color/darker_gray"
                 android:gravity="end"
                 android:layout_weight="1" />
-
         </LinearLayout>
 
     </LinearLayout>
