@@ -10,13 +10,14 @@ import android.widget.AutoCompleteTextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.techinfo.Fragments.BuilcPC.ItemCatalog.PartCatalogAdapter
-import com.example.techinfo.R
 import com.example.techinfo.Fragments.BuilcPC.ItemCatalog.Parts
+import com.example.techinfo.R
 
 class ItemCatalog : Fragment() {
 
     private lateinit var partType: String
     private lateinit var recyclerView: RecyclerView
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,13 +36,17 @@ class ItemCatalog : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Setup AutoCompleteTextViews (ensure these IDs exist in your layout)
         val models = resources.getStringArray(R.array.Models)
         val chipset = resources.getStringArray(R.array.Chipset)
+
         val arrayAdapter1 = ArrayAdapter(requireContext(), R.layout.buildpc_filter, chipset)
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.buildpc_filter, models)
+
         view.findViewById<AutoCompleteTextView>(R.id.chipset_info).setAdapter(arrayAdapter1)
         view.findViewById<AutoCompleteTextView>(R.id.Models_info).setAdapter(arrayAdapter)
 
+        // Initialize RecyclerView
         recyclerView = view.findViewById(R.id.recyclerViewPartCatalog)
         recyclerView.layoutManager = LinearLayoutManager(context)
 
@@ -58,67 +63,49 @@ class ItemCatalog : Fragment() {
             else -> emptyList()
         }
 
+        // Set adapter and handle item selection
         recyclerView.adapter = PartCatalogAdapter(items) { selectedPart ->
-            parentFragmentManager.setFragmentResult(
-                "selectedPart", Bundle().apply {
-                    putString("partName", selectedPart.name)
-                    putString("partDetails", selectedPart.details)
-                    putInt("position", selectedPart.position) // Ensure the correct position is passed
-                }
-            )
-            // Optionally refresh the catalog or do something else after selection
-            refreshCatalog() // If you want to refresh the catalog after a selection
+            // Toggle the selected state
+            selectedPart.isSelected = !selectedPart.isSelected // Toggle selection
+
+            // Create a result bundle and send it to the BuildPC fragment
+            val result = Bundle().apply {
+                putString("partDetails", selectedPart.details)
+                putInt("position", selectedPart.position)
+            }
+            parentFragmentManager.setFragmentResult("selectedPart", result)
+
+            // Pop back to previous fragment
             parentFragmentManager.popBackStack()
         }
     }
 
-    private fun refreshCatalog() {
-        // Reload the items and notify the adapter
-        val items = when (partType) {
-            "CPU" -> getCpuList()
-            "GPU" -> getGpuList()
-            "RAM" -> getRamList()
-            "SSD" -> getSSDList()
-            else -> emptyList()
-        }
 
-        recyclerView.adapter = PartCatalogAdapter(items) { selectedPart ->
-            parentFragmentManager.setFragmentResult(
-                "selectedPart", Bundle().apply {
-                    putString("partName", selectedPart.name)
-                    putString("partDetails", selectedPart.details)
-                    putInt("position", selectedPart.position) // Ensure the correct position is passed
-                }
-            )
-            parentFragmentManager.popBackStack()
-        }
-    }
-
-    // Sample data lists
+        // Sample data lists (ensure these match the actual structure of your Parts class)
     private fun getCpuList(): List<Parts> {
         return listOf(
-            Parts("Intel Core i7", "High performance CPU", 0),
-            Parts("AMD Ryzen 5", "Great value for gaming", 0)
+            Parts("Intel Core i7", 0),
+            Parts("AMD Ryzen 5", 0)
         )
     }
 
     private fun getGpuList(): List<Parts> {
         return listOf(
-            Parts("NVIDIA GeForce RTX 3080", "Top-tier GPU for gaming", 1),
-            Parts("AMD Radeon RX 6800", "Great performance", 1)
+            Parts("NVIDIA GeForce RTX 3080",  1),
+            Parts("AMD Radeon RX 6800", 1)
         )
     }
 
     private fun getRamList(): List<Parts> {
         return listOf(
-            Parts("Corsair Vengeance 16GB", "High speed RAM", 2),
-            Parts("G.Skill Ripjaws 32GB", "Excellent for multitasking", 2)
+            Parts("Corsair Vengeance 16GB", 2),
+            Parts("G.Skill Ripjaws 32GB",  2)
         )
     }
 
     private fun getSSDList(): List<Parts> {
         return listOf(
-            Parts("Kingston 1tb", "goods", 3)
+            Parts("Kingston 1tb",  3)
         )
     }
 

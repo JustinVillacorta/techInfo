@@ -1,3 +1,7 @@
 package com.example.techinfo.Fragments.BuilcPC
 // data class for recyclerView In BuildPC
-data class ComponentData(val name: String, val details: String? = null) // details can be optional
+data class ComponentData(
+    var name: String?,
+    var partDetails: String? = null,
+    var isSelected: Boolean = false
+) // details can be optional
