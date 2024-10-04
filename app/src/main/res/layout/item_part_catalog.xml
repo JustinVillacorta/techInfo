@@ -1,41 +1,50 @@
-<!-- res/layout/recycler_item.xml -->
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
     android:padding="16dp"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
 
+    <!-- ImageView for component image -->
     <ImageView
         android:id="@+id/image"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="85dp"
+        android:layout_height="73dp"
         android:layout_marginEnd="16dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_launcher_foreground" />
+        android:src="@drawable/ic_launcher_foreground" /> <!-- Replace with your drawable -->
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+    <!-- Container for text views -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="216dp"
+        android:layout_height="99dp"
         android:layout_weight="1"
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvPartName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Part Name"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black" />
-
-        <TextView
             android:id="@+id/tvPartSpecs"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Part Specs"
-            android:textSize="14sp"
-            android:textColor="@android:color/darker_gray" />
-    </LinearLayout>
+            android:layout_width="118dp"
+            android:layout_height="24dp"
+            android:text="Part Name"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.626" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/btnSelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Info" /> <!-- This will toggle to "UNSELECT" -->
 </LinearLayout>

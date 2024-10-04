@@ -88,10 +88,10 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Data Transfer Speed"
-                android:textSize="16sp"
                 android:layout_gravity="center_vertical"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:text="Memory"
+                android:textSize="16sp" />
 
             <ProgressBar
                 style="@android:style/Widget.ProgressBar.Horizontal"
@@ -180,10 +180,17 @@
     </LinearLayout>
 
     <!-- RecyclerView for Components -->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/componentsRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="379dp"
+        android:layout_height="380dp"
         android:layout_weight="1" />
+
+    <Button
+        android:id="@+id/BuildBTN"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:text="Build your pc" />
 
 </LinearLayout>

@@ -6,6 +6,7 @@ plugins {
 }
 
 android {
+
     namespace = "com.example.techinfo"
     compileSdk = 34
 
@@ -40,6 +41,9 @@ android {
 
     buildFeatures {
         viewBinding = true
+    }
+    viewBinding{
+        enable = true
     }
 }
 

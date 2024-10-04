@@ -28,10 +28,8 @@ class BottleNeck : Fragment() {
         bottleList = listOf(
             BottleneckData("Central Processing Unit"),
             BottleneckData("Graphics Processing Unit"),
-            BottleneckData("Random Access Memory"),
-            BottleneckData("Solid-State Drive"),
-            BottleneckData("Power Supply Unit"),
-            BottleneckData("Motherboard")
+            BottleneckData("Screen Resolution")
+
         )
 
         // Initialize the adapter
