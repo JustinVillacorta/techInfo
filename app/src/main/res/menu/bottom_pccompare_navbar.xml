@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Build Comparison"
+        android:id="@+id/buildcompare"
+        android:icon="@drawable/baseline_buildpc_24"/>
+
+
+    <item android:title="Parts Comparison"
+        android:id="@+id/parts"
+        android:icon="@drawable/pc_comparison_24"/>
+</menu>

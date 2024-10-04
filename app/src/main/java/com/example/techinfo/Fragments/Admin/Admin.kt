@@ -53,6 +53,8 @@ class Admin : Fragment() {
         }
     }
 
+
+
     interface PassInt {
         fun PassInt(data: Int)
     }
@@ -63,7 +65,7 @@ class Admin : Fragment() {
     }
 
     private fun sendData() {
-        val datasending = 0
+        val datasending = 1
         datapass.PassInt(datasending)
     }
 }
