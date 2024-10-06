@@ -4,8 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient"
     tools:context=".onBoarding.Screen.FirstScreen">
 
+    <TextView
+        android:id="@+id/Skip"
+        android:layout_width="77dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="44dp"
+        android:layout_marginEnd="40dp"
+        android:gravity="center"
+        android:text="Skip"
+        android:textColor="#03A9F4"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -17,28 +31,53 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/TvTitle"
-        android:layout_width="171dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="56dp"
-        android:text="Build your pc"
-        android:textSize="25dp"
+    <ImageView
+        android:id="@+id/box1"
+        android:layout_width="205dp"
+        android:layout_height="3dp"
+        android:layout_marginTop="28dp"
+        android:src="@drawable/box"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <TextView
-        android:id="@+id/TvDescription1"
-        android:layout_width="259dp"
-        android:layout_height="96dp"
-        android:layout_marginTop="44dp"
-        android:text="allow you to build your dream pc"
-        android:textSize="19dp"
+        android:id="@+id/TvTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
         android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:text="Build your PC"
+        android:textSize="25dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <TextView
+        android:id="@+id/TvDescription1"
+        android:layout_width="307dp"
+        android:layout_height="89dp"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:text="This aspect allows you to create whatever your dream PC consist of."
+        android:textSize="19dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TvTitle" />
+
+    <ImageView
+        android:id="@+id/box2"
+        android:layout_width="125dp"
+        android:layout_height="3dp"
+        android:layout_marginTop="28dp"
+        android:src="@drawable/box"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TvDescription1" />
 
     <TextView
         android:id="@+id/Next"

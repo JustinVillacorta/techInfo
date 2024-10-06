@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradient"
     tools:context=".onBoarding.Screen.FourthScreen">
 
 
@@ -11,18 +12,31 @@
         android:id="@+id/imageView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="141dp"
+        android:layout_marginTop="124dp"
         android:src="@drawable/troubleshoot"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/box1_4"
+        android:layout_width="205dp"
+        android:layout_height="3dp"
+        android:layout_marginTop="28dp"
+        android:src="@drawable/box"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+
     <TextView
         android:id="@+id/TvTitle4"
-        android:layout_width="171dp"
-        android:layout_height="40dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="56dp"
-        android:text="Trouble Shoot"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:text="TROUBLESHOOT"
         android:textSize="25dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -32,13 +46,25 @@
         android:id="@+id/TvDescription4"
         android:layout_width="259dp"
         android:layout_height="96dp"
-        android:layout_marginTop="44dp"
-        android:text="allow you to build your dream pc"
-        android:textSize="19dp"
+        android:layout_marginTop="32dp"
         android:gravity="center"
+        android:textColor="@color/white"
+        android:text="Know and then fix what is wrong with your PC"
+        android:textSize="19dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.532"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/TvTitle4" />
+
+    <ImageView
+        android:id="@+id/box2_4"
+        android:layout_width="125dp"
+        android:layout_height="3dp"
+        android:layout_marginTop="28dp"
+        android:src="@drawable/box"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/TvDescription4" />
 
     <TextView
         android:id="@+id/Next4"
@@ -47,7 +73,7 @@
         android:layout_marginEnd="40dp"
         android:layout_marginBottom="40dp"
         android:gravity="center"
-        android:text="finish"
+        android:text="Done"
         android:textColor="#03A9F4"
         android:textSize="20dp"
         android:textStyle="bold"
