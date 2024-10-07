@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -16,8 +18,10 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class AdminView : Fragment() {
     private lateinit var addFab: FloatingActionButton
     private lateinit var recyclerViewAdmin: RecyclerView
-    private lateinit var adminList: ArrayList<admin_data_class> // Assuming admin_data_class exists
+    private lateinit var adminList: ArrayList<admin_data_class> // Full list of items
+    private lateinit var filteredList: ArrayList<admin_data_class> // Filtered list for display
     private lateinit var adminAdapter: admin_adapter
+    private lateinit var autoCompleteTextView: AutoCompleteTextView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,49 +30,80 @@ class AdminView : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_admin_view, container, false)
 
-        // Initialize views here
+        // Initialize views
         adminList = ArrayList()
+        filteredList = ArrayList() // For filtered data
+
         addFab = view.findViewById(R.id.Add)
         recyclerViewAdmin = view.findViewById(R.id.recyclerViewAdmin)
+        autoCompleteTextView = view.findViewById(R.id.filter)
 
-        // Setup the adapter
-        adminAdapter = admin_adapter(requireContext(), adminList)
+        // Setup adapter for RecyclerView
+        adminAdapter = admin_adapter(requireContext(), filteredList)
         recyclerViewAdmin.layoutManager = LinearLayoutManager(requireContext())
         recyclerViewAdmin.adapter = adminAdapter
+
+        // Sample data
+        val sampleDataList = listOf(
+            admin_data_class("CPU Brand 1", "CPU Specs 1"),
+            admin_data_class("GPU Brand 2", "GPU Specs 2"),
+            admin_data_class("RAM Brand 3", "RAM Specs 3"),
+            admin_data_class("SSD Brand 4", "SSD Specs 4"),
+            admin_data_class("HDD Brand 5", "HDD Specs 5"),
+            admin_data_class("PSU Brand 6", "PSU Specs 6"),
+            admin_data_class("CASE Brand 7", "CASE Specs 7"),
+            admin_data_class("CPU Cooler Brand 8", "CPU Cooler Specs 8")
+        )
+        adminList.addAll(sampleDataList)
+        filteredList.addAll(adminList) // Initially show all data
+        adminAdapter.notifyDataSetChanged()
+
+        // Setup dropdown adapter
+        val filterOptions = resources.getStringArray(R.array.filter)
+        val arrayAdapter1 = ArrayAdapter(requireContext(), R.layout.dropdown_filter, filterOptions)
+        autoCompleteTextView.setAdapter(arrayAdapter1)
+
+        // Dropdown item selection listener
+        autoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
+            val selectedFilter = filterOptions[position]
+            filterAdminData(selectedFilter)
+        }
 
         // Set click listener for add button
         addFab.setOnClickListener {
             addInfo()
         }
 
-        // Sample data to populate RecyclerView (if needed)
-        val sampleDataList = listOf(
-            admin_data_class("Brand Title 1", "specs Subtitle 1"),
-            admin_data_class("Brand Title 2", "specs Subtitle 2"),
-            admin_data_class("Brand Title 3", "specs Subtitle 3"),
-            admin_data_class("Brand Title 4", "specs Subtitle 4"),
-            admin_data_class("Brand Title 5", "specs Subtitle 5")
-        )
-
-        adminList.addAll(sampleDataList) // Add sample data to the list
-        adminAdapter.notifyDataSetChanged() // Notify adapter of data change
-
-        return view // Return the inflated view
+        return view
     }
+
+    private fun filterAdminData(filter: String) {
+        filteredList.clear()
+        if (filter == "All") {
+            filteredList.addAll(adminList)
+        } else {
+            // Assuming the `admin_data_class` has a field like `brand` for filtering
+            filteredList.addAll(adminList.filter {
+                it.ModelName.contains(filter, ignoreCase = true) // Update the field name
+            })
+        }
+        adminAdapter.notifyDataSetChanged()
+    }
+
 
     private fun addInfo() {
         val inflater = LayoutInflater.from(requireContext())
         val addView = inflater.inflate(R.layout.troubleshoot_add_item, null)
-        val adminTitle = addView.findViewById<EditText>(R.id.ArticleTitle) // Assuming you have this ID
-        val adminSubtitle = addView.findViewById<EditText>(R.id.article_subtitle) // Assuming you have this ID
+        val adminTitle = addView.findViewById<EditText>(R.id.ArticleTitle)
+        val adminSubtitle = addView.findViewById<EditText>(R.id.article_subtitle)
 
         val addDialog = AlertDialog.Builder(requireContext())
         addDialog.setView(addView)
         addDialog.setPositiveButton("Ok") { dialog, _ ->
             val title = adminTitle.text.toString()
             val subtitle = adminSubtitle.text.toString()
-            adminList.add(admin_data_class(title, subtitle)) // Use the title directly
-            adminAdapter.notifyDataSetChanged()
+            adminList.add(admin_data_class(title, subtitle))
+            filterAdminData(autoCompleteTextView.text.toString()) // Apply current filter
             Toast.makeText(requireContext(), "Adding Admin Information Success", Toast.LENGTH_SHORT).show()
             dialog.dismiss()
         }

@@ -26,6 +26,17 @@
         <item>intel</item>
     </string-array>
 
+    <string-array name="filter">
+        <item>CPU</item>
+        <item>GPU</item>
+        <item>RAM</item>
+        <item>SSD</item>
+        <item>HDD</item>
+        <item>PSU</item>
+        <item>CASE</item>
+        <item>CPU Cooler</item>
+    </string-array>
+
     <string name="lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
