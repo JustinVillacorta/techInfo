@@ -24,11 +24,6 @@ class Adapter(
             componentNameTextView.text = component.partDetails ?: component.name // Show details if available, else show name
 
 
-            // Update background color if selected
-            itemView.setBackgroundColor(
-                if (component.isSelected) Color.LTGRAY else Color.TRANSPARENT
-            )
-
             // Placeholder image for now
             componentImageView.setImageResource(R.drawable.ic_launcher_foreground)
 
