@@ -94,14 +94,18 @@ class AdminView : Fragment() {
 
     private fun filterAdminData(filter: String) {
         filteredList.clear()
-        if (filter == "All") {
+
+        if (filter.equals("All", ignoreCase = true)) {
+            // Ensure all items are added when "All" is selected
             filteredList.addAll(adminList)
         } else {
-            // Assuming the `admin_data_class` has a field like `ModelName` for filtering
+            // Filter items based on the selected option
             filteredList.addAll(adminList.filter {
-                it.ModelName.contains(filter, ignoreCase = true) // Update the field name
+                it.ModelName.contains(filter, ignoreCase = true) // Update this as per your field name
             })
         }
+
+        // Notify the adapter to refresh the view
         adminAdapter.notifyDataSetChanged()
     }
 

@@ -69,14 +69,19 @@ class TroubleshootAdmin : Fragment() {
 
     private fun filterAdminData(filter: String) {
         filteredList.clear()
-        if (filter == "All") {
-            filteredList.addAll(troubleshoot_admin) // Use the original list for "All"
+
+        if (filter.equals("All", ignoreCase = true)) {
+            // Ensure all items are added when "All" is selected
+            filteredList.addAll(troubleshoot_admin)
         } else {
+            // Filter items based on the selected option
             filteredList.addAll(troubleshoot_admin.filter {
-                it.troubleshootTitle.contains(filter, ignoreCase = true)
+                it.troubleshootTitle.contains(filter, ignoreCase = true) // Update this as per your field name
             })
         }
-        troubleshootAdminAdapter.notifyDataSetChanged() // Notify adapter of data change
+
+        // Notify the adapter to refresh the view
+        troubleshootAdminAdapter.notifyDataSetChanged()
     }
 
     private fun addInfo() {
