@@ -16,7 +16,7 @@ import com.example.techinfo.Fragments.Bottleneck.BottleNeck
 import com.example.techinfo.Fragments.BuildPC.BuildPC
 import com.example.techinfo.Fragments.PcComparison.PartsComparison
 import com.example.techinfo.Fragments.PcComparison.PcComparison
-import com.example.techinfo.Fragments.Troubleshoot.TroubleShoot
+import com.example.techinfo.Fragments.Troubleshoot.troubleshoot_content.TroubleShoot
 import com.example.techinfo.R
 import com.google.android.material.navigation.NavigationView
 import com.example.techinfo.databinding.ActivityMainNavigationBinding

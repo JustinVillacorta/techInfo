@@ -28,8 +28,7 @@ class BottleNeck : Fragment() {
         bottleList = listOf(
             BottleneckData("Central Processing Unit"),
             BottleneckData("Graphics Processing Unit"),
-            BottleneckData("Screen Resolution")
-
+            BottleneckData("Resolution")
         )
 
         // Initialize the adapter
