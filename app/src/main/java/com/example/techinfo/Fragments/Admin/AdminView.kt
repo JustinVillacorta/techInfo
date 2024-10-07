@@ -23,6 +23,9 @@ class AdminView : Fragment() {
     private lateinit var adminAdapter: admin_adapter
     private lateinit var autoCompleteTextView: AutoCompleteTextView
 
+    // Hold the last selected filter
+    private var lastSelectedFilter: String? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,14 +62,26 @@ class AdminView : Fragment() {
         adminAdapter.notifyDataSetChanged()
 
         // Setup dropdown adapter
-        val filterOptions = resources.getStringArray(R.array.filter)
-        val arrayAdapter1 = ArrayAdapter(requireContext(), R.layout.dropdown_filter, filterOptions)
-        autoCompleteTextView.setAdapter(arrayAdapter1)
+        val filterOptions = resources.getStringArray(R.array.filter).toList()
+        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_filter, filterOptions)
+        autoCompleteTextView.setAdapter(arrayAdapter)
 
         // Dropdown item selection listener
         autoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
             val selectedFilter = filterOptions[position]
+
+            // Hide the previously selected item
+            if (lastSelectedFilter != null) {
+                arrayAdapter.add(lastSelectedFilter) // Re-add the last selected filter
+            }
+
+            // Filter the data
             filterAdminData(selectedFilter)
+
+            // Hide selected item
+            arrayAdapter.remove(selectedFilter) // Remove the current selection from the dropdown
+            lastSelectedFilter = selectedFilter // Update last selected filter
+            arrayAdapter.notifyDataSetChanged() // Notify adapter about the changes
         }
 
         // Set click listener for add button
@@ -82,14 +97,13 @@ class AdminView : Fragment() {
         if (filter == "All") {
             filteredList.addAll(adminList)
         } else {
-            // Assuming the `admin_data_class` has a field like `brand` for filtering
+            // Assuming the `admin_data_class` has a field like `ModelName` for filtering
             filteredList.addAll(adminList.filter {
                 it.ModelName.contains(filter, ignoreCase = true) // Update the field name
             })
         }
         adminAdapter.notifyDataSetChanged()
     }
-
 
     private fun addInfo() {
         val inflater = LayoutInflater.from(requireContext())

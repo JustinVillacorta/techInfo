@@ -9,32 +9,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center">
+        android:padding="16dp"> <!-- Added padding for spacing -->
 
         <ImageView
             android:id="@+id/videoThumbnailImageView"
             android:layout_width="match_parent"
             android:layout_height="185dp"
-            android:layout_marginBottom="16dp"
-            android:background="@color/gray"
-            android:contentDescription="Video Thumbnail"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="16dp"/> <!-- The thumbnail will be shown only if available -->
 
         <TextView
             android:id="@+id/articleTitleTextView"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:layout_marginBottom="8dp"
-            android:gravity="center" />
+            android:layout_marginBottom="16dp"
+            android:gravity="center"/>
 
         <TextView
             android:id="@+id/contentTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_marginBottom="8dp" />
+            android:layout_marginBottom="8dp"
+            android:textSize="16sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
