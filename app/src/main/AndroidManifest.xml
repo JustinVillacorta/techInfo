@@ -16,6 +16,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".Fragments.Admin.ForgotPassword"
+            android:exported="false" />
+        <activity
             android:name=".Fragments.PcComparison.PcComparisonBottomNav"
             android:exported="false" />
         <activity

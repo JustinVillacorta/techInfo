@@ -1,6 +1,7 @@
 package com.example.techinfo.Fragments.Admin
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -8,8 +9,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.example.techinfo.R
 import com.example.techinfo.api_connector.RetrofitInstance
 import com.example.techinfo.api_connector.User
@@ -60,7 +63,15 @@ class Admin : Fragment() {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
             }
         }
+        val forgotpassword = view.findViewById<TextView>(R.id.ForgotPassword)
+
+        forgotpassword.setOnClickListener{
+            val intent = Intent(requireContext(), ForgotPassword::class.java)
+            startActivity(intent)
+        }
     }
+
+
 
     // Moved the authentication logic to use RetrofitInstance
     private fun authenticateUser(username: String, password: String) {
