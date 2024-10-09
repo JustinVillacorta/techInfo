@@ -22,12 +22,14 @@
                 style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="invisible"
                 android:hint="Models">
 
                 <AutoCompleteTextView
                     android:id="@+id/Models_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:visibility="invisible"
                     android:inputType="none"
                     android:text="All"  />
             </com.google.android.material.textfield.TextInputLayout>
