@@ -4,9 +4,11 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -23,13 +25,14 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class TroubleshootContentFragment : Fragment() {
-    // Move all design-related variables to the top
+
     private lateinit var articleTitleTextView: TextView
     private lateinit var videoThumbnailImageView: ImageView
     private lateinit var contentTextView: TextView
     private lateinit var createdTimeTextView: TextView
     private lateinit var updatedTimeTextView: TextView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var scrollView: ScrollView
     private var articleId: Int? = null // Store article ID
 
     override fun onCreateView(
@@ -44,13 +47,14 @@ class TroubleshootContentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize Views (Design-related part)
+        // Initialize Views
         articleTitleTextView = view.findViewById(R.id.articleTitleTextView)
         videoThumbnailImageView = view.findViewById(R.id.videoThumbnailImageView)
         contentTextView = view.findViewById(R.id.contentTextView)
         createdTimeTextView = view.findViewById(R.id.createdTimeTextView)
         updatedTimeTextView = view.findViewById(R.id.updatedTimeTextView)
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
+        scrollView = view.findViewById(R.id.scrollView) // Initialize ScrollView
 
         // Get the article ID from arguments
         articleId = arguments?.getString("ARTICLE_ID")?.toIntOrNull()
@@ -61,6 +65,17 @@ class TroubleshootContentFragment : Fragment() {
         // Set up swipe refresh layout
         swipeRefreshLayout.setOnRefreshListener {
             articleId?.let { id -> fetchArticlesAndDisplay(id) }
+        }
+
+        // Disable swipe refresh when scrolling inside the ScrollView
+        scrollView.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_MOVE) {
+                swipeRefreshLayout.isEnabled = false // Disable refresh when scrolling
+            }
+            if (event.action == MotionEvent.ACTION_UP || event.action == MotionEvent.ACTION_CANCEL) {
+                swipeRefreshLayout.isEnabled = true // Re-enable refresh when touch ends
+            }
+            false // Let other touch events pass through
         }
     }
 
@@ -183,7 +198,7 @@ class TroubleshootContentFragment : Fragment() {
         }
     }
 
-    // Companion object to create new instance of the fragment
+    // Companion object to create a new instance of the fragment
     companion object {
         fun newInstance(articleId: String): TroubleshootContentFragment {
             val fragment = TroubleshootContentFragment()

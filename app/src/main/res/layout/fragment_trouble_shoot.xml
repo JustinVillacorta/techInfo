@@ -24,11 +24,18 @@
         <!-- Message view when no data is available -->
         <TextView
             android:id="@+id/noDataMessage"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="No articles available."
             android:visibility="gone"
-            android:layout_gravity="center" />
+            android:gravity="center"
+            android:padding="16dp"
+            android:layout_margin="16dp"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
