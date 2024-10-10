@@ -18,7 +18,6 @@ class ItemCatalog : Fragment() {
     private lateinit var partType: String
     private lateinit var recyclerView: RecyclerView
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -64,7 +63,7 @@ class ItemCatalog : Fragment() {
         }
 
         // Set adapter and handle item selection
-        recyclerView.adapter = PartCatalogAdapter(items) { selectedPart ->
+        recyclerView.adapter = PartCatalogAdapter(items, { selectedPart ->
             // Toggle the selected state
             selectedPart.isSelected = !selectedPart.isSelected // Toggle selection
 
@@ -77,11 +76,10 @@ class ItemCatalog : Fragment() {
 
             // Pop back to previous fragment
             parentFragmentManager.popBackStack()
-        }
+        }, this) // Pass 'this' for Fragment instance
     }
 
-
-        // Sample data lists (ensure these match the actual structure of your Parts class)
+    // Sample data lists (ensure these match the actual structure of your Parts class)
     private fun getCpuList(): List<Parts> {
         return listOf(
             Parts("Intel Core i7", 0),
@@ -91,7 +89,7 @@ class ItemCatalog : Fragment() {
 
     private fun getGpuList(): List<Parts> {
         return listOf(
-            Parts("NVIDIA GeForce RTX 3080",  1),
+            Parts("NVIDIA GeForce RTX 3080", 1),
             Parts("AMD Radeon RX 6800", 1)
         )
     }
@@ -99,13 +97,13 @@ class ItemCatalog : Fragment() {
     private fun getRamList(): List<Parts> {
         return listOf(
             Parts("Corsair Vengeance 16GB", 2),
-            Parts("G.Skill Ripjaws 32GB",  2)
+            Parts("G.Skill Ripjaws 32GB", 2)
         )
     }
 
     private fun getSSDList(): List<Parts> {
         return listOf(
-            Parts("Kingston 1tb",  3)
+            Parts("Kingston 1TB", 3)
         )
     }
 

@@ -6,12 +6,14 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.example.techinfo.R
 
 class PartCatalogAdapter(
     private var items: List<Parts>,
-    private val itemClickListener: (Parts) -> Unit
+    private val itemClickListener: (Parts) -> Unit,
+    private val fragment: Fragment // Pass Fragment instance
 ) : RecyclerView.Adapter<PartCatalogAdapter.PartViewHolder>() {
 
     inner class PartViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -23,17 +25,24 @@ class PartCatalogAdapter(
             partSpecsTextView.text = part.details ?: "Select a part"
             partImageView.setImageResource(R.drawable.ic_launcher_foreground)
 
-            // Handle button click for selecting the part
+            // Handle button click for showing part info
             infoButton.setOnClickListener {
-                // Call the itemClickListener for the button click
-
+                // Create an instance of ItemsInfo with the required parameters
+                val infoFragment = ItemsInfo.newInstance(
+                    articleTitle = part.details ?: "No details available", // Set your title here
+                    content = "Detailed information about ${part.details}.", // Example content
+                    createdTime = "Created on: 2023-01-01", // Example created time
+                    updatedTime = "Updated on: 2023-10-01" // Example updated time
+                )
+                fragment.parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, infoFragment)
+                    .addToBackStack(null)
+                    .commit()
             }
 
             // Make the entire item clickable except for the infoButton
             itemView.setOnClickListener {
-                // Handle item click here if needed, you can also pass `part` to a function
-                // For example, you might want to navigate to a details view
-                itemClickListener(part) // You can also use this for item selection
+                itemClickListener(part) // Handle item selection
             }
         }
     }

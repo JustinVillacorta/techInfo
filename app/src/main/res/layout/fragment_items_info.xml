@@ -1,14 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Fragments.BuilcPC.ItemCatalog.ItemsInfo">
+    android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <!-- CardView as a floating background with rounded corners and shadow -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            android:background="@drawable/background_card"
+            app:cardElevation="8dp"
+            app:cardCornerRadius="20dp">
+
+            <!-- Layout for all the content inside the CardView -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!-- Fixed ImageView at the top with 16dp padding -->
+                <ImageView
+                    android:id="@+id/videoThumbnailImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="185dp"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="top"
+                    android:layout_marginBottom="8dp"
+                    android:padding="16dp" />
+
+                <!-- Fixed Article Title below the ImageView with 10dp padding -->
+                <TextView
+                    android:id="@+id/articleTitleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp"
+                    android:padding="10dp" />
+
+                <!-- Scrollable content starts below the Article Title -->
+                <ScrollView
+                    android:id="@+id/scrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"> <!-- Added padding for spacing -->
+
+                        <TextView
+                            android:id="@+id/contentTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:textSize="16sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingTop="8dp">
+
+                            <TextView
+                                android:id="@+id/createdTimeTextView"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:textSize="12sp"
+                                android:textColor="@android:color/darker_gray"
+                                android:layout_weight="1" />
+
+                            <TextView
+                                android:id="@+id/updatedTimeTextView"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:textSize="12sp"
+                                android:textColor="@android:color/darker_gray"
+                                android:gravity="end"
+                                android:layout_weight="1" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </ScrollView>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </FrameLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
