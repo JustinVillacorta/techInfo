@@ -5,13 +5,14 @@ import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.techinfo.R
-import com.example.techinfo.api_connector.RetrofitInstance // Import RetrofitInstance
+import com.example.techinfo.api_connector.RetrofitInstance
 import com.example.techinfo.api_connector.TroubleshootContent
 import com.example.techinfo.api_connector.TroubleShoot_data
 import retrofit2.Call
@@ -24,12 +25,12 @@ class TroubleShoot : Fragment() {
     private lateinit var itemAdapter: TroubleShoot_adapter
     private val items = mutableListOf<TroubleShoot_data>()
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var searchView: SearchView
     private val handler = Handler()
     private val autoRefreshRunnable = Runnable {
-        fetchArticles() // Fetch articles automatically every specified interval
+        fetchArticles() // Auto-refresh articles every specified interval
     }
 
-    // Inflate the fragment layout
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,7 +38,6 @@ class TroubleShoot : Fragment() {
         return inflater.inflate(R.layout.fragment_trouble_shoot, container, false)
     }
 
-    // Called after onCreateView, where the view is fully created
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -45,17 +45,54 @@ class TroubleShoot : Fragment() {
         recyclerView = view.findViewById(R.id.troubleShootRecycler)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Setup SwipeRefreshLayout
+        // Initialize SwipeRefreshLayout
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
         swipeRefreshLayout.setOnRefreshListener {
-            fetchArticles() // Refresh articles when user pulls to refresh
+            fetchArticles() // Refresh articles on swipe down
         }
+
+        // Initialize SearchView
+        searchView = view.findViewById(R.id.searchView)
+        setupSearchView()
 
         // Initial fetch of articles
         fetchArticles()
 
         // Start auto-refresh every 10 seconds
         handler.postDelayed(autoRefreshRunnable, 10000)
+    }
+
+    private fun setupSearchView() {
+        // Set up listener for search input
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // Filter list when user submits the query
+                filterList(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Filter list when user types each letter
+                filterList(newText)
+                return true
+            }
+        })
+    }
+
+    private fun filterList(query: String?) {
+        // When query is empty, reset the list to original data
+        if (query.isNullOrEmpty()) {
+            itemAdapter.resetList()
+            return
+        }
+
+        // Filter the list based on the query
+        val filteredItems = items.filter {
+            it.title.contains(query, ignoreCase = true)
+        }.toMutableList()
+
+        // Update adapter with filtered data
+        itemAdapter.filterList(filteredItems)
     }
 
     private fun fetchArticles() {
@@ -70,7 +107,6 @@ class TroubleShoot : Fragment() {
             ) {
                 swipeRefreshLayout.isRefreshing = false // Stop the refresh indicator
 
-                // Check if response is successful
                 if (response.isSuccessful) {
                     val articles = response.body()
                     if (!articles.isNullOrEmpty()) {
@@ -87,27 +123,25 @@ class TroubleShoot : Fragment() {
                         }
                         recyclerView.adapter = itemAdapter
                     } else {
-                        // Show a message when there are no articles
+                        // Show message when no articles are found
                         Toast.makeText(requireContext(), "No articles found.", Toast.LENGTH_SHORT).show()
-                        recyclerView.adapter = null // Ensure RecyclerView is cleared
+                        recyclerView.adapter = null
                     }
                 } else {
-                    // Handle error response without hiding refresh
+                    // Handle error response
                     Toast.makeText(requireContext(), "Error retrieving data", Toast.LENGTH_SHORT).show()
-                    recyclerView.adapter = null // Ensure RecyclerView is cleared
+                    recyclerView.adapter = null
                 }
             }
 
             override fun onFailure(call: Call<List<TroubleshootContent>>, t: Throwable) {
-                swipeRefreshLayout.isRefreshing = false // Stop the refresh indicator
-                // Handle network failure
+                swipeRefreshLayout.isRefreshing = false
                 Toast.makeText(requireContext(), "No connection or server error", Toast.LENGTH_LONG).show()
-                recyclerView.adapter = null // Ensure RecyclerView is cleared
+                recyclerView.adapter = null
             }
         })
     }
 
-    // Stop the auto-refresh when the fragment is stopped
     override fun onStop() {
         super.onStop()
         handler.removeCallbacks(autoRefreshRunnable)
