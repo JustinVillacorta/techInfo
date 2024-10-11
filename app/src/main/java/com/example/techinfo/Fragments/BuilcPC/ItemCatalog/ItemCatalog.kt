@@ -65,19 +65,50 @@ class ItemCatalog : Fragment() {
         // Set adapter and handle item selection
         recyclerView.adapter = PartCatalogAdapter(items, { selectedPart ->
             // Toggle the selected state
-            selectedPart.isSelected = !selectedPart.isSelected // Toggle selection
+            val wasSelected = selectedPart.isSelected
+            selectedPart.isSelected = !wasSelected // Toggle selection
 
             // Create a result bundle and send it to the BuildPC fragment
             val result = Bundle().apply {
-                putString("partDetails", selectedPart.details)
+                putString("partDetails", if (selectedPart.isSelected) selectedPart.details else null)
                 putInt("position", selectedPart.position)
+                putInt("progress", getProgressForPart(selectedPart, selectedPart.isSelected)) // Get the correct progress
             }
+
             parentFragmentManager.setFragmentResult("selectedPart", result)
 
             // Pop back to previous fragment
             parentFragmentManager.popBackStack()
-        }, this) // Pass 'this' for Fragment instance
+        }, this) // Pass the current fragment instance
     }
+
+    // Method to get the progress for the selected part
+    private fun getProgressForPart(selectedPart: Parts, isSelected: Boolean): Int {
+        return if (isSelected) {
+            when (selectedPart.details) {
+                // CPU progress values
+                "Intel Core i7" -> 80
+                "AMD Ryzen 5" -> 10
+
+                // GPU progress values
+                "NVIDIA GeForce RTX 3080" -> 90
+                "AMD Radeon RX 6800" -> 85
+
+                // RAM progress values
+                "Corsair Vengeance 16GB" -> 60
+                "G.Skill Ripjaws 32GB" -> 70
+
+                // SSD progress values
+                "Kingston 1TB" -> 95
+
+                // Default progress for unrecognized parts
+                else -> 0
+            }
+        } else {
+            0 // Deselecting sets the progress back to 0
+        }
+    }
+
 
     // Sample data lists (ensure these match the actual structure of your Parts class)
     private fun getCpuList(): List<Parts> {
@@ -106,6 +137,7 @@ class ItemCatalog : Fragment() {
             Parts("Kingston 1TB", 3)
         )
     }
+
 
     companion object {
         private const val ARG_PART_TYPE = "part_type"
