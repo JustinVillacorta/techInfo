@@ -92,6 +92,9 @@ dependencies {
     implementation("com.google.android.material:material:1.9.0")
     implementation ("androidx.cardview:cardview:1.0.0")
 
+    // youtube
+    implementation ("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.1")
+
 
     // Additional dependencies
     implementation(libs.androidx.core.ktx)

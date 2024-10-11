@@ -24,17 +24,16 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <!-- Fixed ImageView at the top with 16dp padding -->
-                <ImageView
-                    android:id="@+id/videoThumbnailImageView"
+                <!-- YouTubePlayerView instead of ImageView for the video -->
+                <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+                    android:id="@+id/youtubePlayerView"
                     android:layout_width="match_parent"
                     android:layout_height="185dp"
-                    android:scaleType="centerCrop"
                     android:layout_gravity="top"
                     android:layout_marginBottom="8dp"
-                    android:padding="16dp" />
+                    android:visibility="gone" /> <!-- Initially hidden -->
 
-                <!-- Fixed Article Title below the ImageView with 10dp padding -->
+                <!-- Fixed Article Title below the YouTubePlayerView with 10dp padding -->
                 <TextView
                     android:id="@+id/articleTitleTextView"
                     android:layout_width="match_parent"
