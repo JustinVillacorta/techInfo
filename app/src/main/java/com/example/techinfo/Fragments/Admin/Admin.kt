@@ -65,10 +65,14 @@ class Admin : Fragment() {
         }
         val forgotpassword = view.findViewById<TextView>(R.id.ForgotPassword)
 
-        forgotpassword.setOnClickListener{
-            val intent = Intent(requireContext(), ForgotPassword::class.java)
-            startActivity(intent)
+        forgotpassword.setOnClickListener {
+            // Replace with the ForgotPassword fragment using FragmentManager
+            val fragmentTransaction = parentFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.fragment_container, Forgot_Password())
+            fragmentTransaction.addToBackStack(null) // Optional: if you want to add to back stack
+            fragmentTransaction.commit()
         }
+
     }
 
 
