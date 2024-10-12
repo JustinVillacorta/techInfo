@@ -20,7 +20,7 @@
             android:paddingBottom="8dp">
 
             <TextView
-                android:layout_width="50dp"
+                android:layout_width="76dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Processing"
@@ -29,20 +29,14 @@
 
             <ProgressBar
                 style="@android:style/Widget.ProgressBar.Horizontal"
+                android:id="@+id/progressbarCpu"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:progress="70"
+
                 android:max="100"
                 android:progressTint="@android:color/holo_blue_light" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="70%"
-                android:textSize="16sp"
-                android:layout_gravity="center_vertical"
-                android:paddingStart="8dp" />
         </LinearLayout>
 
         <!-- Rendering -->
@@ -53,7 +47,7 @@
             android:paddingBottom="8dp">
 
             <TextView
-                android:layout_width="50dp"
+                android:layout_width="76dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Rendering"
@@ -63,22 +57,16 @@
             <ProgressBar
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="0dp"
+                android:id="@+id/progressbarGpu"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:progress="85"
+
                 android:max="100"
                 android:progressTint="@android:color/holo_green_light" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="85%"
-                android:textSize="16sp"
-                android:layout_gravity="center_vertical"
-                android:paddingStart="8dp" />
         </LinearLayout>
 
-        <!-- Data Transfer Speed -->
+        <!-- Memory -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -86,7 +74,7 @@
             android:paddingBottom="8dp">
 
             <TextView
-                android:layout_width="50dp"
+                android:layout_width="76dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Memory"
@@ -96,22 +84,16 @@
             <ProgressBar
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="0dp"
+                android:id="@+id/progressbarMemory"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:progress="65"
+
                 android:max="100"
                 android:progressTint="@android:color/holo_orange_light" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="65%"
-                android:textSize="16sp"
-                android:layout_gravity="center_vertical"
-                android:paddingStart="8dp" />
         </LinearLayout>
 
-        <!-- Data Storage -->
+        <!-- Storage -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -119,7 +101,7 @@
             android:paddingBottom="8dp">
 
             <TextView
-                android:layout_width="50dp"
+                android:layout_width="76dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Storage"
@@ -130,18 +112,12 @@
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:id="@+id/progressbarStorage"
                 android:layout_weight="3"
-                android:progress="90"
+
                 android:max="100"
                 android:progressTint="@android:color/holo_red_light" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="90%"
-                android:textSize="16sp"
-                android:layout_gravity="center_vertical"
-                android:paddingStart="8dp" />
         </LinearLayout>
 
         <!-- Power Capacity -->
@@ -152,31 +128,24 @@
             android:paddingBottom="8dp">
 
             <TextView
-                android:layout_width="50dp"
-                android:layout_height="wrap_content"
+                android:layout_width="76dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:text="Power Capacity"
-                android:textSize="16sp"
-                android:layout_gravity="center_vertical" />
+                android:textSize="16sp" />
 
             <ProgressBar
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:progress="75"
+                android:id="@+id/progressbarPsu"
                 android:max="100"
+
                 android:progressTint="@android:color/holo_purple" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="75%"
-                android:textSize="16sp"
-                android:layout_gravity="center_vertical"
-                android:paddingStart="8dp" />
         </LinearLayout>
-
     </LinearLayout>
 
     <!-- RecyclerView for Components -->
