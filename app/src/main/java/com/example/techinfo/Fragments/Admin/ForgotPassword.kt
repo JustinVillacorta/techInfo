@@ -19,7 +19,7 @@ class ForgotPassword : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.activity_forgot_password, container, false)
+        return inflater.inflate(R.layout.fragment_forgot__password, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
