@@ -33,7 +33,7 @@ class TroubleshootContentFragment : Fragment() {
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var scrollView: ScrollView
     private var articleId: Int? = null // Store article ID
-    private lateinit var fullscreenHelper: FullscreenHelper // Fullscreen helper
+    private var isFullscreen: Boolean = false // Track fullscreen state
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,9 +55,6 @@ class TroubleshootContentFragment : Fragment() {
         updatedTimeTextView = view.findViewById(R.id.updatedTimeTextView)
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
         scrollView = view.findViewById(R.id.scrollView)
-
-        // Initialize FullscreenHelper
-        fullscreenHelper = FullscreenHelper(requireActivity())
 
         // Add YouTubePlayerView to the lifecycle (important)
         lifecycle.addObserver(youtubePlayerView)
@@ -97,17 +94,23 @@ class TroubleshootContentFragment : Fragment() {
 
                 // Handle full-screen toggling
                 youtubePlayerView.setOnClickListener {
-                    // Trigger full-screen mode when the player is clicked
-                    if (activity?.requestedOrientation != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-                        fullscreenHelper.enterFullScreen()
-                    } else {
-                        activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                        fullscreenHelper.exitFullScreen()
-                    }
+                    toggleFullScreen()
                 }
             }
         })
+    }
+
+    // Toggle fullscreen mode manually
+    private fun toggleFullScreen() {
+        if (isFullscreen) {
+            // Exit fullscreen: Portrait mode
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+            isFullscreen = false
+        } else {
+            // Enter fullscreen: Landscape mode
+            activity?.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+            isFullscreen = true
+        }
     }
 
     // Load video into YouTubePlayerView

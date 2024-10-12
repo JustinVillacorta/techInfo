@@ -19,21 +19,12 @@
             android:name=".Fragments.Admin.ForgotPassword"
             android:exported="false" />
         <activity
-            android:name=".Fragments.PcComparison.PcComparisonBottomNav"
-            android:exported="false" />
-        <activity
-            android:name=".Fragments.Admin.AdminBottomNav"
-            android:exported="false" />
-        <activity
-            android:name=".ItemsDrawer"
-            android:exported="false" />
-        <activity
             android:name=".MainNavigation.MainNavigation"
             android:exported="false" />
         <activity
-            android:name=".main_navigation"
-            android:exported="false"
-            android:theme="@style/Theme.TechInfo" />
+            android:name=".Fragments.Troubleshoot.troubleshoot_content.TroubleshootContentFragment"
+            android:configChanges="orientation|screenSize">
+        </activity>
         <activity
             android:name=".MainActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar"
