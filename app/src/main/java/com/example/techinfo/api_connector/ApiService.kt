@@ -1,8 +1,22 @@
 package com.example.techinfo.api_connector
 
 import retrofit2.Call
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import com.google.gson.annotations.SerializedName
+
+// Data class for OTP request
+data class OTPRequest(
+    val email: String
+)
+
+// Data class for password reset request
+data class PasswordResetRequest(
+    val email: String,
+    val token: String,
+    val password: String
+)
 
 data class Processor(
     val processor_id: Int,
@@ -28,12 +42,6 @@ data class ScreenResolution(
     val screen_resolutions_id: Int,
     val resolution_size: String,
     val resolutions_name: String
-)
-
-data class JsonData(
-    val processors: List<Processor>,
-    val gpuses: List<Gpu>,
-    val screen_resolutions: List<ScreenResolution>
 )
 
 data class TroubleShoot_data(
@@ -65,6 +73,11 @@ interface ApiService {
     @GET("accounts") // Adjust the endpoint according to your API
     fun getUsers(): Call<List<User>>
 
-    @GET("jsondata") // New endpoint to fetch the JSON data
-    fun getJsonData(): Call<JsonData>
+    // Request to send OTP to email
+    @POST("admin/request-reset")
+    fun requestOTP(@Body request: OTPRequest): Call<Void>
+
+    // Request to reset password with OTP and new password
+    @POST("admin/reset-password")
+    fun resetPassword(@Body request: PasswordResetRequest): Call<Void>
 }

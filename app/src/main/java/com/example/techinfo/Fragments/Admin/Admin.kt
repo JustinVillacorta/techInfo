@@ -23,6 +23,17 @@ class Admin : Fragment() {
     private lateinit var datapass: PassInt
     private lateinit var sharedPreferences: android.content.SharedPreferences
 
+    // Initialize datapass in onAttach() method to avoid UninitializedPropertyAccessException
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            // Ensure the context implements the PassInt interface
+            datapass = context as PassInt
+        } catch (e: ClassCastException) {
+            throw ClassCastException("$context must implement PassInt")
+        }
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -93,7 +104,7 @@ class Admin : Fragment() {
 
                             sharedPreferences.edit().putBoolean("isAdminLoggedIn", true).apply()
                             navigateToAdminView()
-                            sendData()
+                            sendData() // Sending data after login
                         } else {
                             Log.d("Admin", "Invalid username or password")
                             if (isAdded) {
@@ -136,7 +147,7 @@ class Admin : Fragment() {
 
     private fun sendData() {
         val datasending = 1
-        datapass.PassInt(datasending)
+        datapass.PassInt(datasending) // This will now work because datapass is initialized in onAttach()
     }
 
     override fun onDestroy() {
