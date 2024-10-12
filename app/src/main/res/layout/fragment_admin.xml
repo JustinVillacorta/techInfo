@@ -4,23 +4,20 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <!-- CardView wrapping the entire content -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="16dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="8dp"
-        android:background="@drawable/background_card"> <!-- Assuming you want a background drawable -->
+        android:background="@drawable/background_card">
 
-        <!-- Layout for all the content inside the CardView -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Logo at the top -->
             <ImageView
                 android:id="@+id/logoImageView"
                 android:layout_width="200dp"
@@ -45,13 +42,14 @@
                     android:padding="12dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Password Input -->
+            <!-- Password Input with Show/Hide functionality inside -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/passwordInputLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Password"
-                android:layout_marginTop="24dp">
+                android:layout_marginTop="24dp"
+                app:endIconMode="password_toggle">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/passwordInput"
@@ -61,25 +59,24 @@
                     android:padding="12dp" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Login Button -->
             <Button
                 android:id="@+id/loginButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Login"
-                android:layout_marginTop="32dp"/>
+                android:layout_marginTop="24dp"
+                android:backgroundTint="@color/blue"
+                android:textColor="@android:color/white" />
 
-            <!-- Forgot Password -->
+            <!-- Forgot Password Text aligned to the right -->
             <TextView
                 android:id="@+id/ForgotPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Forgot Password?"
+                android:textColor="@color/gray"
                 android:layout_marginTop="16dp"
-                android:clickable="true"
-                android:text="Forgot Password"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"
-                android:gravity="center"/>
+                android:layout_gravity="end" /> <!-- Align to the right -->
 
         </LinearLayout>
     </androidx.cardview.widget.CardView>

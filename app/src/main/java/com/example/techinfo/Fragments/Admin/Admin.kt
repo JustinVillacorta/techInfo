@@ -1,7 +1,6 @@
 package com.example.techinfo.Fragments.Admin
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,7 +11,6 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.example.techinfo.R
 import com.example.techinfo.api_connector.RetrofitInstance
 import com.example.techinfo.api_connector.User
@@ -41,7 +39,6 @@ class Admin : Fragment() {
         // Check if the admin is already logged in
         val isAdminLoggedIn = sharedPreferences.getBoolean("isAdminLoggedIn", false)
         if (isAdminLoggedIn) {
-            // Admin is already logged in, directly navigate to AdminView
             navigateToAdminView()
             return
         }
@@ -50,7 +47,6 @@ class Admin : Fragment() {
         val passwordInput = view.findViewById<EditText>(R.id.passwordInput)
         val loginButton = view.findViewById<Button>(R.id.loginButton)
 
-        // Handle login button click
         loginButton.setOnClickListener {
             val username = usernameInput.text.toString().trim()
             val password = passwordInput.text.toString().trim()
@@ -63,24 +59,21 @@ class Admin : Fragment() {
                 Toast.makeText(requireContext(), "Please fill in all fields", Toast.LENGTH_SHORT).show()
             }
         }
-        val forgotpassword = view.findViewById<TextView>(R.id.ForgotPassword)
 
-        forgotpassword.setOnClickListener{
-            val intent = Intent(requireContext(), ForgotPassword::class.java)
-            startActivity(intent)
+        val forgotPassword = view.findViewById<TextView>(R.id.ForgotPassword)
+        forgotPassword.setOnClickListener {
+            val fragmentTransaction = parentFragmentManager.beginTransaction()
+            fragmentTransaction.replace(R.id.fragment_container, ForgotPassword())
+            fragmentTransaction.addToBackStack(null)
+            fragmentTransaction.commit()
         }
     }
 
-
-
-    // Moved the authentication logic to use RetrofitInstance
     private fun authenticateUser(username: String, password: String) {
         Log.d("Admin", "Authenticating user...")
 
-        // Fetch API service from RetrofitInstance
         val apiService = RetrofitInstance.getApiService()
 
-        // Fetch users from the API
         apiService.getUsers().enqueue(object : Callback<List<User>> {
             override fun onResponse(call: Call<List<User>>, response: Response<List<User>>) {
                 Log.d("Admin", "Received API response")
@@ -91,7 +84,6 @@ class Admin : Fragment() {
                     if (users != null) {
                         Log.d("Admin", "User list: $users")
 
-                        // Check if username and password match
                         val user = users.find { it.username == username && it.password == password }
                         if (user != null) {
                             Log.d("Admin", "Login successful for user: $username")
@@ -99,12 +91,8 @@ class Admin : Fragment() {
                                 Toast.makeText(requireContext(), "Login Successful", Toast.LENGTH_SHORT).show()
                             }
 
-                            // Save login state in SharedPreferences
                             sharedPreferences.edit().putBoolean("isAdminLoggedIn", true).apply()
-
-                            // Navigate to AdminView after successful login
                             navigateToAdminView()
-
                             sendData()
                         } else {
                             Log.d("Admin", "Invalid username or password")
@@ -135,28 +123,15 @@ class Admin : Fragment() {
         })
     }
 
-    // Navigate to the AdminView fragment after login success
     private fun navigateToAdminView() {
-        // Create an instance of AdminView fragment
         val adminViewFragment = AdminView()
-
-        // Replace the current Admin fragment with AdminView without adding to the back stack
         parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, adminViewFragment) // Use your actual container ID
-            .commit() // No addToBackStack(null), so pressing back won't return to Admin login
+            .replace(R.id.fragment_container, adminViewFragment)
+            .commit()
     }
 
     interface PassInt {
         fun PassInt(data: Int)
-    }
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        try {
-            datapass = context as PassInt
-        } catch (e: ClassCastException) {
-            throw ClassCastException("$context must implement PassInt")
-        }
     }
 
     private fun sendData() {
@@ -166,8 +141,6 @@ class Admin : Fragment() {
 
     override fun onDestroy() {
         super.onDestroy()
-
-        // Clear login state when the activity is destroyed (not just when the fragment is destroyed)
         sharedPreferences.edit().putBoolean("isAdminLoggedIn", false).apply()
     }
 }
