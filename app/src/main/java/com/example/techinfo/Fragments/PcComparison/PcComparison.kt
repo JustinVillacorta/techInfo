@@ -47,7 +47,7 @@ class PcComparison : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         val builds = resources.getStringArray(R.array.Builds)
         val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, builds)
-        view.findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView5).setAdapter(arrayAdapter)
-        view.findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView3).setAdapter(arrayAdapter)
+        view.findViewById<AutoCompleteTextView>(R.id.Parts1).setAdapter(arrayAdapter)
+        view.findViewById<AutoCompleteTextView>(R.id.Parts2).setAdapter(arrayAdapter)
     }
 }

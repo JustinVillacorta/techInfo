@@ -9,7 +9,7 @@
 
     <!-- Build 1 Dropdown -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout2"
+        android:id="@+id/ComponentsDropDown"
         style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
         android:layout_width="143dp"
         android:layout_height="64dp"
@@ -21,7 +21,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextView5"
+            android:id="@+id/Parts1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="none"
@@ -30,7 +30,7 @@
 
     <!-- Build 2 Dropdown -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout3"
+        android:id="@+id/Parts2DropDown"
         style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
         android:layout_width="143dp"
         android:layout_height="64dp"
@@ -41,11 +41,11 @@
         android:hint="Builds"
 
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textInputLayout2"
+        app:layout_constraintStart_toEndOf="@+id/ComponentsDropDown"
         app:layout_constraintTop_toTopOf="parent">
 
         <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextView3"
+            android:id="@+id/Parts2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="none"
@@ -64,7 +64,7 @@
         android:scrollbars="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout2" />
+        app:layout_constraintTop_toBottomOf="@+id/ComponentsDropDown" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
