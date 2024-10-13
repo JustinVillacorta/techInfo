@@ -1,27 +1,35 @@
-package com.example.academic
+package com.example.techinfo
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.techinfo.Fragments.BuilcPC.ItemCatalog.PartCatalogAdapter
-import com.example.techinfo.Fragments.BuilcPC.ItemCatalog.Parts
-import com.example.techinfo.R
+import com.example.techinfo.api_connector.*
+import com.example.techinfo.Fragments.BuilcPC.ComponentData
+import com.example.techinfo.api_connector.RetrofitInstance
+import com.example.techinfo.Fragments.BuildPCmodules.Adapter
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class ItemCatalog : Fragment() {
 
-    private lateinit var partType: String
     private lateinit var recyclerView: RecyclerView
+    private lateinit var componentAdapter: Adapter
+    private val componentDataList = mutableListOf<ComponentData>()
+    private val apiService = RetrofitInstance.getApiService()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            partType = it.getString(ARG_PART_TYPE) ?: "CPU"
+    companion object {
+        fun newInstance(componentName: String): ItemCatalog {
+            val fragment = ItemCatalog()
+            val bundle = Bundle()
+            bundle.putString("componentName", componentName)
+            fragment.arguments = bundle
+            return fragment
         }
     }
 
@@ -35,116 +43,210 @@ class ItemCatalog : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Setup AutoCompleteTextViews (ensure these IDs exist in your layout)
-        val models = resources.getStringArray(R.array.Models)
-        val chipset = resources.getStringArray(R.array.Chipset)
-
-        val arrayAdapter1 = ArrayAdapter(requireContext(), R.layout.buildpc_filter, chipset)
-        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.buildpc_filter, models)
-
-        view.findViewById<AutoCompleteTextView>(R.id.chipset_info).setAdapter(arrayAdapter1)
-        view.findViewById<AutoCompleteTextView>(R.id.Models_info).setAdapter(arrayAdapter)
-
-        // Initialize RecyclerView
         recyclerView = view.findViewById(R.id.recyclerViewPartCatalog)
-        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        // Load the catalog and set up the click listener
-        loadCatalog(partType)
-    }
+        val componentName = arguments?.getString("componentName") ?: ""
+        fetchComponentData(componentName)
 
-    private fun loadCatalog(partType: String) {
-        val items = when (partType) {
-            "CPU" -> getCpuList()
-            "GPU" -> getGpuList()
-            "RAM" -> getRamList()
-            "SSD" -> getSSDList()
-            else -> emptyList()
-        }
+        componentAdapter = Adapter(componentDataList) { component, position ->
+            val resultBundle = Bundle()
+            resultBundle.putString("partDetails", component.partDetails)
+            resultBundle.putInt("position", position)
+            resultBundle.putInt("progress", 100)
 
-        // Set adapter and handle item selection
-        recyclerView.adapter = PartCatalogAdapter(items, { selectedPart ->
-            // Toggle the selected state
-            val wasSelected = selectedPart.isSelected
-            selectedPart.isSelected = !wasSelected // Toggle selection
-
-            // Create a result bundle and send it to the BuildPC fragment
-            val result = Bundle().apply {
-                putString("partDetails", if (selectedPart.isSelected) selectedPart.details else null)
-                putInt("position", selectedPart.position)
-                putInt("progress", getProgressForPart(selectedPart, selectedPart.isSelected)) // Get the correct progress
-            }
-
-            parentFragmentManager.setFragmentResult("selectedPart", result)
-
-            // Pop back to previous fragment
+            parentFragmentManager.setFragmentResult("selectedPart", resultBundle)
             parentFragmentManager.popBackStack()
-        }, this) // Pass the current fragment instance
-    }
-
-    // Method to get the progress for the selected part
-    private fun getProgressForPart(selectedPart: Parts, isSelected: Boolean): Int {
-        return if (isSelected) {
-            when (selectedPart.details) {
-                // CPU progress values
-                "Intel Core i7" -> 80
-                "AMD Ryzen 5" -> 10
-
-                // GPU progress values
-                "NVIDIA GeForce RTX 3080" -> 90
-                "AMD Radeon RX 6800" -> 85
-
-                // RAM progress values
-                "Corsair Vengeance 16GB" -> 60
-                "G.Skill Ripjaws 32GB" -> 70
-
-                // SSD progress values
-                "Kingston 1TB" -> 95
-
-                // Default progress for unrecognized parts
-                else -> 0
-            }
-        } else {
-            0 // Deselecting sets the progress back to 0
         }
+
+
+        recyclerView.adapter = componentAdapter
     }
 
+    private fun fetchComponentData(componentName: String) {
+        when (componentName.lowercase()) {
+            "cpu" -> {
+                apiService.getProcessors().enqueue(object : Callback<List<Processor>> {
+                    override fun onResponse(call: Call<List<Processor>>, response: Response<List<Processor>>) {
+                        if (response.isSuccessful) {
+                            componentDataList.clear()
+                            response.body()?.forEach { processor ->
+                                componentDataList.add(ComponentData(processor.processor_name))
+                            }
+                            componentAdapter.notifyDataSetChanged()
+                        } else {
+                            Log.e("APIError", "Error response: ${response.code()}")
+                        }
+                    }
 
-    // Sample data lists (ensure these match the actual structure of your Parts class)
-    private fun getCpuList(): List<Parts> {
-        return listOf(
-            Parts("Intel Core i7", 0),
-            Parts("AMD Ryzen 5", 0)
-        )
-    }
+                    override fun onFailure(call: Call<List<Processor>>, t: Throwable) {
+                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
+                    }
+                })
+            }
 
-    private fun getGpuList(): List<Parts> {
-        return listOf(
-            Parts("NVIDIA GeForce RTX 3080", 1),
-            Parts("AMD Radeon RX 6800", 1)
-        )
-    }
+            "gpu" -> {
+                apiService.getGpus().enqueue(object : Callback<List<Gpu>> {
+                    override fun onResponse(call: Call<List<Gpu>>, response: Response<List<Gpu>>) {
+                        if (response.isSuccessful) {
+                            componentDataList.clear()
+                            response.body()?.forEach { gpu ->
+                                componentDataList.add(ComponentData(gpu.gpu_name))
+                            }
+                            componentAdapter.notifyDataSetChanged()
+                        } else {
+                            Log.e("APIError", "Error response: ${response.code()}")
+                        }
+                    }
 
-    private fun getRamList(): List<Parts> {
-        return listOf(
-            Parts("Corsair Vengeance 16GB", 2),
-            Parts("G.Skill Ripjaws 32GB", 2)
-        )
-    }
+                    override fun onFailure(call: Call<List<Gpu>>, t: Throwable) {
+                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
+                    }
+                })
+            }
 
-    private fun getSSDList(): List<Parts> {
-        return listOf(
-            Parts("Kingston 1TB", 3)
-        )
-    }
+            "ram" -> {
+                apiService.getRams().enqueue(object : Callback<List<Ram>> {
+                    override fun onResponse(call: Call<List<Ram>>, response: Response<List<Ram>>) {
+                        if (response.isSuccessful) {
+                            componentDataList.clear()
+                            response.body()?.forEach { ram ->
+                                componentDataList.add(ComponentData(ram.ram_name))
+                            }
+                            componentAdapter.notifyDataSetChanged()
+                        } else {
+                            Log.e("APIError", "Error response: ${response.code()}")
+                        }
+                    }
 
+                    override fun onFailure(call: Call<List<Ram>>, t: Throwable) {
+                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
+                    }
+                })
+            }
 
-    companion object {
-        private const val ARG_PART_TYPE = "part_type"
+            "motherboard" -> {
+                apiService.getMotherboards().enqueue(object : Callback<List<Motherboard>> {
+                    override fun onResponse(call: Call<List<Motherboard>>, response: Response<List<Motherboard>>) {
+                        if (response.isSuccessful) {
+                            componentDataList.clear()
+                            response.body()?.forEach { motherboard ->
+                                componentDataList.add(ComponentData(motherboard.motherboard_name))
+                            }
+                            componentAdapter.notifyDataSetChanged()
+                        } else {
+                            Log.e("APIError", "Error response: ${response.code()}")
+                        }
+                    }
 
-        fun newInstance(partType: String) = ItemCatalog().apply {
-            arguments = Bundle().apply {
-                putString(ARG_PART_TYPE, partType)
+                    override fun onFailure(call: Call<List<Motherboard>>, t: Throwable) {
+                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
+                    }
+                })
+            }
+
+            "psu" -> {
+                apiService.getPowerSupplyUnits().enqueue(object : Callback<List<PowerSupplyUnit>> {
+                    override fun onResponse(call: Call<List<PowerSupplyUnit>>, response: Response<List<PowerSupplyUnit>>) {
+                        if (response.isSuccessful) {
+                            componentDataList.clear()
+                            response.body()?.forEach { psu ->
+                                componentDataList.add(ComponentData(psu.psu_name))
+                            }
+                            componentAdapter.notifyDataSetChanged()
+                        } else {
+                            Log.e("APIError", "Error response: ${response.code()}")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<PowerSupplyUnit>>, t: Throwable) {
+                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
+                    }
+                })
+            }
+
+            "case" -> {
+                apiService.getComputerCases().enqueue(object : Callback<List<Case>> {
+                    override fun onResponse(call: Call<List<Case>>, response: Response<List<Case>>) {
+                        if (response.isSuccessful) {
+                            componentDataList.clear()
+                            response.body()?.forEach { computerCase ->
+                                componentDataList.add(ComponentData(computerCase.case_name))
+                            }
+                            componentAdapter.notifyDataSetChanged()
+                        } else {
+                            Log.e("APIError", "Error response: ${response.code()}")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Case>>, t: Throwable) {
+                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
+                    }
+                })
+            }
+
+            "cpu cooler" -> {
+                apiService.getCpuCoolers().enqueue(object : Callback<List<CpuCooler>> {
+                    override fun onResponse(call: Call<List<CpuCooler>>, response: Response<List<CpuCooler>>) {
+                        if (response.isSuccessful) {
+                            componentDataList.clear()
+                            response.body()?.forEach { cooler ->
+                                componentDataList.add(ComponentData(cooler.cooler_name))
+                            }
+                            componentAdapter.notifyDataSetChanged()
+                        } else {
+                            Log.e("APIError", "Error response: ${response.code()}")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<CpuCooler>>, t: Throwable) {
+                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
+                    }
+                })
+            }
+
+            "hdd" -> {
+                apiService.getHdds().enqueue(object : Callback<List<Hdd>> {
+                    override fun onResponse(call: Call<List<Hdd>>, response: Response<List<Hdd>>) {
+                        if (response.isSuccessful) {
+                            componentDataList.clear()
+                            response.body()?.forEach { hdd ->
+                                componentDataList.add(ComponentData(hdd.hdd_name))
+                            }
+                            componentAdapter.notifyDataSetChanged()
+                        } else {
+                            Log.e("APIError", "Error response: ${response.code()}")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Hdd>>, t: Throwable) {
+                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
+                    }
+                })
+            }
+
+            "ssd" -> {
+                apiService.getSsds().enqueue(object : Callback<List<Ssd>> {
+                    override fun onResponse(call: Call<List<Ssd>>, response: Response<List<Ssd>>) {
+                        if (response.isSuccessful) {
+                            componentDataList.clear()
+                            response.body()?.forEach { ssd ->
+                                componentDataList.add(ComponentData(ssd.ssd_name))
+                            }
+                            componentAdapter.notifyDataSetChanged()
+                        } else {
+                            Log.e("APIError", "Error response: ${response.code()}")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Ssd>>, t: Throwable) {
+                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
+                    }
+                })
+            }
+
+            else -> {
+                Log.e("APIError", "Invalid component type: $componentName")
             }
         }
     }

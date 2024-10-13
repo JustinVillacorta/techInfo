@@ -10,10 +10,10 @@ import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.academic.ItemCatalog
 import com.example.techinfo.Fragments.BuilcPC.ComponentData
 import com.example.techinfo.Fragments.BuildPCmodules.Adapter
 import com.example.techinfo.R
+import com.example.techinfo.ItemCatalog
 
 class BuildPC : Fragment() {
 
@@ -47,7 +47,7 @@ class BuildPC : Fragment() {
 
         recyclerView = view.findViewById(R.id.componentsRecyclerView)
         componentAdapter = Adapter(componentDataList) { component, position ->
-            // Store the name in a local variable
+            // When a component is clicked, pass the component name to the ItemCatalog fragment
             val componentName = component.name
             if (!componentName.isNullOrEmpty()) { // Check for both null and empty strings
                 val partCatalogFragment = ItemCatalog.newInstance(componentName)
@@ -72,7 +72,7 @@ class BuildPC : Fragment() {
             // Update the progress bars based on selected components
             updateProgressBars(position, progress)
 
-            // Existing logic to handle selected parts
+            // Handle selected parts
             if (position in componentDataList.indices) {
                 val component = componentDataList[position]
 

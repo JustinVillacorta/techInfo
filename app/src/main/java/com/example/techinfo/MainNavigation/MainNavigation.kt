@@ -21,12 +21,11 @@ import com.example.techinfo.R
 import com.google.android.material.navigation.NavigationView
 import com.example.techinfo.databinding.ActivityMainNavigationBinding
 
-// Main Navigation Drawer For Tech Info
 class MainNavigation : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, Admin.PassInt {
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navigationView: NavigationView
-    private lateinit var binding: ActivityMainNavigationBinding // Assuming you're using View Binding
+    private lateinit var binding: ActivityMainNavigationBinding
     var recievedData: Int? = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +50,6 @@ class MainNavigation : AppCompatActivity(), NavigationView.OnNavigationItemSelec
                     replaceFragment(PartsComparison())
                     true
                 }
-
                 R.id.pc_parts -> {
                     replaceFragment(AdminView())
                     true
@@ -70,9 +68,9 @@ class MainNavigation : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
-        // Initialize with BuildPC fragment and hide bottom navigation
+        // Initialize with BuildPCFragment and hide bottom navigation
         if (savedInstanceState == null) {
-            replaceFragment(BuildPC())
+            replaceFragment(BuildPC())  // Use BuildPCFragment instead of BuildPC
             navigationView.setCheckedItem(R.id.nav_buildpc)
             binding.bottomNavigationView.visibility = View.GONE // Hide Bottom Nav initially
         }
@@ -81,7 +79,7 @@ class MainNavigation : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_buildpc -> {
-                replaceFragment(BuildPC())
+                replaceFragment(BuildPC())  // Use BuildPCFragment instead of BuildPC
                 binding.bottomNavigationView.visibility = View.GONE // Hide Bottom Nav
             }
             R.id.nav_pc_compare -> {
@@ -113,32 +111,27 @@ class MainNavigation : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         return true
     }
 
-    // Method to update the bottom navigation menu dynamically
     private fun updateBottomNavigation(menuRes: Int) {
-        binding.bottomNavigationView.menu.clear() // Clear existing menu items
-        binding.bottomNavigationView.inflateMenu(menuRes) // Inflate new menu
-        binding.bottomNavigationView.visibility = View.VISIBLE // Show Bottom Nav
+        binding.bottomNavigationView.menu.clear()
+        binding.bottomNavigationView.inflateMenu(menuRes)
+        binding.bottomNavigationView.visibility = View.VISIBLE
     }
 
-    // Interface method to receive data from Admin login process
     override fun PassInt(data: Int) {
         recievedData = data
         if (recievedData == 1) {
-            // After login, replace fragment with AdminView and show the bottom navigation
             replaceFragment(AdminView())
-            binding.bottomNavigationView.visibility = View.VISIBLE // Show Bottom Nav after login
-            updateBottomNavigation(R.menu.bottom_navbar) // Show Admin specific nav menu
+            binding.bottomNavigationView.visibility = View.VISIBLE
+            updateBottomNavigation(R.menu.bottom_navbar)
         }
     }
 
-    // Helper method to replace fragments in the container
     private fun replaceFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .commit()
     }
 
-    // Close navigation drawer when back button is pressed
     override fun onBackPressed() {
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)

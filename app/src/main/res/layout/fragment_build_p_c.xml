@@ -33,7 +33,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-
                 android:max="100"
                 android:progressTint="@android:color/holo_blue_light" />
 
@@ -56,11 +55,10 @@
 
             <ProgressBar
                 style="@android:style/Widget.ProgressBar.Horizontal"
-                android:layout_width="0dp"
                 android:id="@+id/progressbarGpu"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-
                 android:max="100"
                 android:progressTint="@android:color/holo_green_light" />
 
@@ -83,11 +81,10 @@
 
             <ProgressBar
                 style="@android:style/Widget.ProgressBar.Horizontal"
-                android:layout_width="0dp"
                 android:id="@+id/progressbarMemory"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-
                 android:max="100"
                 android:progressTint="@android:color/holo_orange_light" />
 
@@ -110,11 +107,10 @@
 
             <ProgressBar
                 style="@android:style/Widget.ProgressBar.Horizontal"
+                android:id="@+id/progressbarStorage"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/progressbarStorage"
                 android:layout_weight="3"
-
                 android:max="100"
                 android:progressTint="@android:color/holo_red_light" />
 
@@ -137,12 +133,11 @@
 
             <ProgressBar
                 style="@android:style/Widget.ProgressBar.Horizontal"
+                android:id="@+id/progressbarPsu"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
-                android:id="@+id/progressbarPsu"
                 android:max="100"
-
                 android:progressTint="@android:color/holo_purple" />
 
         </LinearLayout>
