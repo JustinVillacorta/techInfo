@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.techinfo.api_connector.*
 import com.example.techinfo.Fragments.BuilcPC.ComponentData
+import com.example.techinfo.Fragments.BuildPC.ItemCatalog.PartCatalogAdapter
 import com.example.techinfo.api_connector.RetrofitInstance
 import com.example.techinfo.Fragments.BuildPCmodules.Adapter
 import retrofit2.Call
@@ -19,7 +20,7 @@ import retrofit2.Response
 class ItemCatalog : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var componentAdapter: Adapter
+    private lateinit var componentAdapter: PartCatalogAdapter
     private val componentDataList = mutableListOf<ComponentData>()
     private val apiService = RetrofitInstance.getApiService()
 
@@ -49,17 +50,19 @@ class ItemCatalog : Fragment() {
         val componentName = arguments?.getString("componentName") ?: ""
         fetchComponentData(componentName)
 
-        componentAdapter = Adapter(componentDataList) { component, position ->
-            val resultBundle = Bundle()
-            resultBundle.putString("partDetails", component.partDetails)
-            resultBundle.putInt("position", position)
-            resultBundle.putInt("progress", 100)
+        componentAdapter = PartCatalogAdapter(componentDataList, { component, position ->
+            // component is of type ComponentData
+            val resultBundle = Bundle().apply {
+                putString("partDetails", component.partDetails)
+                putInt("position", position)
+                putInt("progress", 100)
+            }
 
             parentFragmentManager.setFragmentResult("selectedPart", resultBundle)
             parentFragmentManager.popBackStack()
-        }
+        }, this)  // Pass 'this' as the Fragment instance
 
-
+// Setting the adapter to RecyclerView
         recyclerView.adapter = componentAdapter
     }
 
