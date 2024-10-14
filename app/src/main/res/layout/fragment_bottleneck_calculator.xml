@@ -1,59 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".Fragments.Bottleneck.bottleneck_calculator">
+    android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
-
-    <Button
-        android:id="@+id/ButtonOut"
-        android:layout_width="396dp"
-        android:layout_height="46dp"
-        android:text="Button"
-        app:layout_constraintBottom_toTopOf="@id/title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/title"
-        android:text="BOTTLENECK RESULT"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@id/CircularProgress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ButtonOut"
-        />
-
-    <ProgressBar
-        android:id="@+id/CircularProgress"
-        style="@style/CircularProgressBar"
-        android:layout_width="245dp"
-        android:layout_height="245dp"
-        android:progress="100"
-        app:layout_constraintTop_toBottomOf="@id/title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
-    <TextView
-        android:id="@+id/TextPercent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="50%"
-        app:layout_constraintBottom_toBottomOf="@id/CircularProgress"
-        app:layout_constraintTop_toTopOf="@id/CircularProgress"
-        app:layout_constraintEnd_toEndOf="@id/CircularProgress"
-        app:layout_constraintStart_toStartOf="@id/CircularProgress"/>
-    <TextView
-        android:id="@+id/TextPara"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/lorem_ipsum"
-        app:layout_constraintTop_toBottomOf="@id/CircularProgress"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        android:layout_height="match_parent">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- CardView as a floating background with rounded corners and shadow -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:id="@+id/cardView"
+            android:layout_height="match_parent"
+            android:layout_margin="16dp"
+            android:background="@drawable/background_card"
+            app:cardElevation="8dp"
+            app:cardCornerRadius="20dp">
+
+            <!-- Layout for all the content inside the CardView -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!-- Fixed ImageView at the top with 16dp padding -->
+                <ImageView
+                    android:id="@+id/videoThumbnailImageView"
+                    android:layout_width="match_parent"
+                    android:layout_height="185dp"
+                    android:scaleType="centerCrop"
+                    android:layout_gravity="top"
+                    android:layout_marginBottom="8dp"
+                    android:padding="16dp" />
+
+                <!-- Fixed Article Title below the ImageView with 10dp padding -->
+                <TextView
+                    android:id="@+id/articleTitleTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_marginBottom="16dp"
+                    android:padding="10dp" />
+
+                <!-- Scrollable content starts below the Article Title -->
+                <ScrollView
+                    android:id="@+id/scrollView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="16dp"> <!-- Added padding for spacing -->
+
+                        <TextView
+                            android:id="@+id/contentTextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:textSize="16sp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:paddingTop="8dp">
+
+                            <TextView
+                                android:id="@+id/createdTimeTextView"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:textSize="12sp"
+                                android:textColor="@android:color/darker_gray"
+                                android:layout_weight="1" />
+
+                            <TextView
+                                android:id="@+id/updatedTimeTextView"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:textSize="12sp"
+                                android:textColor="@android:color/darker_gray"
+                                android:gravity="end"
+                                android:layout_weight="1" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </ScrollView>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </FrameLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

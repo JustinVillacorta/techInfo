@@ -26,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="none"
-            android:text="Builds1" />
+            android:text="Pick a Component" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Build 2 Dropdown -->

@@ -5,11 +5,10 @@
     android:background="@drawable/splash_background"> <!-- Use a drawable for background -->
 
     <!-- ImageView for splash image -->
-    <ImageView
-        android:id="@+id/splashImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <VideoView
+        android:id="@+id/VideoView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_centerInParent="true"
-        android:src="@drawable/logo"
         android:contentDescription="TechInfo" />
 </RelativeLayout>

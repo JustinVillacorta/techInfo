@@ -52,9 +52,8 @@ class PartsComparison : Fragment() {
         val componentsAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, componentsList)
         componentsDropDown.setAdapter(componentsAdapter)
 
-        // Default: Set CPU as the selected component and populate the parts dropdowns with CPU-related parts
-        componentsDropDown.setText("CPU", false)  // Set default selection
-        updatePartsDropdowns(parts1DropDown, parts2DropDown, cpuPartsList)
+        // Initially set both parts dropdowns as empty
+        updatePartsDropdowns(parts1DropDown, parts2DropDown, emptyList())
 
         // Handling selection in Components dropdown
         componentsDropDown.setOnItemClickListener { parent, _, position, _ ->
@@ -70,8 +69,8 @@ class PartsComparison : Fragment() {
                 "Storage" -> updatePartsDropdowns(parts1DropDown, parts2DropDown, storagePartsList)
             }
 
-            // Update RecyclerView based on selected component and parts
-            updateRecyclerViewData(selectedComponent, parts1DropDown.text.toString(), parts2DropDown.text.toString())
+            // Reset RecyclerView as the parts are not yet selected
+            updateRecyclerViewData(selectedComponent, "", "")
         }
 
         // Handling selection in Parts1 and Parts2 dropdowns
@@ -173,8 +172,8 @@ class PartsComparison : Fragment() {
         parts1DropDown.setAdapter(partsAdapter)
         parts2DropDown.setAdapter(partsAdapter)
 
-        // Set default parts if you want to pre-select the first item
-        parts1DropDown.setText(partsList[0], false)
-        parts2DropDown.setText(partsList[0], false)
+        // Initially clear the current selection in parts1 and parts2 (keep it empty if no category is selected)
+        parts1DropDown.setText("", false)
+        parts2DropDown.setText("", false)
     }
 }
