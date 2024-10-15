@@ -1,28 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Fragments.PcComparison.PartsComparison">
 
+    <!-- Build 1 Dropdown -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout2"
+        android:id="@+id/ComponentsDropDown"
         style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
-        android:layout_width="143dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="34dp"
-        android:layout_marginTop="54dp"
-        android:layout_marginBottom="30dp"
-        android:hint="Builds"
-       >
+        android:layout_width="374dp"
+        android:layout_height="55dp"
+        android:hint="Components"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <AutoCompleteTextView
-            android:id="@+id/autoCompleteTextView5"
+            android:id="@+id/Components1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:inputType="none"
-            android:text="Builds1" />
+            android:text="Pick a Component" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Build 2 Dropdown -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/Parts1DropDown"
+        style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="58dp"
+        android:layout_marginTop="16dp"
+        android:hint="Parts"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/Parts2DropDown"
+        app:layout_constraintTop_toBottomOf="@+id/ComponentsDropDown"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="16dp">
+
+        <AutoCompleteTextView
+            android:id="@+id/Parts1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="none"
+            android:text="Parts" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Build 3 Dropdown -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/Parts2DropDown"
+        style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="58dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:hint="Parts"
+        app:layout_constraintStart_toEndOf="@+id/Parts1DropDown"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ComponentsDropDown"
+        android:layout_marginEnd="16dp">
+
+        <AutoCompleteTextView
+            android:id="@+id/Parts2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:inputType="none"
+            android:text="Parts" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- RecyclerView for the comparison data -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        android:scrollbars="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/Parts1DropDown"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
