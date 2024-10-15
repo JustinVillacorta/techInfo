@@ -14,10 +14,11 @@ import com.example.techinfo.R
 class ItemsInfo : Fragment() {
 
     companion object {
-        fun newInstance(component: ComponentData): ItemsInfo {
+        fun newInstance(component: ComponentData, position: Int): ItemsInfo {
             val fragment = ItemsInfo()
             val bundle = Bundle().apply {
                 putSerializable("componentData", component)
+                putInt("position", position) // Pass the position of the component
             }
             fragment.arguments = bundle
             return fragment
@@ -34,8 +35,9 @@ class ItemsInfo : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Get the component data passed via arguments
+        // Get the component data and position passed via arguments
         val component = arguments?.getSerializable("componentData") as? ComponentData
+        val position = arguments?.getInt("position") ?: -1 // Get the position, default to -1 if not found
 
         // Check if the component is not null
         if (component != null) {
@@ -62,13 +64,18 @@ class ItemsInfo : Fragment() {
 
         // Set the "OK" Button Listener
         view.findViewById<Button>(R.id.okButton).setOnClickListener {
-            // Handle the selection of the CPU
+            // Handle the selection of the component
             val selectedComponent = arguments?.getSerializable("componentData") as? ComponentData
-            if (selectedComponent != null) {
+            if (selectedComponent != null && position != -1) {
                 // Pass the selected component back to BuildPC Fragment
-                val buildPCFragment = BuildPC.newInstance(selectedComponent)
+                val result = Bundle().apply {
+                    putSerializable("selectedComponent", selectedComponent)
+                    putInt("position", position) // Include the position of the selected component
+                }
+                parentFragmentManager.setFragmentResult("selectedComponent", result)
 
-                // Replace the current fragment with BuildPC
+                // Optionally, go back to BuildPC
+                val buildPCFragment = BuildPC.newInstance(selectedComponent)
                 requireActivity().supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, buildPCFragment)
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)

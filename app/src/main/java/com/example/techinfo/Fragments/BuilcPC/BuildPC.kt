@@ -78,30 +78,23 @@ class BuildPC : Fragment() {
             adapter = componentAdapter
         }
 
-        // Set up FragmentResultListener to listen for selected part details from ItemCatalog
-        parentFragmentManager.setFragmentResultListener("selectedPart", this) { _, bundle ->
-            val partDetails = bundle.getString("partDetails")
-            val position = bundle.getInt("position")
-            val progress = bundle.getInt("progress")
+        // To store the selected component data (key: position, value: selected component)
+         val selectedComponents = mutableMapOf<Int, ComponentData>()
 
-            // Update progress bars and handle selected parts
-            updateProgressBars(position, progress)
+// When a component is selected and returned from ItemsInfo
+        parentFragmentManager.setFragmentResultListener("selectedComponent", this) { _, bundle ->
+            val selectedComponent = bundle.getSerializable("selectedComponent") as ComponentData
+            val position = bundle.getInt("position")
 
             if (position in componentDataList.indices) {
-                val component = componentDataList[position]
+                // Update the list and selectedComponents map
+                componentDataList[position] = selectedComponent
+                selectedComponents[position] = selectedComponent
 
-                // Toggle selection and update part details
-                if (component.isSelected && component.partDetails == partDetails) {
-                    component.partDetails = "" // Clear part details
-                    component.isSelected = false
-                } else {
-                    component.partDetails = partDetails ?: ""
-                    component.isSelected = true
-                }
-
-                componentAdapter.notifyItemChanged(position)  // Refresh the item in the RecyclerView
+                componentAdapter.notifyItemChanged(position) // Refresh the item in the RecyclerView
             }
         }
+
 
         // Initialize the progress bars
         progressBars = listOf(

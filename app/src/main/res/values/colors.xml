@@ -4,5 +4,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#808080</color>
     <color name="darker_gray">#a9a9a9</color>
+    <color name="pastel">#F5F5DC</color>
+    <color name="pastel1">#D3CBCB</color>
     <color name="blue">#0000FF</color>
+    <color name="toolbar">#ADD8E6</color>
 </resources>

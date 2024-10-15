@@ -1,0 +1,9 @@
+<!-- res/drawable/frosted_glass.xml -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#80FFFFFF"/> <!-- 80 is the alpha for transparency -->
+            <corners android:radius="8dp"/> <!-- Rounded corners to match CardView -->
+        </shape>
+    </item>
+</layer-list>

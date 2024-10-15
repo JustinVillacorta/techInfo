@@ -5,66 +5,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/gradiant_background"
     tools:context=".Fragments.PcComparison.PcComparison">
 
     <!-- Build 1 Dropdown -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/ComponentsDropDown"
         style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
-        android:layout_width="143dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="34dp"
-        android:layout_marginTop="54dp"
-        android:layout_marginBottom="30dp"
-        android:hint="Builds"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <AutoCompleteTextView
-            android:id="@+id/Parts1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="none"
-            android:text="Builds1" />
-    </com.google.android.material.textfield.TextInputLayout>
+        android:layout_width="0dp"
+    android:layout_height="64dp"
+    android:layout_marginStart="34dp"
+    android:layout_marginTop="54dp"
+    android:layout_marginBottom="30dp"
+    android:hint="Builds"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintEnd_toStartOf="@+id/Parts2DropDown">
+    <AutoCompleteTextView
+        android:id="@+id/Parts1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inputType="none"
+        android:text="Builds1" />
+</com.google.android.material.textfield.TextInputLayout>
 
     <!-- Build 2 Dropdown -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/Parts2DropDown"
-        style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
-        android:layout_width="143dp"
-        android:layout_height="64dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="54dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginBottom="30dp"
-        android:hint="Builds"
+<com.google.android.material.textfield.TextInputLayout
+android:id="@+id/Parts2DropDown"
+style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+android:layout_width="0dp"
+    android:layout_height="64dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginTop="54dp"
+    android:layout_marginEnd="32dp"
+    android:layout_marginBottom="30dp"
+    android:hint="Builds"
+    app:layout_constraintStart_toEndOf="@+id/ComponentsDropDown"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
 
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ComponentsDropDown"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <AutoCompleteTextView
-            android:id="@+id/Parts2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="none"
-            android:text="Builds2" />
+<AutoCompleteTextView
+android:id="@+id/Parts2"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+android:inputType="none"
+android:text="Builds2" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- LinearLayout containing RecyclerView -->
 
-        <!-- RecyclerView for the comparison data -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="372dp"
-        android:layout_height="590dp"
-        android:layout_margin="16dp"
-        android:layout_marginTop="16dp"
-        android:scrollbars="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ComponentsDropDown" />
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+<androidx.recyclerview.widget.RecyclerView
+android:id="@+id/recyclerView"
+android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:layout_margin="16dp"
+    android:scrollbars="vertical"
+    app:layout_constraintTop_toBottomOf="@+id/ComponentsDropDown"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>

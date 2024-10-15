@@ -50,8 +50,8 @@ class ItemCatalog : Fragment() {
         fetchComponentData(componentName)
 
         componentAdapter = Adapter(componentDataList) { component: ComponentData, position: Int ->
-            // Pass the ComponentData directly to ItemsInfo fragment
-            val itemInfoFragment = ItemsInfo.newInstance(component)
+            // Pass both the ComponentData and the position to ItemsInfo fragment
+            val itemInfoFragment = ItemsInfo.newInstance(component, position)
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, itemInfoFragment)
                 .addToBackStack(null)

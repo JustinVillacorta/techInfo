@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@drawable/gradiant_background"
     android:padding="16dp">
 
     <!-- Horizontal Bar Charts Section -->
@@ -24,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Processing"
+                android:textColor="@color/white"
                 android:textSize="16sp"
                 android:layout_gravity="center_vertical" />
 
@@ -34,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:max="100"
-                android:progressTint="@android:color/holo_blue_light" />
+                android:progressDrawable="@drawable/progressbar_custom"/>
 
         </LinearLayout>
 
@@ -47,6 +49,7 @@
 
             <TextView
                 android:layout_width="76dp"
+                android:textColor="@color/white"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Rendering"
@@ -60,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:max="100"
-                android:progressTint="@android:color/holo_green_light" />
+                android:progressDrawable="@drawable/progressbar_custom"/>
 
         </LinearLayout>
 
@@ -74,6 +77,7 @@
             <TextView
                 android:layout_width="76dp"
                 android:layout_height="wrap_content"
+                android:textColor="@color/white"
                 android:layout_weight="1"
                 android:text="Memory"
                 android:textSize="16sp"
@@ -86,7 +90,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:max="100"
-                android:progressTint="@android:color/holo_orange_light" />
+                android:progressDrawable="@drawable/progressbar_custom"/>
 
         </LinearLayout>
 
@@ -101,6 +105,7 @@
                 android:layout_width="76dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:textColor="@color/white"
                 android:text="Storage"
                 android:textSize="16sp"
                 android:layout_gravity="center_vertical" />
@@ -112,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:max="100"
-                android:progressTint="@android:color/holo_red_light" />
+                android:progressDrawable="@drawable/progressbar_custom"/>
 
         </LinearLayout>
 
@@ -127,6 +132,7 @@
                 android:layout_width="76dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
+                android:textColor="@color/white"
                 android:layout_weight="1"
                 android:text="Power Capacity"
                 android:textSize="16sp" />
@@ -138,7 +144,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="3"
                 android:max="100"
-                android:progressTint="@android:color/holo_purple" />
+                android:progressDrawable="@drawable/progressbar_custom"/>
 
         </LinearLayout>
     </LinearLayout>
@@ -149,10 +155,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@drawable/transparent_card_view"
         android:padding="8dp" />
 
     <!-- Build Button -->
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/BuildBTN"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
