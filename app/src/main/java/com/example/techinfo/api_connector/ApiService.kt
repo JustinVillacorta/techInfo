@@ -5,6 +5,8 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import com.google.gson.annotations.SerializedName
+import retrofit2.http.Path
+import java.io.Serializable
 
 // Data class for OTP request
 data class OTPRequest(
@@ -31,7 +33,7 @@ data class Processor(
     val link: String?,
     val created_at: String,
     val updated_at: String
-)
+) : Serializable  // Make it Serializable
 
 // GPU model
 data class Gpu(
@@ -41,8 +43,10 @@ data class Gpu(
     val interface_type: String,
     val tdp_wattage: Int,
     val gpu_length_mm: Int,
-    val link: String?
-)
+    val link: String?,
+    val created_at: String,
+    val updated_at: String
+) : Serializable  // Make it Serializable
 
 // Motherboard model
 data class Motherboard(
@@ -51,18 +55,22 @@ data class Motherboard(
     val brand: String,
     val socket_type: String,
     val chipset: String,
-    val link: String?
-)
+    val link: String?,
+    val created_at: String,
+    val updated_at: String
+) : Serializable  // Make it Serializable
 
 // RAM model
 data class Ram(
     val ram_id: Int,
     val ram_name: String,
     val brand: String,
-    val capacity: String,
+    val ram_capacity_gb: String,
     val speed: String,
-    val link: String?
-)
+    val link: String?,
+    val created_at: String,
+    val updated_at: String
+) : Serializable  // Make it Serializable
 
 // Power Supply Unit model
 data class PowerSupplyUnit(
@@ -70,8 +78,10 @@ data class PowerSupplyUnit(
     val psu_name: String,
     val brand: String,
     val wattage: String,
-    val link: String?
-)
+    val link: String?,
+    val created_at: String,
+    val updated_at: String
+) : Serializable  // Make it Serializable
 
 // Case model
 data class Case(
@@ -79,11 +89,12 @@ data class Case(
     val case_name: String,
     val brand: String,
     val form_factor: String,
-    val link: String?
-)
+    val link: String?,
+    val created_at: String,
+    val updated_at: String
+) : Serializable  // Make it Serializable
 
 // CPU Cooler model
-// CPU Cooler model class
 data class CpuCooler(
     val cooler_id: Int,
     val cooler_name: String,
@@ -93,26 +104,29 @@ data class CpuCooler(
     val link: String?,
     val created_at: String,
     val updated_at: String
-)
-
+) : Serializable  // Make it Serializable
 
 // HDD model
 data class Hdd(
     val hdd_id: Int,
     val hdd_name: String,
-    val capacity: String,
-    val type: String,
-    val link: String?
-)
+    val brand: String,
+    val capacity_gb: String,
+    val link: String?,
+    val created_at: String,
+    val updated_at: String
+) : Serializable  // Make it Serializable
 
 // SSD model
 data class Ssd(
     val ssd_id: Int,
     val ssd_name: String,
-    val capacity: String,
-    val type: String,
-    val link: String?
-)
+    val capacity_gb: String,
+    val interface_type: String,
+    val link: String?,
+    val created_at: String,
+    val updated_at: String
+) : Serializable  // Make it Serializable
 
 data class TroubleShoot_data(
     val title: String,
@@ -140,7 +154,7 @@ interface ApiService {
     @GET("troubleshoot_articles")
     fun getTroubleshootArticles(): Call<List<TroubleshootContent>>
 
-    @GET("accounts") // Adjust the endpoint according to your API
+    @GET("accounts")
     fun getUsers(): Call<List<User>>
 
     // Request to send OTP to email
@@ -151,11 +165,9 @@ interface ApiService {
     @POST("admin/reset-password")
     fun resetPassword(@Body request: PasswordResetRequest): Call<Void>
 
+    // Component APIs
     @GET("processors")
     fun getProcessors(): Call<List<Processor>>
-
-    @GET("motherboards")
-    fun getMotherboards(): Call<List<Motherboard>>
 
     @GET("gpuses")
     fun getGpus(): Call<List<Gpu>>
@@ -163,18 +175,22 @@ interface ApiService {
     @GET("rams")
     fun getRams(): Call<List<Ram>>
 
+    @GET("motherboards")
+    fun getMotherboards(): Call<List<Motherboard>>  // Added motherboard endpoint
+
     @GET("power_supply_units")
-    fun getPowerSupplyUnits(): Call<List<PowerSupplyUnit>>
+    fun getPowerSupplyUnits(): Call<List<PowerSupplyUnit>>  // Added PSU endpoint
 
     @GET("computer_cases")
-    fun getComputerCases(): Call<List<Case>>
+    fun getComputerCases(): Call<List<Case>>  // Added case endpoint
 
     @GET("cpu_coolers")
-    fun getCpuCoolers(): Call<List<CpuCooler>>
+    fun getCpuCoolers(): Call<List<CpuCooler>>  // Added CPU cooler endpoint
 
     @GET("hdds")
-    fun getHdds(): Call<List<Hdd>>
+    fun getHdds(): Call<List<Hdd>>  // Added HDD endpoint
 
     @GET("ssds")
-    fun getSsds(): Call<List<Ssd>>
+    fun getSsds(): Call<List<Ssd>>  // Added SSD endpoint
 }
+

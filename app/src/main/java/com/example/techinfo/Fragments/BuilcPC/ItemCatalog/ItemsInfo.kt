@@ -1,28 +1,26 @@
-package com.example.techinfo.Fragments.BuilcPC.ItemCatalog
+package com.example.techinfo.Fragments.BuildPC
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
+import android.widget.Button
 import android.widget.TextView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.example.techinfo.R
 
 class ItemsInfo : Fragment() {
 
-    private lateinit var articleTitle: String
-    private lateinit var content: String
-    private lateinit var createdTime: String
-    private lateinit var updatedTime: String
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            articleTitle = it.getString(ARG_ARTICLE_TITLE) ?: "No Title Available"
-            content = it.getString(ARG_CONTENT) ?: "No Content Available"
-            createdTime = it.getString(ARG_CREATED_TIME) ?: "No Created Time Available"
-            updatedTime = it.getString(ARG_UPDATED_TIME) ?: "No Updated Time Available"
+    companion object {
+        fun newInstance(component: ComponentData): ItemsInfo {
+            val fragment = ItemsInfo()
+            val bundle = Bundle().apply {
+                putSerializable("componentData", component)
+            }
+            fragment.arguments = bundle
+            return fragment
         }
     }
 
@@ -35,29 +33,47 @@ class ItemsInfo : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.findViewById<TextView>(R.id.articleTitleTextView).text = articleTitle
-        view.findViewById<TextView>(R.id.contentTextView).text = content
-        view.findViewById<TextView>(R.id.createdTimeTextView).text = createdTime
-        view.findViewById<TextView>(R.id.updatedTimeTextView).text = updatedTime
-    }
 
-    companion object {
-        private const val ARG_ARTICLE_TITLE = "article_title"
-        private const val ARG_CONTENT = "content"
-        private const val ARG_CREATED_TIME = "created_time"
-        private const val ARG_UPDATED_TIME = "updated_time"
+        // Get the component data passed via arguments
+        val component = arguments?.getSerializable("componentData") as? ComponentData
 
-        fun newInstance(
-            articleTitle: String,
-            content: String,
-            createdTime: String,
-            updatedTime: String
-        ) = ItemsInfo().apply {
-            arguments = Bundle().apply {
-                putString(ARG_ARTICLE_TITLE, articleTitle)
-                putString(ARG_CONTENT, content)
-                putString(ARG_CREATED_TIME, createdTime)
-                putString(ARG_UPDATED_TIME, updatedTime)
+        // Check if the component is not null
+        if (component != null) {
+            // Update the TextViews based on available data
+            view.findViewById<TextView>(R.id.articleTitleTextView).text = component.name
+
+            // Dynamically populate contentTextView with available data (if exists)
+            val contentTextView = view.findViewById<TextView>(R.id.contentTextView)
+
+            val content = buildString {
+                append("Name: ${component.name}\n")
+                append("Type: ${component.type}\n")
+
+                // Check if other details are available, and append them accordingly
+                if (component.partDetails.isNotEmpty()) {
+                    append("Part Details: ${component.partDetails}\n")
+                }
+            }
+
+            contentTextView.text = content
+        } else {
+            Log.e("ItemsInfo", "Component data is null")
+        }
+
+        // Set the "OK" Button Listener
+        view.findViewById<Button>(R.id.okButton).setOnClickListener {
+            // Handle the selection of the CPU
+            val selectedComponent = arguments?.getSerializable("componentData") as? ComponentData
+            if (selectedComponent != null) {
+                // Pass the selected component back to BuildPC Fragment
+                val buildPCFragment = BuildPC.newInstance(selectedComponent)
+
+                // Replace the current fragment with BuildPC
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, buildPCFragment)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .addToBackStack(null)
+                    .commit()
             }
         }
     }

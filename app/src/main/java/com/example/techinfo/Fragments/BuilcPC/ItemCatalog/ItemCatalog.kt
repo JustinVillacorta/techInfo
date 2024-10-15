@@ -9,9 +9,9 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.techinfo.api_connector.*
-import com.example.techinfo.Fragments.BuilcPC.ComponentData
-import com.example.techinfo.api_connector.RetrofitInstance
 import com.example.techinfo.Fragments.BuildPCmodules.Adapter
+import com.example.techinfo.Fragments.BuildPC.ComponentData
+import com.example.techinfo.Fragments.BuildPC.ItemsInfo
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -49,16 +49,14 @@ class ItemCatalog : Fragment() {
         val componentName = arguments?.getString("componentName") ?: ""
         fetchComponentData(componentName)
 
-        componentAdapter = Adapter(componentDataList) { component, position ->
-            val resultBundle = Bundle()
-            resultBundle.putString("partDetails", component.partDetails)
-            resultBundle.putInt("position", position)
-            resultBundle.putInt("progress", 100)
-
-            parentFragmentManager.setFragmentResult("selectedPart", resultBundle)
-            parentFragmentManager.popBackStack()
+        componentAdapter = Adapter(componentDataList) { component: ComponentData, position: Int ->
+            // Pass the ComponentData directly to ItemsInfo fragment
+            val itemInfoFragment = ItemsInfo.newInstance(component)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, itemInfoFragment)
+                .addToBackStack(null)
+                .commit()
         }
-
 
         recyclerView.adapter = componentAdapter
     }
@@ -71,7 +69,12 @@ class ItemCatalog : Fragment() {
                         if (response.isSuccessful) {
                             componentDataList.clear()
                             response.body()?.forEach { processor ->
-                                componentDataList.add(ComponentData(processor.processor_name))
+                                componentDataList.add(
+                                    ComponentData(
+                                        name = processor.processor_name,
+                                        type = "CPU",
+                                    )
+                                )
                             }
                             componentAdapter.notifyDataSetChanged()
                         } else {
@@ -91,7 +94,12 @@ class ItemCatalog : Fragment() {
                         if (response.isSuccessful) {
                             componentDataList.clear()
                             response.body()?.forEach { gpu ->
-                                componentDataList.add(ComponentData(gpu.gpu_name))
+                                componentDataList.add(
+                                    ComponentData(
+                                        name = gpu.gpu_name,
+                                        type = "GPU",
+                                    )
+                                )
                             }
                             componentAdapter.notifyDataSetChanged()
                         } else {
@@ -111,7 +119,12 @@ class ItemCatalog : Fragment() {
                         if (response.isSuccessful) {
                             componentDataList.clear()
                             response.body()?.forEach { ram ->
-                                componentDataList.add(ComponentData(ram.ram_name))
+                                componentDataList.add(
+                                    ComponentData(
+                                        name = ram.ram_name,
+                                        type = "RAM",
+                                    )
+                                )
                             }
                             componentAdapter.notifyDataSetChanged()
                         } else {
@@ -131,7 +144,12 @@ class ItemCatalog : Fragment() {
                         if (response.isSuccessful) {
                             componentDataList.clear()
                             response.body()?.forEach { motherboard ->
-                                componentDataList.add(ComponentData(motherboard.motherboard_name))
+                                componentDataList.add(
+                                    ComponentData(
+                                        name = motherboard.motherboard_name,
+                                        type = "Motherboard",
+                                    )
+                                )
                             }
                             componentAdapter.notifyDataSetChanged()
                         } else {
@@ -151,7 +169,12 @@ class ItemCatalog : Fragment() {
                         if (response.isSuccessful) {
                             componentDataList.clear()
                             response.body()?.forEach { psu ->
-                                componentDataList.add(ComponentData(psu.psu_name))
+                                componentDataList.add(
+                                    ComponentData(
+                                        name = psu.psu_name,
+                                        type = "PSU",
+                                    )
+                                )
                             }
                             componentAdapter.notifyDataSetChanged()
                         } else {
@@ -171,7 +194,12 @@ class ItemCatalog : Fragment() {
                         if (response.isSuccessful) {
                             componentDataList.clear()
                             response.body()?.forEach { computerCase ->
-                                componentDataList.add(ComponentData(computerCase.case_name))
+                                componentDataList.add(
+                                    ComponentData(
+                                        name = computerCase.case_name,
+                                        type = "Case",
+                                    )
+                                )
                             }
                             componentAdapter.notifyDataSetChanged()
                         } else {
@@ -191,7 +219,12 @@ class ItemCatalog : Fragment() {
                         if (response.isSuccessful) {
                             componentDataList.clear()
                             response.body()?.forEach { cooler ->
-                                componentDataList.add(ComponentData(cooler.cooler_name))
+                                componentDataList.add(
+                                    ComponentData(
+                                        name = cooler.cooler_name,
+                                        type = "CPU Cooler",
+                                    )
+                                )
                             }
                             componentAdapter.notifyDataSetChanged()
                         } else {
@@ -211,7 +244,12 @@ class ItemCatalog : Fragment() {
                         if (response.isSuccessful) {
                             componentDataList.clear()
                             response.body()?.forEach { hdd ->
-                                componentDataList.add(ComponentData(hdd.hdd_name))
+                                componentDataList.add(
+                                    ComponentData(
+                                        name = hdd.hdd_name,
+                                        type = "HDD",
+                                    )
+                                )
                             }
                             componentAdapter.notifyDataSetChanged()
                         } else {
@@ -231,7 +269,12 @@ class ItemCatalog : Fragment() {
                         if (response.isSuccessful) {
                             componentDataList.clear()
                             response.body()?.forEach { ssd ->
-                                componentDataList.add(ComponentData(ssd.ssd_name))
+                                componentDataList.add(
+                                    ComponentData(
+                                        name = ssd.ssd_name,
+                                        type = "SSD",
+                                    )
+                                )
                             }
                             componentAdapter.notifyDataSetChanged()
                         } else {
@@ -250,4 +293,5 @@ class ItemCatalog : Fragment() {
             }
         }
     }
+
 }

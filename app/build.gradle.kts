@@ -86,6 +86,9 @@ dependencies {
     // YouTube Player
     implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.1")
 
+    //Picasso
+    implementation ("com.squareup.picasso:picasso:2.8")
+
     // Additional dependencies from libs.versions.toml (ensure they are defined correctly)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

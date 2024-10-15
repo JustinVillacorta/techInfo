@@ -55,10 +55,11 @@ class ForgotPassword : Fragment() {
         submitButton = view.findViewById(R.id.submitButton)
         passwordChecklist = view.findViewById(R.id.passwordChecklist)
 
-        // Initially hide the password fields
+        // Initially hide the password fields and OTP input
         newPasswordInput.visibility = View.GONE
         confirmPasswordInput.visibility = View.GONE
         passwordChecklist.visibility = View.GONE
+        otpInput.visibility = View.GONE
 
         // Handle "Get OTP" button click
         getOtpButton.setOnClickListener {
@@ -109,7 +110,8 @@ class ForgotPassword : Fragment() {
                     // Start OTP timer
                     startOtpTimer()
 
-                    // Show password fields after OTP is sent
+                    // Show OTP input and password fields after OTP is sent
+                    otpInput.visibility = View.VISIBLE
                     newPasswordInput.visibility = View.VISIBLE
                     confirmPasswordInput.visibility = View.VISIBLE
                     passwordChecklist.visibility = View.VISIBLE
@@ -186,6 +188,12 @@ class ForgotPassword : Fragment() {
             override fun onFinish() {
                 getOtpButton.text = "Resend OTP"
                 getOtpButton.isEnabled = true
+
+                // Hide OTP input, password fields, and checklist when the timer finishes
+                otpInput.visibility = View.GONE
+                newPasswordInput.visibility = View.GONE
+                confirmPasswordInput.visibility = View.GONE
+                passwordChecklist.visibility = View.GONE
             }
         }.start()
     }
