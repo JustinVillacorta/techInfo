@@ -1,6 +1,7 @@
 package com.example.techinfo.Fragments.BuildPC
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,6 +21,9 @@ class BuildPC : Fragment() {
     private lateinit var componentAdapter: Adapter
     private lateinit var buildButton: Button
     private lateinit var progressBars: List<ProgressBar>
+
+    // Create a central storage for selected components
+    private val selectedComponents = BuildPCComponents()
 
     // List of components for building the PC
     private val componentDataList = mutableListOf(
@@ -78,44 +82,71 @@ class BuildPC : Fragment() {
             adapter = componentAdapter
         }
 
-        // To store the selected component data (key: position, value: selected component)
-         val selectedComponents = mutableMapOf<Int, ComponentData>()
-
-// When a component is selected and returned from ItemsInfo
+        // When a component is selected and returned from ItemsInfo
         parentFragmentManager.setFragmentResultListener("selectedComponent", this) { _, bundle ->
             val selectedComponent = bundle.getSerializable("selectedComponent") as ComponentData
-            val position = bundle.getInt("position")
+            val type = bundle.getString("type") ?: ""
 
-            if (position in componentDataList.indices) {
-                // Update the list and selectedComponents map
-                componentDataList[position] = selectedComponent
-                selectedComponents[position] = selectedComponent
-
-                componentAdapter.notifyItemChanged(position) // Refresh the item in the RecyclerView
+            // Update the selectedComponents based on the type
+            when (type.lowercase()) {
+                "cpu" -> {
+                    selectedComponents.cpuList.clear()
+                    selectedComponents.cpuList.add(selectedComponent)
+                }
+                "gpu" -> {
+                    selectedComponents.gpuList.clear()
+                    selectedComponents.gpuList.add(selectedComponent)
+                }
+                "ram" -> {
+                    selectedComponents.ramList.clear()
+                    selectedComponents.ramList.add(selectedComponent)
+                }
+                "psu" -> {
+                    selectedComponents.psuList.clear()
+                    selectedComponents.psuList.add(selectedComponent)
+                }
+                "case" -> {
+                    selectedComponents.caseList.clear()
+                    selectedComponents.caseList.add(selectedComponent)
+                }
+                "cpu cooler" -> {
+                    selectedComponents.cpuCoolerList.clear()
+                    selectedComponents.cpuCoolerList.add(selectedComponent)
+                }
+                "hdd" -> {
+                    selectedComponents.hddList.clear()
+                    selectedComponents.hddList.add(selectedComponent)
+                }
+                "ssd" -> {
+                    selectedComponents.ssdList.clear()
+                    selectedComponents.ssdList.add(selectedComponent)
+                }
+                "motherboard" -> {
+                    selectedComponents.motherboardList.clear()
+                    selectedComponents.motherboardList.add(selectedComponent)
+                }
+                else -> Log.e("BuildPC", "Unknown type: $type")
             }
+
+            // Update the UI to reflect the selected component
+            updateComponent(type, selectedComponent)
         }
 
-
-        // Initialize the progress bars
-        progressBars = listOf(
-            view.findViewById(R.id.progressbarCpu),
-            view.findViewById(R.id.progressbarGpu),
-            view.findViewById(R.id.progressbarMemory),
-            view.findViewById(R.id.progressbarStorage),
-            view.findViewById(R.id.progressbarPsu)
-        )
-
-        // Build button click listener
+        // Handle build button click (for future implementation)
         buildButton = view.findViewById(R.id.BuildBTN)
         buildButton.setOnClickListener {
-            Toast.makeText(requireContext(), "PC build Saved", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Building your PC...", Toast.LENGTH_SHORT).show()
         }
     }
 
-    private fun updateProgressBars(position: Int, progress: Int) {
-        // Update the progress bar based on the component's position
-        if (position in progressBars.indices) {
-            progressBars[position].progress = progress
+    private fun updateComponent(type: String, component: ComponentData) {
+        // Find the component by its type and update the list
+        val position = componentDataList.indexOfFirst { it.type.equals(type, ignoreCase = true) }
+        if (position != -1) {
+            componentDataList[position] = component
+            componentAdapter.notifyItemChanged(position)
+        } else {
+            Log.e("BuildPC", "Component type not found: $type")
         }
     }
 }
