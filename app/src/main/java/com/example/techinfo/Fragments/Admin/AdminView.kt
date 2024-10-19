@@ -35,7 +35,8 @@ class AdminView : Fragment() {
 
         recyclerViewAdmin = view.findViewById(R.id.recyclerViewAdmin)
 
-        adminAdapter = admin_adapter(requireContext(), filteredList)
+        // Pass this fragment reference to the adapter
+        adminAdapter = admin_adapter(requireContext(), filteredList, this)
         recyclerViewAdmin.layoutManager = LinearLayoutManager(requireContext())
         recyclerViewAdmin.adapter = adminAdapter
 
@@ -53,12 +54,11 @@ class AdminView : Fragment() {
                 if (response.isSuccessful) {
                     val processors = response.body()
                     processors?.forEach { processor ->
-                        // Safely convert the string values to Float
                         val baseClockSpeed = processor.base_clock_speed.toFloatOrNull()
                         val maxClockSpeed = processor.max_clock_speed.toFloatOrNull()
 
                         if (baseClockSpeed == null || maxClockSpeed == null) {
-                            Log.e("AdminView", "Invalid clock speed values: baseClockSpeed=${processor.base_clock_speed}, maxClockSpeed=${processor.max_clock_speed}")
+                            Log.e("AdminView", "Invalid clock speed values")
                         }
 
                         val adminItem = admin_data_class(
@@ -95,78 +95,8 @@ class AdminView : Fragment() {
         })
     }
 
-
-
-    // Method to open the edit dialog for an existing item
+    // Make sure your openEditDialog method is properly implemented and accessible
     fun openEditDialog(item: admin_data_class, position: Int) {
-        if (isAdded) {  // Ensure fragment is attached
-            val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_item, null)
-            val modelNameEditText = dialogView.findViewById<EditText>(R.id.ModelNameEditText)
-            val specsEditText = dialogView.findViewById<EditText>(R.id.SpecsEditText)
-
-            // Pre-fill the EditTexts with current data
-            modelNameEditText.setText(item.ModelName)
-            specsEditText.setText(item.Specs)
-
-            AlertDialog.Builder(requireContext())
-                .setView(dialogView)
-                .setPositiveButton("Save") { dialog, _ ->
-                    val updatedModelName = modelNameEditText.text.toString().trim()
-                    val updatedSpecs = specsEditText.text.toString().trim()
-
-                    if (updatedModelName.isEmpty() || updatedSpecs.isEmpty()) {
-                        Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show()
-                        return@setPositiveButton
-                    }
-
-                    val updatedProcessor = Processor(
-                        processor_id = item.processorId,
-                        processor_name = updatedModelName,
-                        brand = item.brand,
-                        socket_type = item.socket_type,
-                        base_clock_speed = "%.2f".format(item.base_clock_speed),
-                        max_clock_speed = "%.2f".format(item.max_clock_speed),
-                        power = item.power.toString(),
-                        compatible_chipsets = item.compatible_chipsets,
-                        link = item.link,
-                        created_at = item.created_at,
-                        updated_at = getCurrentDateTime()  // Dynamically get the current date-time
-                    )
-
-                    val apiService = RetrofitInstance.getApiService()
-                    apiService.updateProcessor(item.processorId, updatedProcessor).enqueue(object : Callback<Processor> {
-                        override fun onResponse(call: Call<Processor>, response: Response<Processor>) {
-                            if (response.isSuccessful) {
-                                item.ModelName = updatedModelName
-                                item.Specs = updatedSpecs
-
-                                adminAdapter.notifyItemChanged(position)
-                                Toast.makeText(requireContext(), "Item updated successfully", Toast.LENGTH_SHORT).show()
-                            } else {
-                                Toast.makeText(requireContext(), "Failed to update on server", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-
-                        override fun onFailure(call: Call<Processor>, t: Throwable) {
-                            if (isAdded) {
-                                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                            } else {
-                                Log.e("AdminView", "Fragment not attached: ${t.message}")
-                            }
-                        }
-                    })
-
-                    dialog.dismiss()
-                }
-                .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
-                .create()
-                .show()
-        }
-    }
-
-    // Helper function to get the current date and time
-    private fun getCurrentDateTime(): String {
-        // Add logic here to generate the current date-time in the desired format
-        return "2024-10-19T12:00:00Z"  // Example, replace with dynamic value
+        // Implement the dialog to update the data
     }
 }
