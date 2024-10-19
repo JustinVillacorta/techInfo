@@ -6,26 +6,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.techinfo.Fragments.BuildPCmodules.Adapter
-import com.example.techinfo.R
 import com.example.techinfo.ItemCatalog
+import com.example.techinfo.R
 
 class BuildPC : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var componentAdapter: Adapter
     private lateinit var buildButton: Button
-    private lateinit var progressBars: List<ProgressBar>
 
-    // Create a central storage for selected components
-    private val selectedComponents = BuildPCComponents()
+    // Map to store the selected components
+    private val selectedComponentsMap = mutableMapOf<String, ComponentData>()
 
-    // List of components for building the PC
+    // Initialize the components list with placeholder data
     private val componentDataList = mutableListOf(
         ComponentData("CPU", "CPU"),
         ComponentData("GPU", "GPU"),
@@ -38,18 +36,6 @@ class BuildPC : Fragment() {
         ComponentData("CPU Cooler", "CPU Cooler")
     )
 
-    companion object {
-        // Define the newInstance method to pass the selected component data to the BuildPC fragment
-        fun newInstance(component: ComponentData): BuildPC {
-            val fragment = BuildPC()
-            val bundle = Bundle().apply {
-                putSerializable("selectedComponent", component)
-            }
-            fragment.arguments = bundle
-            return fragment
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -60,19 +46,15 @@ class BuildPC : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Get the selected component passed via arguments
-        val selectedComponent = arguments?.getSerializable("selectedComponent") as? ComponentData
-
         // Initialize RecyclerView and its adapter
         recyclerView = view.findViewById(R.id.componentsRecyclerView)
         componentAdapter = Adapter(componentDataList) { component, position ->
-            // When a component is clicked, pass the component name to the ItemCatalog fragment
             val componentName = component.name
-            if (!componentName.isNullOrEmpty()) {
+            if (componentName.isNotEmpty()) {
                 val partCatalogFragment = ItemCatalog.newInstance(componentName)
                 parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, partCatalogFragment)  // Replace container with ItemCatalog
-                    .addToBackStack(null) // Add to the back stack
+                    .replace(R.id.fragment_container, partCatalogFragment)
+                    .addToBackStack(null)
                     .commit()
             }
         }
@@ -82,71 +64,51 @@ class BuildPC : Fragment() {
             adapter = componentAdapter
         }
 
-        // When a component is selected and returned from ItemsInfo
+        // Listen for the result when a component is selected from ItemCatalog
         parentFragmentManager.setFragmentResultListener("selectedComponent", this) { _, bundle ->
             val selectedComponent = bundle.getSerializable("selectedComponent") as ComponentData
             val type = bundle.getString("type") ?: ""
 
-            // Update the selectedComponents based on the type
-            when (type.lowercase()) {
-                "cpu" -> {
-                    selectedComponents.cpuList.clear()
-                    selectedComponents.cpuList.add(selectedComponent)
-                }
-                "gpu" -> {
-                    selectedComponents.gpuList.clear()
-                    selectedComponents.gpuList.add(selectedComponent)
-                }
-                "ram" -> {
-                    selectedComponents.ramList.clear()
-                    selectedComponents.ramList.add(selectedComponent)
-                }
-                "psu" -> {
-                    selectedComponents.psuList.clear()
-                    selectedComponents.psuList.add(selectedComponent)
-                }
-                "case" -> {
-                    selectedComponents.caseList.clear()
-                    selectedComponents.caseList.add(selectedComponent)
-                }
-                "cpu cooler" -> {
-                    selectedComponents.cpuCoolerList.clear()
-                    selectedComponents.cpuCoolerList.add(selectedComponent)
-                }
-                "hdd" -> {
-                    selectedComponents.hddList.clear()
-                    selectedComponents.hddList.add(selectedComponent)
-                }
-                "ssd" -> {
-                    selectedComponents.ssdList.clear()
-                    selectedComponents.ssdList.add(selectedComponent)
-                }
-                "motherboard" -> {
-                    selectedComponents.motherboardList.clear()
-                    selectedComponents.motherboardList.add(selectedComponent)
-                }
-                else -> Log.e("BuildPC", "Unknown type: $type")
-            }
-
-            // Update the UI to reflect the selected component
-            updateComponent(type, selectedComponent)
+            // Update the UI and map with the selected component
+            updateSelectedComponent(type, selectedComponent)
         }
 
-        // Handle build button click (for future implementation)
         buildButton = view.findViewById(R.id.BuildBTN)
         buildButton.setOnClickListener {
             Toast.makeText(requireContext(), "Building your PC...", Toast.LENGTH_SHORT).show()
         }
+
+        // Restore previously selected components (if any)
+        restoreSelectedComponents()
     }
 
-    private fun updateComponent(type: String, component: ComponentData) {
-        // Find the component by its type and update the list
+    private fun updateSelectedComponent(type: String, component: ComponentData) {
+        // Store the selected component in the map based on its type
+        selectedComponentsMap[type] = component
+
+        // Find the position of the component type in the list
         val position = componentDataList.indexOfFirst { it.type.equals(type, ignoreCase = true) }
+
         if (position != -1) {
+            // Replace the placeholder with the selected component in the list
             componentDataList[position] = component
-            componentAdapter.notifyItemChanged(position)
+            componentAdapter.notifyItemChanged(position) // Refresh only the updated item
         } else {
             Log.e("BuildPC", "Component type not found: $type")
+        }
+
+        // Provide feedback to the user
+        Toast.makeText(requireContext(), "${component.name} selected for ${component.type}", Toast.LENGTH_SHORT).show()
+    }
+
+    // This method restores previously selected components in the UI after returning to BuildPC
+    private fun restoreSelectedComponents() {
+        for ((type, component) in selectedComponentsMap) {
+            val position = componentDataList.indexOfFirst { it.type.equals(type, ignoreCase = true) }
+            if (position != -1) {
+                componentDataList[position] = component
+                componentAdapter.notifyItemChanged(position) // Refresh only the updated item
+            }
         }
     }
 }

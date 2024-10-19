@@ -44,10 +44,23 @@ data class Gpu(
     val interface_type: String,
     val tdp_wattage: Int,
     val gpu_length_mm: Int,
+    val memory_size_gb: Int,
+    val memory_type: String,
+    val memory_interface_bits: String,
+    val base_clock_ghz: String,
+    val game_clock_ghz: String,
+    val boost_clock_ghz: String,
+    val compute_units: Int,
+    val stream_processors: Int,
+    val required_power: Int,
+    val required_6_pin_connectors: Int,
+    val required_8_pin_connectors: Int,
+    val required_12_pin_connectors: Int,
     val link: String?,
     val created_at: String,
     val updated_at: String
-) : Serializable  // Make it Serializable
+) : Serializable
+
 
 // Motherboard model
 data class Motherboard(
@@ -57,6 +70,8 @@ data class Motherboard(
     val socket_type: String,
     val chipset: String,
     val link: String?,
+    val wifi: String,
+    val gpu_support: String,
     val created_at: String,
     val updated_at: String
 ) : Serializable  // Make it Serializable

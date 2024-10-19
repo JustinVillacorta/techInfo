@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentTransaction
 import com.example.techinfo.R
 
 class ItemsInfo : Fragment() {
@@ -37,11 +36,9 @@ class ItemsInfo : Fragment() {
 
         // Retrieve the component data and position passed from ItemCatalog fragment
         val component = arguments?.getSerializable("componentData") as? ComponentData
-        val position = arguments?.getInt("position") ?: -1  // Get position (default to -1 if not found)
 
-        // Log the component and position to ensure they're passed correctly
+        // Log the component to ensure it's passed correctly
         Log.d("ItemsInfo", "Component Data: $component")
-        Log.d("ItemsInfo", "Position: $position")
 
         // Check if the component is not null
         if (component != null) {
@@ -68,14 +65,38 @@ class ItemsInfo : Fragment() {
                     component.gpu?.let {
                         """
                         Brand: ${it.brand}
+                        GPU Name: ${it.gpu_name}
                         Interface Type: ${it.interface_type}
                         TDP: ${it.tdp_wattage}W
                         Length: ${it.gpu_length_mm}mm
+                        Memory Size: ${it.memory_size_gb}GB
+                        Memory Type: ${it.memory_type}
+                        Memory Interface: ${it.memory_interface_bits}
+                        Game Clock: ${it.game_clock_ghz} GHz
+                        Base Clock: ${it.base_clock_ghz} GHz
+                        Boost Clock: ${it.boost_clock_ghz} GHz
+                        Compute Units: ${it.compute_units}
+                        Stream Processors: ${it.stream_processors}
+                        Required Power: ${it.required_power}W
+                        6-Pin Connectors: ${it.required_6_pin_connectors}
+                        8-Pin Connectors: ${it.required_8_pin_connectors}
+                        12-Pin Connectors: ${it.required_12_pin_connectors}
                         """.trimIndent()
                     } ?: "No details available for GPU."
                 }
-                // Handle other types similarly (RAM, SSD, etc.)
-                else -> "No details available for this component."
+                "motherboard" -> {
+                    component.motherboard?.let {
+                        """
+                        Brand: ${it.brand}
+                        Motherboard Name: ${it.motherboard_name}
+                        Socket Type: ${it.socket_type}
+                        Chipset: ${it.chipset}
+                        WiFi: ${it.wifi}
+                        GPU Support: ${it.gpu_support}
+                        """.trimIndent()
+                    } ?: "No details available for Motherboard."
+                }
+                else -> "Component details are unavailable for this type."
             }
 
             // Set the formatted content in the contentTextView
@@ -94,13 +115,8 @@ class ItemsInfo : Fragment() {
                 }
                 parentFragmentManager.setFragmentResult("selectedComponent", result)
 
-                // Optionally, navigate back to the BuildPC fragment
-                val buildPCFragment = BuildPC.newInstance(component)
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, buildPCFragment)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .addToBackStack(null)
-                    .commit()
+                // Pop the current ItemsInfo fragment
+                requireActivity().supportFragmentManager.popBackStack()
             }
         }
     }

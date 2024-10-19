@@ -37,17 +37,18 @@
                     android:padding="16dp" />
 
                 <!-- Fixed Article Title below the ImageView with 10dp padding -->
+
+                <!-- Scrollable content starts below the Article Title -->
                 <TextView
                     android:id="@+id/articleTitleTextView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:gravity="center"
                     android:layout_marginBottom="16dp"
-                    android:padding="10dp" />
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
 
-                <!-- Scrollable content starts below the Article Title -->
                 <ScrollView
                     android:id="@+id/scrollView"
                     android:layout_width="match_parent"

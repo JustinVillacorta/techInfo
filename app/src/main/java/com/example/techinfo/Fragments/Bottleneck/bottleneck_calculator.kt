@@ -46,8 +46,8 @@ class bottleneck_calculator : Fragment() {
 
         // You can set sample data for testing here
 
-        articleTitleTextView.text = "Sample Article Title"
-        contentTextView.text = "This is a sample article content to be displayed in the TextView."
+        articleTitleTextView.text = "Bottleneck results"
+        contentTextView.text = "test message for bottleneck results."
         createdTimeTextView.text = "Created: 01 Jan 2024"
         updatedTimeTextView.text = "Updated: 05 Jan 2024"
 

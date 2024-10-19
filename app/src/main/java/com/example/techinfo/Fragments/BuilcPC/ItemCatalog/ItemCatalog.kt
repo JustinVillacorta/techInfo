@@ -92,12 +92,12 @@ class ItemCatalog : Fragment() {
                     override fun onResponse(call: Call<List<Gpu>>, response: Response<List<Gpu>>) {
                         if (response.isSuccessful) {
                             componentDataList.clear()
-                            response.body()?.forEachIndexed { index, gpu ->
+                            response.body()?.forEachIndexed { index, Gpu ->
                                 componentDataList.add(
                                     ComponentData(
-                                        name = gpu.gpu_name,
+                                        name = Gpu.gpu_name,
                                         type = "GPU",
-                                        gpu = gpu
+                                        gpu = Gpu
                                     )
                                 )
                             }
