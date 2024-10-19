@@ -68,8 +68,6 @@ class BuildPC : Fragment() {
         parentFragmentManager.setFragmentResultListener("selectedComponent", this) { _, bundle ->
             val selectedComponent = bundle.getSerializable("selectedComponent") as ComponentData
             val type = bundle.getString("type") ?: ""
-
-            // Update the UI and map with the selected component
             updateSelectedComponent(type, selectedComponent)
         }
 

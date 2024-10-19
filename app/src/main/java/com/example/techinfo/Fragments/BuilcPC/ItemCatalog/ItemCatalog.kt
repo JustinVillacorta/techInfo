@@ -92,12 +92,12 @@ class ItemCatalog : Fragment() {
                     override fun onResponse(call: Call<List<Gpu>>, response: Response<List<Gpu>>) {
                         if (response.isSuccessful) {
                             componentDataList.clear()
-                            response.body()?.forEachIndexed { index, Gpu ->
+                            response.body()?.forEachIndexed { index, gpu ->
                                 componentDataList.add(
                                     ComponentData(
-                                        name = Gpu.gpu_name,
+                                        name = gpu.gpu_name,
                                         type = "GPU",
-                                        gpu = Gpu
+                                        gpu = gpu
                                     )
                                 )
                             }
@@ -111,7 +111,175 @@ class ItemCatalog : Fragment() {
                 })
             }
 
-            // Add other components like RAM, SSD, etc. using similar approach
+            "ram" -> {
+                apiService.getRams().enqueue(object : Callback<List<Ram>> {
+                    override fun onResponse(call: Call<List<Ram>>, response: Response<List<Ram>>) {
+                        if (response.isSuccessful) {
+                            componentDataList.clear()
+                            response.body()?.forEachIndexed { index, ram ->
+                                componentDataList.add(
+                                    ComponentData(
+                                        name = ram.ram_name,
+                                        type = "RAM",
+                                        ram = ram
+                                    )
+                                )
+                            }
+                            componentAdapter.notifyDataSetChanged()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Ram>>, t: Throwable) {
+                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
+                    }
+                })
+            }
+
+            "motherboard" -> {
+                apiService.getMotherboards().enqueue(object : Callback<List<Motherboard>> {
+                    override fun onResponse(call: Call<List<Motherboard>>, response: Response<List<Motherboard>>) {
+                        if (response.isSuccessful) {
+                            componentDataList.clear()
+                            response.body()?.forEachIndexed { index, motherboard ->
+                                componentDataList.add(
+                                    ComponentData(
+                                        name = motherboard.motherboard_name,
+                                        type = "Motherboard",
+                                        motherboard = motherboard
+                                    )
+                                )
+                            }
+                            componentAdapter.notifyDataSetChanged()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Motherboard>>, t: Throwable) {
+                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
+                    }
+                })
+            }
+
+            "psu" -> {
+                apiService.getPowerSupplyUnits().enqueue(object : Callback<List<PowerSupplyUnit>> {
+                    override fun onResponse(call: Call<List<PowerSupplyUnit>>, response: Response<List<PowerSupplyUnit>>) {
+                        if (response.isSuccessful) {
+                            componentDataList.clear()
+                            response.body()?.forEachIndexed { index, psu ->
+                                componentDataList.add(
+                                    ComponentData(
+                                        name = psu.psu_name,
+                                        type = "PSU",
+                                        psu = psu
+                                    )
+                                )
+                            }
+                            componentAdapter.notifyDataSetChanged()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<PowerSupplyUnit>>, t: Throwable) {
+                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
+                    }
+                })
+            }
+
+            "case" -> {
+                apiService.getComputerCases().enqueue(object : Callback<List<Case>> {
+                    override fun onResponse(call: Call<List<Case>>, response: Response<List<Case>>) {
+                        if (response.isSuccessful) {
+                            componentDataList.clear()
+                            response.body()?.forEachIndexed { index, case ->
+                                componentDataList.add(
+                                    ComponentData(
+                                        name = case.case_name,
+                                        type = "Case",
+                                        case = case
+                                    )
+                                )
+                            }
+                            componentAdapter.notifyDataSetChanged()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Case>>, t: Throwable) {
+                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
+                    }
+                })
+            }
+
+            "cpu cooler" -> {
+                apiService.getCpuCoolers().enqueue(object : Callback<List<CpuCooler>> {
+                    override fun onResponse(call: Call<List<CpuCooler>>, response: Response<List<CpuCooler>>) {
+                        if (response.isSuccessful) {
+                            componentDataList.clear()
+                            response.body()?.forEachIndexed { index, cpuCooler ->
+                                componentDataList.add(
+                                    ComponentData(
+                                        name = cpuCooler.cooler_name,
+                                        type = "CPU Cooler",
+                                        cpuCooler = cpuCooler
+                                    )
+                                )
+                            }
+                            componentAdapter.notifyDataSetChanged()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<CpuCooler>>, t: Throwable) {
+                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
+                    }
+                })
+            }
+
+            "hdd" -> {
+                apiService.getHdds().enqueue(object : Callback<List<Hdd>> {
+                    override fun onResponse(call: Call<List<Hdd>>, response: Response<List<Hdd>>) {
+                        if (response.isSuccessful) {
+                            componentDataList.clear()
+                            response.body()?.forEachIndexed { index, hdd ->
+                                componentDataList.add(
+                                    ComponentData(
+                                        name = hdd.hdd_name,
+                                        type = "HDD",
+                                        hdd = hdd
+                                    )
+                                )
+                            }
+                            componentAdapter.notifyDataSetChanged()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Hdd>>, t: Throwable) {
+                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
+                    }
+                })
+            }
+
+            "ssd" -> {
+                apiService.getSsds().enqueue(object : Callback<List<Ssd>> {
+                    override fun onResponse(call: Call<List<Ssd>>, response: Response<List<Ssd>>) {
+                        if (response.isSuccessful) {
+                            componentDataList.clear()
+                            response.body()?.forEachIndexed { index, ssd ->
+                                componentDataList.add(
+                                    ComponentData(
+                                        name = ssd.ssd_name,
+                                        type = "SSD",
+                                        ssd = ssd
+                                    )
+                                )
+                            }
+                            componentAdapter.notifyDataSetChanged()
+                        }
+                    }
+
+                    override fun onFailure(call: Call<List<Ssd>>, t: Throwable) {
+                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
+                    }
+                })
+            }
+
+            // Add other component fetch logic as needed
         }
     }
 }

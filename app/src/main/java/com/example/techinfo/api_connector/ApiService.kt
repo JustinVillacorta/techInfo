@@ -41,21 +41,22 @@ data class Gpu(
     val gpu_id: Int,
     val gpu_name: String,
     val brand: String,
+    val cuda_cores: String,
     val interface_type: String,
-    val tdp_wattage: Int,
-    val gpu_length_mm: Int,
-    val memory_size_gb: Int,
+    val tdp_wattage: String,
+    val gpu_length_mm: String,
+    val memory_size_gb: String,
     val memory_type: String,
     val memory_interface_bits: String,
     val base_clock_ghz: String,
     val game_clock_ghz: String,
     val boost_clock_ghz: String,
-    val compute_units: Int,
-    val stream_processors: Int,
-    val required_power: Int,
-    val required_6_pin_connectors: Int,
-    val required_8_pin_connectors: Int,
-    val required_12_pin_connectors: Int,
+    val compute_units: String,
+    val stream_processors: String,
+    val required_power: String,
+    val required_6_pin_connectors: String,
+    val required_8_pin_connectors: String,
+    val required_12_pin_connectors: String,
     val link: String?,
     val created_at: String,
     val updated_at: String
@@ -69,12 +70,21 @@ data class Motherboard(
     val brand: String,
     val socket_type: String,
     val chipset: String,
-    val link: String?,
-    val wifi: String,
-    val gpu_support: String,
-    val created_at: String,
-    val updated_at: String
-) : Serializable  // Make it Serializable
+    val link: String?,                // Nullable field
+    val wifi: String,                 // Yes/No or other representation for Wi-Fi
+    val gpu_support: String,          // GPU support information
+    val max_ram_slots: Int,           // Maximum number of RAM slots
+    val max_ram_capacity: String,     // Maximum RAM capacity (e.g., "128 GB")
+    val max_ram_speed: String,        // Maximum RAM speed (e.g., "5000 MHz")
+    val ram_type: String,             // Type of RAM supported (e.g., DDR4)
+    val has_pcie_slot: Int,           // Whether it has a PCIe slot (1 for Yes, 0 for No)
+    val has_sata_ports: Int,          // Whether it has SATA ports (1 for Yes, 0 for No)
+    val has_m2_slot: Int,             // Whether it has an M.2 slot (1 for Yes, 0 for No)
+    val gpu_interface: String,        // GPU interface type (e.g., PCIe 4.0)
+    val form_factor: String,          // Form factor (e.g., ATX, Micro-ATX)
+    val created_at: String,           // Creation timestamp
+    val updated_at: String            // Last updated timestamp
+) : Serializable  // Ensure class implements Serializable interface
 
 // RAM model
 data class Ram(
@@ -82,7 +92,8 @@ data class Ram(
     val ram_name: String,
     val brand: String,
     val ram_capacity_gb: String,
-    val speed: String,
+    val ram_speed_mhz: String,
+    val power_consumption: String,
     val link: String?,
     val created_at: String,
     val updated_at: String
@@ -90,24 +101,35 @@ data class Ram(
 
 // Power Supply Unit model
 data class PowerSupplyUnit(
-    val psu_id: Int,
-    val psu_name: String,
-    val brand: String,
-    val wattage: String,
-    val link: String?,
-    val created_at: String,
-    val updated_at: String
+    val psu_id: Int,                          // PSU ID
+    val psu_name: String,                     // PSU name
+    val brand: String,                        // Brand of the PSU
+    val wattage: String,                      // Total wattage (e.g., "750W")
+    val continuous_wattage: String,           // Continuous wattage (e.g., "750W")
+    val gpu_6_pin_connectors: Int,            // Number of 6-pin connectors
+    val gpu_8_pin_connectors: Int,            // Number of 8-pin connectors
+    val gpu_12_pin_connectors: Int,           // Number of 12-pin connectors
+    val efficiency_rating: String,            // Efficiency rating (e.g., "80+ Gold")
+    val has_required_connectors: Int,         // Whether it has the required connectors
+    val created_at: String,                   // Creation timestamp
+    val updated_at: String                    // Last updated timestamp
 ) : Serializable  // Make it Serializable
 
 // Case model
 data class Case(
-    val case_id: Int,
-    val case_name: String,
-    val brand: String,
-    val form_factor: String,
-    val link: String?,
-    val created_at: String,
-    val updated_at: String
+    val case_id: Int,                     // Case ID
+    val case_name: String,                // Case name
+    val brand: String,                    // Brand of the case
+    val form_factor_supported: String,    // Supported form factors (e.g., "ATX, Micro-ATX, Mini-ITX")
+    val max_gpu_length_mm: String,        // Maximum GPU length in mm
+    val max_hdd_count: Int,               // Maximum number of HDDs supported
+    val max_ssd_count: Int,               // Maximum number of SSDs supported
+    val current_hdd_count: Int,           // Current number of installed HDDs
+    val current_ssd_count: Int,           // Current number of installed SSDs
+    val airflow_rating: String,           // Airflow rating (e.g., low, medium, high)
+    val max_cooler_height_mm: String,     // Maximum CPU cooler height in mm
+    val created_at: String,               // Creation timestamp
+    val updated_at: String                // Last updated timestamp
 ) : Serializable  // Make it Serializable
 
 // CPU Cooler model
@@ -115,8 +137,9 @@ data class CpuCooler(
     val cooler_id: Int,
     val cooler_name: String,
     val brand: String,
+    val tdp_rating: String,
     val socket_type_supported: String,
-    val max_cooler_height_mm: Int,
+    val max_cooler_height_mm: String,
     val link: String?,
     val created_at: String,
     val updated_at: String
