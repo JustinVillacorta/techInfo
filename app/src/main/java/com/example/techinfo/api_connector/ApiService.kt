@@ -5,6 +5,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import com.google.gson.annotations.SerializedName
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import java.io.Serializable
 
@@ -23,14 +24,14 @@ data class PasswordResetRequest(
 // Processor model
 data class Processor(
     val processor_id: Int,
-    val processor_name: String,   // Can be used as the model
+    val processor_name: String,
     val brand: String,
     val socket_type: String,
-    val compatible_chipsets: String, // Mapping to chipset
-    val power: Int,
-    val base_clock_speed: String,
-    val max_clock_speed: String,
-    val link: String?,
+    val compatible_chipsets: String,
+    val power: String,
+    val base_clock_speed: String,  // Keep this as String for initial response
+    val max_clock_speed: String,   // Keep this as String for initial response
+    val link: String,
     val created_at: String,
     val updated_at: String
 ) : Serializable  // Make it Serializable
@@ -164,6 +165,10 @@ interface ApiService {
     // Request to reset password with OTP and new password
     @POST("admin/reset-password")
     fun resetPassword(@Body request: PasswordResetRequest): Call<Void>
+
+    // PUT method to update a processor
+    @PUT("processors/{id}")
+    fun updateProcessor(@Path("id") processorId: Int, @Body processor: Processor): Call<Processor>
 
     // Component APIs
     @GET("processors")
