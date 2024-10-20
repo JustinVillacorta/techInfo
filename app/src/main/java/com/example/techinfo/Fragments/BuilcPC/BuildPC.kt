@@ -51,7 +51,7 @@ class BuildPC : Fragment() {
         componentAdapter = Adapter(componentDataList) { component, position ->
             val componentName = component.name
             if (componentName.isNotEmpty()) {
-                val partCatalogFragment = ItemCatalog.newInstance(componentName)
+                val partCatalogFragment = ItemCatalog.newInstance(component.type)
                 parentFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, partCatalogFragment)
                     .addToBackStack(null)
@@ -81,8 +81,6 @@ class BuildPC : Fragment() {
     }
 
     private fun updateSelectedComponent(type: String, component: ComponentData) {
-        Log.d("BuildPC", "Received component of type: $type, data: $component")
-
         // Store the selected component in the map based on its type
         selectedComponentsMap[type] = component
 
@@ -100,6 +98,7 @@ class BuildPC : Fragment() {
         // Provide feedback to the user
         Toast.makeText(requireContext(), "${component.name} selected for ${component.type}", Toast.LENGTH_SHORT).show()
     }
+
 
     // This method restores previously selected components in the UI after returning to BuildPC
     private fun restoreSelectedComponents() {
