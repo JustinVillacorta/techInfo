@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,6 +41,13 @@ class BuildPC : Fragment() {
         ComponentData("Motherboard", "Motherboard"),
         ComponentData("CPU Cooler", "CPU Cooler")
     )
+
+    // ProgressBar references
+    private lateinit var cpuProgressBar: ProgressBar
+    private lateinit var gpuProgressBar: ProgressBar
+    private lateinit var memoryProgressBar: ProgressBar
+    private lateinit var storageProgressBar: ProgressBar
+    private lateinit var psuProgressBar: ProgressBar
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -82,8 +90,27 @@ class BuildPC : Fragment() {
             checkComponentCompatibility()  // Call compatibility check when button is pressed
         }
 
+        // Initialize ProgressBars
+        cpuProgressBar = view.findViewById(R.id.progressbarCpu)
+        gpuProgressBar = view.findViewById(R.id.progressbarGpu)
+        memoryProgressBar = view.findViewById(R.id.progressbarMemory)
+        storageProgressBar = view.findViewById(R.id.progressbarStorage)
+        psuProgressBar = view.findViewById(R.id.progressbarPsu)
+
+        // Set initial progress values
+        ProgressBars()
+
         // Restore previously selected components (if any)
         restoreSelectedComponents()
+    }
+
+    private fun ProgressBars() {
+        // Set initial values for the progress bars (0 to 100)
+        cpuProgressBar.progress = 0
+        gpuProgressBar.progress = 0
+        memoryProgressBar.progress = 0
+        storageProgressBar.progress = 0
+        psuProgressBar.progress = 0
     }
 
     private fun updateSelectedComponent(type: String, component: ComponentData) {
@@ -103,6 +130,18 @@ class BuildPC : Fragment() {
 
         // Provide feedback to the user
         Toast.makeText(requireContext(), "${component.name} selected for ${component.type}", Toast.LENGTH_SHORT).show()
+
+        // Update progress bars based on the selected component
+        updateProgressBars()
+    }
+
+    private fun updateProgressBars() {
+        // Update the progress of each progress bar based on the selected components
+        cpuProgressBar.progress = selectedComponentsMap["CPU"]?.let { 100 } ?: 0
+        gpuProgressBar.progress = selectedComponentsMap["GPU"]?.let { 100 } ?: 0
+        memoryProgressBar.progress = selectedComponentsMap["RAM"]?.let { 100 } ?: 0
+        storageProgressBar.progress = (selectedComponentsMap["SSD"]?.let { 50 } ?: 0) + (selectedComponentsMap["HDD"]?.let { 50 } ?: 0)
+        psuProgressBar.progress = selectedComponentsMap["PSU"]?.let { 100 } ?: 0
     }
 
     // This method restores previously selected components in the UI after returning to BuildPC
@@ -114,6 +153,9 @@ class BuildPC : Fragment() {
                 componentAdapter.notifyItemChanged(position) // Refresh only the updated item
             }
         }
+
+        // After restoring components, update the progress bars
+        updateProgressBars()
     }
 
     private fun getAllSelectedComponents(): Map<String, String> {
