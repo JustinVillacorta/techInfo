@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit
 import okhttp3.logging.HttpLoggingInterceptor
 
 object RetrofitInstance {
-    private const val BASE_URL = "http://192.168.43.90:8000/api/"
+    private const val BASE_URL = "http://192.168.100.74:8000/api/"
 
     // Create a logging interceptor to log network requests and responses
     private val loggingInterceptor = HttpLoggingInterceptor().apply {

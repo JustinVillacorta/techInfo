@@ -1,19 +1,17 @@
 package com.example.techinfo.Fragments.Admin
 
 data class admin_data_class(
-    var processorId: Int,
-    var ModelName: String,
-    var Specs: String,
-    var Category: String,
-    var brand: String,
-    var socket_type: String,
-    var base_clock_speed: Float,  // Should be Float as you're converting the string to a float
-    var max_clock_speed: Float,   // Should be Float as you're converting the string to a float
-    var power: String,
-    var compatible_chipsets: String,
-    var link: String,
-    var created_at: String,
-    var updated_at: String
+    val processorId: Int,
+    var ModelName: String,  // Change from val to var
+    var Specs: String,      // Change from val to var
+    val Category: String,
+    val brand: String,
+    val socket_type: String,
+    val base_clock_speed: Float,
+    val max_clock_speed: Float,
+    val power: String,
+    val compatible_chipsets: String,
+    val link: String?,
+    val created_at: String,
+    var updated_at: String // Consider changing this to var if you plan to modify it
 )
-
-

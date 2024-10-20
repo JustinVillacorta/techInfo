@@ -23,11 +23,21 @@ class ItemCatalog : Fragment() {
     private val componentDataList = mutableListOf<ComponentData>()
     private val apiService = RetrofitInstance.getApiService()
 
+    // Track the selected motherboard and CPU
+    private var selectedMotherboard: Motherboard? = null
+    private var selectedProcessor: Processor? = null
+
     companion object {
-        fun newInstance(componentName: String): ItemCatalog {
+        fun newInstance(
+            componentName: String,
+            selectedMotherboard: Motherboard? = null,
+            selectedProcessor: Processor? = null
+        ): ItemCatalog {
             val fragment = ItemCatalog()
             val bundle = Bundle()
             bundle.putString("componentName", componentName)
+            bundle.putSerializable("selectedMotherboard", selectedMotherboard)
+            bundle.putSerializable("selectedProcessor", selectedProcessor)
             fragment.arguments = bundle
             return fragment
         }
@@ -46,11 +56,18 @@ class ItemCatalog : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerViewPartCatalog)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        // Get selected motherboard and processor (if provided)
+        selectedMotherboard = arguments?.getSerializable("selectedMotherboard") as? Motherboard
+        selectedProcessor = arguments?.getSerializable("selectedProcessor") as? Processor
+
+        // Log the selected components for debugging
+        Log.d("ItemCatalog", "Selected Motherboard: $selectedMotherboard")
+        Log.d("ItemCatalog", "Selected Processor: $selectedProcessor")
+
         val componentName = arguments?.getString("componentName") ?: ""
         fetchComponentData(componentName)
 
         componentAdapter = Adapter(componentDataList) { component: ComponentData, position: Int ->
-            // Pass the ComponentData (which already has the type) to ItemsInfo
             val itemInfoFragment = ItemsInfo.newInstance(component, position)
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, itemInfoFragment)
@@ -68,14 +85,23 @@ class ItemCatalog : Fragment() {
                     override fun onResponse(call: Call<List<Processor>>, response: Response<List<Processor>>) {
                         if (response.isSuccessful) {
                             componentDataList.clear()
-                            response.body()?.forEachIndexed { index, processor ->
-                                componentDataList.add(
-                                    ComponentData(
-                                        name = processor.processor_name,
-                                        type = "CPU",
-                                        processor = processor
+                            response.body()?.forEach { processor ->
+                                // Log each processor for debugging
+                                Log.d("ItemCatalog", "Processor found: ${processor.processor_name}, Socket Type: ${processor.socket_type}")
+
+                                // Only add compatible CPUs if a motherboard is selected
+                                if (selectedMotherboard == null || isCompatible(processor.socket_type, selectedMotherboard?.socket_type)) {
+                                    Log.d("ItemCatalog", "Processor ${processor.processor_name} is compatible with motherboard")
+                                    componentDataList.add(
+                                        ComponentData(
+                                            name = processor.processor_name,
+                                            type = "CPU",
+                                            processor = processor
+                                        )
                                     )
-                                )
+                                } else {
+                                    Log.d("ItemCatalog", "Processor ${processor.processor_name} is NOT compatible with motherboard")
+                                }
                             }
                             componentAdapter.notifyDataSetChanged()
                         }
@@ -87,67 +113,28 @@ class ItemCatalog : Fragment() {
                 })
             }
 
-            "gpu" -> {
-                apiService.getGpus().enqueue(object : Callback<List<Gpu>> {
-                    override fun onResponse(call: Call<List<Gpu>>, response: Response<List<Gpu>>) {
-                        if (response.isSuccessful) {
-                            componentDataList.clear()
-                            response.body()?.forEachIndexed { index, gpu ->
-                                componentDataList.add(
-                                    ComponentData(
-                                        name = gpu.gpu_name,
-                                        type = "GPU",
-                                        gpu = gpu
-                                    )
-                                )
-                            }
-                            componentAdapter.notifyDataSetChanged()
-                        }
-                    }
-
-                    override fun onFailure(call: Call<List<Gpu>>, t: Throwable) {
-                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
-                    }
-                })
-            }
-
-            "ram" -> {
-                apiService.getRams().enqueue(object : Callback<List<Ram>> {
-                    override fun onResponse(call: Call<List<Ram>>, response: Response<List<Ram>>) {
-                        if (response.isSuccessful) {
-                            componentDataList.clear()
-                            response.body()?.forEachIndexed { index, ram ->
-                                componentDataList.add(
-                                    ComponentData(
-                                        name = ram.ram_name,
-                                        type = "RAM",
-                                        ram = ram
-                                    )
-                                )
-                            }
-                            componentAdapter.notifyDataSetChanged()
-                        }
-                    }
-
-                    override fun onFailure(call: Call<List<Ram>>, t: Throwable) {
-                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
-                    }
-                })
-            }
-
             "motherboard" -> {
                 apiService.getMotherboards().enqueue(object : Callback<List<Motherboard>> {
                     override fun onResponse(call: Call<List<Motherboard>>, response: Response<List<Motherboard>>) {
                         if (response.isSuccessful) {
                             componentDataList.clear()
-                            response.body()?.forEachIndexed { index, motherboard ->
-                                componentDataList.add(
-                                    ComponentData(
-                                        name = motherboard.motherboard_name,
-                                        type = "Motherboard",
-                                        motherboard = motherboard
+                            response.body()?.forEach { motherboard ->
+                                // Log each motherboard for debugging
+                                Log.d("ItemCatalog", "Motherboard found: ${motherboard.motherboard_name}, Socket Type: ${motherboard.socket_type}")
+
+                                // Only add compatible motherboards if a CPU is selected
+                                if (selectedProcessor == null || isCompatible(motherboard.socket_type, selectedProcessor?.socket_type)) {
+                                    Log.d("ItemCatalog", "Motherboard ${motherboard.motherboard_name} is compatible with CPU")
+                                    componentDataList.add(
+                                        ComponentData(
+                                            name = motherboard.motherboard_name,
+                                            type = "Motherboard",
+                                            motherboard = motherboard
+                                        )
                                     )
-                                )
+                                } else {
+                                    Log.d("ItemCatalog", "Motherboard ${motherboard.motherboard_name} is NOT compatible with CPU")
+                                }
                             }
                             componentAdapter.notifyDataSetChanged()
                         }
@@ -159,127 +146,14 @@ class ItemCatalog : Fragment() {
                 })
             }
 
-            "psu" -> {
-                apiService.getPowerSupplyUnits().enqueue(object : Callback<List<PowerSupplyUnit>> {
-                    override fun onResponse(call: Call<List<PowerSupplyUnit>>, response: Response<List<PowerSupplyUnit>>) {
-                        if (response.isSuccessful) {
-                            componentDataList.clear()
-                            response.body()?.forEachIndexed { index, psu ->
-                                componentDataList.add(
-                                    ComponentData(
-                                        name = psu.psu_name,
-                                        type = "PSU",
-                                        psu = psu
-                                    )
-                                )
-                            }
-                            componentAdapter.notifyDataSetChanged()
-                        }
-                    }
-
-                    override fun onFailure(call: Call<List<PowerSupplyUnit>>, t: Throwable) {
-                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
-                    }
-                })
-            }
-
-            "case" -> {
-                apiService.getComputerCases().enqueue(object : Callback<List<Case>> {
-                    override fun onResponse(call: Call<List<Case>>, response: Response<List<Case>>) {
-                        if (response.isSuccessful) {
-                            componentDataList.clear()
-                            response.body()?.forEachIndexed { index, case ->
-                                componentDataList.add(
-                                    ComponentData(
-                                        name = case.case_name,
-                                        type = "Case",
-                                        case = case
-                                    )
-                                )
-                            }
-                            componentAdapter.notifyDataSetChanged()
-                        }
-                    }
-
-                    override fun onFailure(call: Call<List<Case>>, t: Throwable) {
-                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
-                    }
-                })
-            }
-
-            "cpu cooler" -> {
-                apiService.getCpuCoolers().enqueue(object : Callback<List<CpuCooler>> {
-                    override fun onResponse(call: Call<List<CpuCooler>>, response: Response<List<CpuCooler>>) {
-                        if (response.isSuccessful) {
-                            componentDataList.clear()
-                            response.body()?.forEachIndexed { index, cpuCooler ->
-                                componentDataList.add(
-                                    ComponentData(
-                                        name = cpuCooler.cooler_name,
-                                        type = "CPU Cooler",
-                                        cpuCooler = cpuCooler
-                                    )
-                                )
-                            }
-                            componentAdapter.notifyDataSetChanged()
-                        }
-                    }
-
-                    override fun onFailure(call: Call<List<CpuCooler>>, t: Throwable) {
-                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
-                    }
-                })
-            }
-
-            "hdd" -> {
-                apiService.getHdds().enqueue(object : Callback<List<Hdd>> {
-                    override fun onResponse(call: Call<List<Hdd>>, response: Response<List<Hdd>>) {
-                        if (response.isSuccessful) {
-                            componentDataList.clear()
-                            response.body()?.forEachIndexed { index, hdd ->
-                                componentDataList.add(
-                                    ComponentData(
-                                        name = hdd.hdd_name,
-                                        type = "HDD",
-                                        hdd = hdd
-                                    )
-                                )
-                            }
-                            componentAdapter.notifyDataSetChanged()
-                        }
-                    }
-
-                    override fun onFailure(call: Call<List<Hdd>>, t: Throwable) {
-                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
-                    }
-                })
-            }
-
-            "ssd" -> {
-                apiService.getSsds().enqueue(object : Callback<List<Ssd>> {
-                    override fun onResponse(call: Call<List<Ssd>>, response: Response<List<Ssd>>) {
-                        if (response.isSuccessful) {
-                            componentDataList.clear()
-                            response.body()?.forEachIndexed { index, ssd ->
-                                componentDataList.add(
-                                    ComponentData(
-                                        name = ssd.ssd_name,
-                                        type = "SSD",
-                                        ssd = ssd
-                                    )
-                                )
-                            }
-                            componentAdapter.notifyDataSetChanged()
-                        }
-                    }
-
-                    override fun onFailure(call: Call<List<Ssd>>, t: Throwable) {
-                        Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
-                    }
-                })
-            }
-
-            // Add other component fetch logic as needed
+            // Add other component types if necessary (GPU, RAM, etc.)
         }
+    }
+
+    // Compatibility check between selected component's socket types
+    private fun isCompatible(componentSocketType: String?, selectedSocketType: String?): Boolean {
+        // Returns true if no selection or both sockets match
+        Log.d("ItemCatalog", "Comparing socket types: $componentSocketType with $selectedSocketType")
+        return selectedSocketType == null || componentSocketType == selectedSocketType
     }
 }

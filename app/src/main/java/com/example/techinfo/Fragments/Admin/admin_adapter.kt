@@ -12,11 +12,7 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.example.techinfo.R
 
-class admin_adapter(
-    val context: Context,
-    val adminList: ArrayList<admin_data_class>,
-    val fragment: AdminView  // Explicitly pass the fragment reference
-) : RecyclerView.Adapter<admin_adapter.AdminViewHolder>() {
+class admin_adapter(val context: Context, val adminList: ArrayList<admin_data_class>) : RecyclerView.Adapter<admin_adapter.AdminViewHolder>() {
 
     inner class AdminViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val ModelName: TextView = view.findViewById(R.id.Model_Name)
@@ -42,7 +38,8 @@ class admin_adapter(
             when (menuItem.itemId) {
                 R.id.update -> {
                     // Trigger the update functionality in AdminView (passing item to update)
-                    fragment.openEditDialog(selectedAdminItem, position)  // Use fragment reference directly
+                    val activity = context as? AdminView  // Safe casting to AdminView
+                    activity?.openEditDialog(selectedAdminItem, position)  // Call openEditDialog if casting succeeds
                     true
                 }
 
