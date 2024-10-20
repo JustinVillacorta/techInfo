@@ -81,6 +81,8 @@ class BuildPC : Fragment() {
     }
 
     private fun updateSelectedComponent(type: String, component: ComponentData) {
+        Log.d("BuildPC", "Received component of type: $type, data: $component")
+
         // Store the selected component in the map based on its type
         selectedComponentsMap[type] = component
 

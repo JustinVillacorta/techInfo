@@ -9,6 +9,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.bumptech.glide.Glide
 import com.example.techinfo.R
 import com.example.techinfo.api_connector.*
@@ -59,7 +60,7 @@ class ItemsInfo : Fragment() {
 
         // Set the content based on the component type
         val contentTextView = view.findViewById<TextView>(R.id.contentTextView)
-        val content = when (component.type.lowercase()) {
+        contentTextView.text = when (component.type.lowercase()) {
             "cpu" -> {
                 component.processor?.let {
                     """
@@ -89,9 +90,7 @@ class ItemsInfo : Fragment() {
                     GPU Length (mm): ${it.gpu_length_mm}
                     TDP Wattage: ${it.tdp_wattage}
                     Required Power: ${it.required_power}W
-                    Product Link: ${it.link ?: "N/A"}
-                    Created At: ${it.created_at ?: "N/A"}
-                    Updated At: ${it.updated_at ?: "N/A"}
+                 
                     """.trimIndent()
                 } ?: "No details available for GPU."
             }
@@ -111,28 +110,44 @@ class ItemsInfo : Fragment() {
             else -> "Component details are unavailable for this type."
         }
 
-        contentTextView.text = content
-
         // Set the creation and update times (check if these fields are available in your model)
         val createdTimeTextView = view.findViewById<TextView>(R.id.createdTimeTextView)
-        createdTimeTextView.text = "Created At: ${component.processor?.created_at ?: "N/A"}"  // Adjust field name as needed
+        createdTimeTextView.text = "Created At: ${component.processor?. created_at ?: "N/A"}"  // Adjust field name as needed
 
         val updatedTimeTextView = view.findViewById<TextView>(R.id.updatedTimeTextView)
-        updatedTimeTextView.text = "Updated At: ${component.processor?.updated_at ?: "N/A"}"  // Adjust field name as needed
+        updatedTimeTextView.text = "Updated At: ${component.processor?. created_at?: "N/A"}"  // Adjust field name as needed
 
+        // Handle the "OK" button action
         // Handle the "OK" button action
         view.findViewById<Button>(R.id.okButton).setOnClickListener {
             if (component != null) {
-                // Return the selected component back to BuildPC with the type
                 val result = Bundle().apply {
                     putSerializable("selectedComponent", component)  // Send the selected component back
                     putString("type", component.type)  // Pass the type (e.g., CPU, GPU)
                 }
                 parentFragmentManager.setFragmentResult("selectedComponent", result)
 
-                // Pop the current ItemsInfo fragment
-                requireActivity().supportFragmentManager.popBackStack()
+                // Pop back to the BuildPC fragment
+                val fragmentManager = requireActivity().supportFragmentManager
+
+                // Check if BuildPC is in the back stack
+                val buildPCFragment = fragmentManager.findFragmentByTag("BuildPC")
+
+                if (buildPCFragment != null) {
+                    // Pop back to BuildPC if it's already in the stack
+                    fragmentManager.popBackStack("BuildPC", 0)
+                } else {
+                    // Replace with a new BuildPC fragment if it's not in the back stack
+                    val newBuildPCFragment = BuildPC()
+                    fragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, newBuildPCFragment, "BuildPC")
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .commit()
+                }
+            } else {
+                Log.e("ItemsInfo", "Component data is null, cannot send result.")
             }
         }
+
     }
 }

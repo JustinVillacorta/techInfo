@@ -6,8 +6,10 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout // Add this import
 import com.example.techinfo.api_connector.*
 import com.example.techinfo.Fragments.BuildPCmodules.Adapter
 import com.example.techinfo.Fragments.BuildPC.ComponentData
@@ -21,6 +23,9 @@ class ItemCatalog : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var componentAdapter: Adapter
     private val componentDataList = mutableListOf<ComponentData>()
+    private val filteredDataList = mutableListOf<ComponentData>() // New list for filtered data
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
+    private lateinit var searchView: SearchView
     private val apiService = RetrofitInstance.getApiService()
 
     // Track the selected motherboard and CPU
@@ -56,6 +61,9 @@ class ItemCatalog : Fragment() {
         recyclerView = view.findViewById(R.id.recyclerViewPartCatalog)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout)
+        searchView = view.findViewById(R.id.searchView)
+
         // Get selected motherboard and processor (if provided)
         selectedMotherboard = arguments?.getSerializable("selectedMotherboard") as? Motherboard
         selectedProcessor = arguments?.getSerializable("selectedProcessor") as? Processor
@@ -67,7 +75,7 @@ class ItemCatalog : Fragment() {
         val componentName = arguments?.getString("componentName") ?: ""
         fetchComponentData(componentName)
 
-        componentAdapter = Adapter(componentDataList) { component: ComponentData, position: Int ->
+        componentAdapter = Adapter(filteredDataList) { component: ComponentData, position: Int ->
             val itemInfoFragment = ItemsInfo.newInstance(component, position)
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, itemInfoFragment)
@@ -76,9 +84,18 @@ class ItemCatalog : Fragment() {
         }
 
         recyclerView.adapter = componentAdapter
+
+        // Setup the search functionality
+        setupSearchView()
+
+        // Setup the swipe refresh functionality
+        swipeRefreshLayout.setOnRefreshListener {
+            fetchComponentData(componentName)
+        }
     }
 
     private fun fetchComponentData(componentName: String) {
+        swipeRefreshLayout.isRefreshing = true // Show refresh indicator
         when (componentName.lowercase()) {
             "cpu" -> {
                 apiService.getProcessors().enqueue(object : Callback<List<Processor>> {
@@ -86,12 +103,9 @@ class ItemCatalog : Fragment() {
                         if (response.isSuccessful) {
                             componentDataList.clear()
                             response.body()?.forEach { processor ->
-                                // Log each processor for debugging
                                 Log.d("ItemCatalog", "Processor found: ${processor.processor_name}, Socket Type: ${processor.socket_type}")
 
-                                // Only add compatible CPUs if a motherboard is selected
                                 if (selectedMotherboard == null || isCompatible(processor.socket_type, selectedMotherboard?.socket_type)) {
-                                    Log.d("ItemCatalog", "Processor ${processor.processor_name} is compatible with motherboard")
                                     componentDataList.add(
                                         ComponentData(
                                             name = processor.processor_name,
@@ -99,16 +113,16 @@ class ItemCatalog : Fragment() {
                                             processor = processor
                                         )
                                     )
-                                } else {
-                                    Log.d("ItemCatalog", "Processor ${processor.processor_name} is NOT compatible with motherboard")
                                 }
                             }
-                            componentAdapter.notifyDataSetChanged()
+                            updateFilteredDataList()
                         }
+                        swipeRefreshLayout.isRefreshing = false // Hide refresh indicator
                     }
 
                     override fun onFailure(call: Call<List<Processor>>, t: Throwable) {
                         Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
+                        swipeRefreshLayout.isRefreshing = false // Hide refresh indicator
                     }
                 })
             }
@@ -119,12 +133,9 @@ class ItemCatalog : Fragment() {
                         if (response.isSuccessful) {
                             componentDataList.clear()
                             response.body()?.forEach { motherboard ->
-                                // Log each motherboard for debugging
                                 Log.d("ItemCatalog", "Motherboard found: ${motherboard.motherboard_name}, Socket Type: ${motherboard.socket_type}")
 
-                                // Only add compatible motherboards if a CPU is selected
                                 if (selectedProcessor == null || isCompatible(motherboard.socket_type, selectedProcessor?.socket_type)) {
-                                    Log.d("ItemCatalog", "Motherboard ${motherboard.motherboard_name} is compatible with CPU")
                                     componentDataList.add(
                                         ComponentData(
                                             name = motherboard.motherboard_name,
@@ -132,22 +143,57 @@ class ItemCatalog : Fragment() {
                                             motherboard = motherboard
                                         )
                                     )
-                                } else {
-                                    Log.d("ItemCatalog", "Motherboard ${motherboard.motherboard_name} is NOT compatible with CPU")
                                 }
                             }
-                            componentAdapter.notifyDataSetChanged()
+                            updateFilteredDataList()
                         }
+                        swipeRefreshLayout.isRefreshing = false // Hide refresh indicator
                     }
 
                     override fun onFailure(call: Call<List<Motherboard>>, t: Throwable) {
                         Log.e("APIFailure", "Request failed: ${t.localizedMessage}")
+                        swipeRefreshLayout.isRefreshing = false // Hide refresh indicator
                     }
                 })
             }
 
             // Add other component types if necessary (GPU, RAM, etc.)
         }
+    }
+
+    private fun updateFilteredDataList() {
+        filteredDataList.clear()
+        filteredDataList.addAll(componentDataList) // Reset filtered list to show all components
+        componentAdapter.notifyDataSetChanged()
+    }
+
+
+    private fun setupSearchView() {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                filterComponents(newText)
+                return true
+            }
+        })
+    }
+
+    private fun filterComponents(query: String?) {
+        filteredDataList.clear()
+        if (query.isNullOrEmpty()) {
+            filteredDataList.addAll(componentDataList) // If query is empty, show all components
+        } else {
+            val lowerCaseQuery = query.lowercase()
+            componentDataList.forEach { component ->
+                if (component.name.lowercase().contains(lowerCaseQuery)) {
+                    filteredDataList.add(component)
+                }
+            }
+        }
+        componentAdapter.notifyDataSetChanged()
     }
 
     // Compatibility check between selected component's socket types

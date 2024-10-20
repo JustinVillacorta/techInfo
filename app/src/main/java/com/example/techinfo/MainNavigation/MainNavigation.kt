@@ -14,7 +14,6 @@ import com.example.techinfo.Fragments.Admin.AdminView
 import com.example.techinfo.Fragments.Admin.TroubleshootAdmin
 import com.example.techinfo.Fragments.Bottleneck.BottleNeck
 import com.example.techinfo.Fragments.BuildPC.BuildPC
-import com.example.techinfo.Fragments.PcComparison.PartsComparison
 import com.example.techinfo.Fragments.PcComparison.PcComparison
 import com.example.techinfo.Fragments.Troubleshoot.troubleshoot_content.TroubleShoot
 import com.example.techinfo.R
@@ -44,10 +43,6 @@ class MainNavigation : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             when (menuItem.itemId) {
                 R.id.buildcompare -> {
                     replaceFragment(PcComparison())
-                    true
-                }
-                R.id.parts -> {
-                    replaceFragment(PartsComparison())
                     true
                 }
                 R.id.pc_parts -> {
@@ -84,7 +79,7 @@ class MainNavigation : AppCompatActivity(), NavigationView.OnNavigationItemSelec
             }
             R.id.nav_pc_compare -> {
                 replaceFragment(PcComparison())
-                updateBottomNavigation(R.menu.bottom_pccompare_navbar) // Update Bottom Nav
+                binding.bottomNavigationView.visibility = View.GONE // Hide Bottom Nav
             }
             R.id.nav_bottleneck -> {
                 replaceFragment(BottleNeck())
