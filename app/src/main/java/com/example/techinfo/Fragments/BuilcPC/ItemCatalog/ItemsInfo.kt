@@ -107,6 +107,94 @@ class ItemsInfo : Fragment() {
                     """.trimIndent()
                 } ?: "No details available for Motherboard."
             }
+
+            "ram" ->{
+                component.ram?.let {
+                    """
+                   Ram name: ${it.ram_name}
+                   brand: ${it.brand}
+                   Ram capacity: ${it.ram_capacity_gb}
+                   ram_speed: ${it.ram_speed_mhz}
+                   power consumption: ${it.power_consumption}
+                   """.trimIndent()
+                } ?: "No details available for RAM"
+
+            }
+
+            "psu" ->{
+                component.psu?.let {
+                    """
+                    Psu name: ${it.psu_name}
+                    brand: ${it.brand}
+                    wattage: ${it.wattage}
+                    continuous_wattage: ${it.continuous_wattage}
+                    gpu_6_pin_connectors: ${it.gpu_6_pin_connectors}
+                    gpu_8_pin_connectors: ${it.gpu_8_pin_connectors}
+                    gpu_12_pin_connectors: ${it.gpu_12_pin_connectors}
+                    efficiency_rating: ${it.efficiency_rating}
+                    has_required_connectors: ${it.has_required_connectors}
+                    """.trimIndent()
+                } ?: "No details available for psu"
+            }
+
+
+
+            "case" ->{
+                component.case?.let {
+                    """
+                 case_name: ${it.case_name}
+                 brand: ${it.brand}
+                 form_factor_supported: ${it.form_factor_supported}
+                 max_gpu_length_mm: ${it.max_gpu_length_mm}
+                 max_hdd_count: ${it.max_hdd_count}
+                 max_ssd_count: ${it.max_ssd_count}
+                 current_hdd_count: ${it.current_hdd_count}
+                 current_ssd_count: ${it.current_ssd_count}
+                 max_cooler_height_mm: ${it.max_cooler_height_mm}
+                 current_hdd_count: ${it.current_hdd_count}
+                 """.trimIndent()
+
+                }?: "No details available for case"
+            }
+
+            "Cpucooler" ->{
+                component.cpuCooler?.let {
+                    """
+                 cooler_name: ${it.cooler_name}
+                 brand: ${it.brand}
+                 tdp_rating: ${it.tdp_rating}
+                 socket_type_supported: ${it.socket_type_supported}
+                 max_cooler_height_mm: ${it.max_cooler_height_mm}
+                 """.trimIndent()
+
+                }?: "No details available for Cpu cooler"
+            }
+
+            "Hdd" ->{
+                component.hdd?.let {
+                    """
+                 hdd_name: ${it.hdd_name}
+                 brand: ${it.brand}
+                 capacity_gb: ${it.capacity_gb}
+                 """.trimIndent()
+
+                }?: "No details available for hdd"
+            }
+
+
+            "ssd" ->{
+                component.ssd?.let {
+                    """
+                 ssd_name: ${it.ssd_name}
+                 capacity_gb: ${it.capacity_gb}
+                 interface_type: ${it.interface_type}
+                 """.trimIndent()
+
+                }?: "No details available for Cpu cooler"
+            }
+
+
+
             else -> "Component details are unavailable for this type."
         }
 
@@ -119,34 +207,35 @@ class ItemsInfo : Fragment() {
 
 
         view.findViewById<Button>(R.id.okButton).setOnClickListener {
-            if (component != null) {
-                val result = Bundle().apply {
-                    putSerializable("selectedComponent", component)  // Send the selected component back
-                    putString("type", component.type)  // Pass the type (e.g., CPU, GPU)
-                }
-                parentFragmentManager.setFragmentResult("selectedComponent", result)
+            // Only proceed when the OK button is clicked
+            val result = Bundle().apply {
+                putSerializable("selectedComponent", component)  // Send the selected component back
+                putString("type", component.type)  // Pass the type (e.g., CPU, GPU)
+            }
+            parentFragmentManager.setFragmentResult("selectedComponent", result)
 
-                val fragmentManager = requireActivity().supportFragmentManager
-                // Check if BuildPC is already in the back stack
-                val buildPCFragment = fragmentManager.findFragmentByTag("BuildPC")
+            val fragmentManager = requireActivity().supportFragmentManager
+            // Check if BuildPC is already in the back stack
+            val buildPCFragment = fragmentManager.findFragmentByTag("BuildPC")
 
-                if (buildPCFragment != null) {
-                    // Pop back to the existing BuildPC if it's already in the back stack
-                    fragmentManager.popBackStack("BuildPC", 0)
-                } else {
-                    // Replace the current fragment with a new BuildPC instance
-                    fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, BuildPC(), "BuildPC")
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .addToBackStack("BuildPC")  // Add this transaction to the back stack
-                        .commit()
-                }
+            if (buildPCFragment != null) {
+                // Pop back to the existing BuildPC if it's already in the back stack
+                fragmentManager.popBackStack("BuildPC", 0)
             } else {
-                Log.e("ItemsInfo", "Component data is null, cannot send result.")
+                // Replace the current fragment with a new BuildPC instance
+                fragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, BuildPC(), "BuildPC")
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .addToBackStack("BuildPC")  // Add this transaction to the back stack
+                    .commit()
             }
         }
+    }
 
-
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        // Ensure that no data is passed when the fragment is destroyed or backed out of.
+        // Only pass the selected component when the "OK" button is clicked.
+        parentFragmentManager.clearFragmentResult("selectedComponent")
     }
 }
