@@ -126,16 +126,26 @@ class ItemsInfo : Fragment() {
                 }
                 parentFragmentManager.setFragmentResult("selectedComponent", result)
 
-                // Navigate directly to BuildPC fragment
-                val buildPCFragment = BuildPC()
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, buildPCFragment, "BuildPC")
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .commit()
+                val fragmentManager = requireActivity().supportFragmentManager
+                // Check if BuildPC is already in the back stack
+                val buildPCFragment = fragmentManager.findFragmentByTag("BuildPC")
+
+                if (buildPCFragment != null) {
+                    // Pop back to the existing BuildPC if it's already in the back stack
+                    fragmentManager.popBackStack("BuildPC", 0)
+                } else {
+                    // Replace the current fragment with a new BuildPC instance
+                    fragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, BuildPC(), "BuildPC")
+                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .addToBackStack("BuildPC")  // Add this transaction to the back stack
+                        .commit()
+                }
             } else {
                 Log.e("ItemsInfo", "Component data is null, cannot send result.")
             }
         }
+
 
 
     }
