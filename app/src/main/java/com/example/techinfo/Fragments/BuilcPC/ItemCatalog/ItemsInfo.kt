@@ -117,8 +117,7 @@ class ItemsInfo : Fragment() {
         val updatedTimeTextView = view.findViewById<TextView>(R.id.updatedTimeTextView)
         updatedTimeTextView.text = "Updated At: ${component.processor?. created_at?: "N/A"}"  // Adjust field name as needed
 
-        // Handle the "OK" button action
-        // Handle the "OK" button action
+
         view.findViewById<Button>(R.id.okButton).setOnClickListener {
             if (component != null) {
                 val result = Bundle().apply {
@@ -127,27 +126,17 @@ class ItemsInfo : Fragment() {
                 }
                 parentFragmentManager.setFragmentResult("selectedComponent", result)
 
-                // Pop back to the BuildPC fragment
-                val fragmentManager = requireActivity().supportFragmentManager
-
-                // Check if BuildPC is in the back stack
-                val buildPCFragment = fragmentManager.findFragmentByTag("BuildPC")
-
-                if (buildPCFragment != null) {
-                    // Pop back to BuildPC if it's already in the stack
-                    fragmentManager.popBackStack("BuildPC", 0)
-                } else {
-                    // Replace with a new BuildPC fragment if it's not in the back stack
-                    val newBuildPCFragment = BuildPC()
-                    fragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, newBuildPCFragment, "BuildPC")
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .commit()
-                }
+                // Navigate directly to BuildPC fragment
+                val buildPCFragment = BuildPC()
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, buildPCFragment, "BuildPC")
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .commit()
             } else {
                 Log.e("ItemsInfo", "Component data is null, cannot send result.")
             }
         }
+
 
     }
 }
