@@ -1,5 +1,6 @@
 package com.example.techinfo.Fragments.BuildPC
 
+import AlertDialog_Buildpc
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -194,7 +195,8 @@ class BuildPC : Fragment() {
                     if (compatibilityResponse?.is_compatible == true) {
                         Toast.makeText(requireContext(), "Components are compatible!", Toast.LENGTH_SHORT).show()
                     } else {
-                        Toast.makeText(requireContext(), "Incompatible components: ${compatibilityResponse?.issues?.joinToString()}", Toast.LENGTH_SHORT).show()
+                        val alertDialogFragment = AlertDialog_Buildpc()
+                        alertDialogFragment.show(parentFragmentManager, "alertDialog")
                     }
                 } else {
                     Toast.makeText(requireContext(), "Error checking compatibility", Toast.LENGTH_SHORT).show()

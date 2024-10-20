@@ -16,20 +16,20 @@
         android:layout_margin="8dp"
         android:layoutDirection="rtl"
         app:cardCornerRadius="16dp"
-    app:cardElevation="4dp"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent">
+        app:cardElevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <android.widget.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:queryHint="Search articles..."
-        android:iconifiedByDefault="false"
-        android:background="@color/white" />
+        <android.widget.SearchView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:queryHint="Search articles..."
+            android:iconifiedByDefault="false"
+            android:background="@color/white" />
 
-</androidx.cardview.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
     <!-- RecyclerView inside SwipeRefreshLayout -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
