@@ -1,110 +1,102 @@
-<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/swipeRefreshLayout"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="@color/background"
-    android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <FrameLayout
+    <!-- CardView as a floating background with rounded corners and shadow -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:background="@drawable/background_card"
+        app:cardElevation="8dp"
+        app:cardCornerRadius="20dp">
 
-        <!-- CardView as a floating background with rounded corners and shadow -->
-        <androidx.cardview.widget.CardView
+        <!-- Layout for all the content inside the CardView -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="16dp"
-            android:background="@drawable/background_card"
-            app:cardElevation="8dp"
-            app:cardCornerRadius="20dp">
+            android:orientation="vertical">
 
-            <!-- Layout for all the content inside the CardView -->
-            <LinearLayout
+            <!-- Fixed ImageView at the top with 16dp padding -->
+            <ImageView
+                android:id="@+id/videoThumbnailImageView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+                android:layout_height="240dp"
+                android:layout_gravity="top"
+                android:layout_marginBottom="26dp"
+                android:padding="16dp"
+                android:scaleType="centerCrop" />
 
-                <!-- Fixed ImageView at the top with 16dp padding -->
+            <TextView
+                android:id="@+id/articleTitleTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginBottom="16dp"
+                android:padding="10dp" />
 
-                <!-- Fixed Article Title below the ImageView with 10dp padding -->
-                <ImageView
-                    android:id="@+id/videoThumbnailImageView"
-                    android:layout_width="match_parent"
-                    android:layout_height="240dp"
-                    android:layout_gravity="top"
-                    android:layout_marginBottom="26dp"
-                    android:padding="16dp"
-                    android:scaleType="centerCrop" />
+            <!-- Scrollable content starts below the Article Title -->
+            <ScrollView
+                android:id="@+id/scrollView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
 
-                <TextView
-                    android:id="@+id/articleTitleTextView"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:layout_marginBottom="16dp"
-                    android:padding="10dp" />
+                    android:orientation="vertical"
+                    android:padding="16dp"> <!-- Added padding for spacing -->
 
-                <!-- Scrollable content starts below the Article Title -->
-                <ScrollView
-                    android:id="@+id/scrollView"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="1">
+                    <TextView
+                        android:id="@+id/contentTextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:textSize="16sp" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp"> <!-- Added padding for spacing -->
+                        android:orientation="horizontal"
+                        android:paddingTop="8dp">
 
                         <TextView
-                            android:id="@+id/contentTextView"
-                            android:layout_width="match_parent"
+                            android:id="@+id/createdTimeTextView"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:textSize="16sp" />
+                            android:textSize="12sp"
+                            android:textColor="@android:color/darker_gray"
+                            android:layout_weight="1" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
+                        <TextView
+                            android:id="@+id/updatedTimeTextView"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingTop="8dp">
-
-                            <TextView
-                                android:id="@+id/createdTimeTextView"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:textSize="12sp"
-                                android:textColor="@android:color/darker_gray"
-                                android:layout_weight="1" />
-
-                            <TextView
-                                android:id="@+id/updatedTimeTextView"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:textSize="12sp"
-                                android:textColor="@android:color/darker_gray"
-                                android:gravity="end"
-                                android:layout_weight="1" />
-                        </LinearLayout>
+                            android:textSize="12sp"
+                            android:textColor="@android:color/darker_gray"
+                            android:gravity="end"
+                            android:layout_weight="1" />
                     </LinearLayout>
+                </LinearLayout>
 
-                </ScrollView>
+            </ScrollView>
 
-                <!-- Add the "OK" Button at the bottom -->
-                <Button
-                    android:id="@+id/okButton"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="OK"
-                    android:textColor="@android:color/white"
-                    android:background="@color/blue"
-                    android:padding="16dp"
-                    android:layout_marginTop="16dp" />
+            <!-- Add the "OK" Button at the bottom -->
+            <Button
+                android:id="@+id/okButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="OK"
+                android:textColor="@android:color/white"
+                android:background="@color/blue"
+                android:padding="16dp"
+                android:layout_marginTop="16dp" />
 
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-    </FrameLayout>
-</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+</FrameLayout>
