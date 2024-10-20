@@ -18,15 +18,3 @@ data class ComponentData(
     val hdd: Hdd? = null,                // For HDD
     val ssd: Ssd? = null                 // For SSD
 ) : Serializable
-
-data class BuildPCComponents(
-    var cpuList: MutableList<ComponentData> = mutableListOf(),
-    var gpuList: MutableList<ComponentData> = mutableListOf(),
-    var ramList: MutableList<ComponentData> = mutableListOf(),
-    var psuList: MutableList<ComponentData> = mutableListOf(),
-    var caseList: MutableList<ComponentData> = mutableListOf(),
-    var cpuCoolerList: MutableList<ComponentData> = mutableListOf(),
-    var hddList: MutableList<ComponentData> = mutableListOf(),
-    var ssdList: MutableList<ComponentData> = mutableListOf(),
-    var motherboardList: MutableList<ComponentData> = mutableListOf()
-) : Serializable

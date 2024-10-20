@@ -7,6 +7,7 @@ import retrofit2.http.POST
 import com.google.gson.annotations.SerializedName
 import retrofit2.http.PUT
 import retrofit2.http.Path
+import retrofit2.http.Query
 import java.io.Serializable
 
 // Data class for OTP request
@@ -167,6 +168,25 @@ data class Ssd(
     val updated_at: String
 ) : Serializable  // Make it Serializable
 
+data class CompatibilityResponse(
+    val is_compatible: Boolean,  // A flag indicating if the components are compatible
+    val issues: List<String>,    // List of compatibility issues, if any
+    val components: SelectedComponents // A nested class to hold selected components
+)
+
+// A data class to hold the selected components for troubleshooting purposes
+data class SelectedComponents(
+    val processor: String?,
+    val motherboard: String?,
+    val ram: String?,
+    val gpu: String?,
+    val psu: String?,
+    val case: String?,
+    val cooler: String?,
+    val hdd: String?,
+    val ssd: String?
+)
+
 data class TroubleShoot_data(
     val title: String,
     val id: String
@@ -235,5 +255,18 @@ interface ApiService {
 
     @GET("ssds")
     fun getSsds(): Call<List<Ssd>>  // Added SSD endpoint
+
+    @GET("compatibility_checker")
+    fun checkCompatibility(
+        @Query("processor_name") processorName: String,
+        @Query("motherboard_name") motherboardName: String,
+        @Query("ram_name") ramName: String,
+        @Query("gpu_name") gpuName: String,
+        @Query("psu_name") psuName: String,
+        @Query("case_name") caseName: String,
+        @Query("cooler_name") coolerName: String,
+        @Query("hdd_name") hddName: String,
+        @Query("ssd_name") ssdName: String
+    ): Call<CompatibilityResponse> // Use a different return type if the API returns a response body
 }
 

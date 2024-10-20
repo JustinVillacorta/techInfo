@@ -13,6 +13,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.techinfo.Fragments.BuildPCmodules.Adapter
 import com.example.techinfo.ItemCatalog
 import com.example.techinfo.R
+import com.example.techinfo.api_connector.*
+import com.example.techinfo.api_connector.RetrofitInstance
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class BuildPC : Fragment() {
 
@@ -74,6 +79,7 @@ class BuildPC : Fragment() {
         buildButton = view.findViewById(R.id.BuildBTN)
         buildButton.setOnClickListener {
             Toast.makeText(requireContext(), "Building your PC...", Toast.LENGTH_SHORT).show()
+            checkComponentCompatibility()  // Call compatibility check when button is pressed
         }
 
         // Restore previously selected components (if any)
@@ -99,7 +105,6 @@ class BuildPC : Fragment() {
         Toast.makeText(requireContext(), "${component.name} selected for ${component.type}", Toast.LENGTH_SHORT).show()
     }
 
-
     // This method restores previously selected components in the UI after returning to BuildPC
     private fun restoreSelectedComponents() {
         for ((type, component) in selectedComponentsMap) {
@@ -109,5 +114,54 @@ class BuildPC : Fragment() {
                 componentAdapter.notifyItemChanged(position) // Refresh only the updated item
             }
         }
+    }
+
+    private fun getAllSelectedComponents(): Map<String, String> {
+        // Return only the names of the selected components
+        return selectedComponentsMap.mapValues { it.value.name }
+    }
+
+    private fun checkComponentCompatibility() {
+        // Get the selected components' names
+        val selectedComponents = getAllSelectedComponents()
+
+        // Extract the component names from the selected map
+        val processorName = selectedComponents["CPU"] ?: ""
+        val motherboardName = selectedComponents["Motherboard"] ?: ""
+        val ramName = selectedComponents["RAM"] ?: ""
+        val gpuName = selectedComponents["GPU"] ?: ""
+        val psuName = selectedComponents["PSU"] ?: ""
+        val caseName = selectedComponents["Case"] ?: ""
+        val coolerName = selectedComponents["CPU Cooler"] ?: ""
+        val hddName = selectedComponents["HDD"] ?: ""
+        val ssdName = selectedComponents["SSD"] ?: ""
+
+        // Use ApiService to check compatibility
+        val apiService = RetrofitInstance.getApiService()
+        val call = apiService.checkCompatibility(
+            processorName, motherboardName, ramName, gpuName, psuName, caseName, coolerName, hddName, ssdName
+        )
+
+        // Make the API call asynchronously
+        call.enqueue(object : Callback<CompatibilityResponse> {
+            override fun onResponse(call: Call<CompatibilityResponse>, response: Response<CompatibilityResponse>) {
+                if (response.isSuccessful) {
+                    val compatibilityResponse = response.body()
+
+                    // Handle the response: display compatibility issues if any
+                    if (compatibilityResponse?.is_compatible == true) {
+                        Toast.makeText(requireContext(), "Components are compatible!", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(requireContext(), "Incompatible components: ${compatibilityResponse?.issues?.joinToString()}", Toast.LENGTH_SHORT).show()
+                    }
+                } else {
+                    Toast.makeText(requireContext(), "Error checking compatibility", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<CompatibilityResponse>, t: Throwable) {
+                Toast.makeText(requireContext(), "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 }

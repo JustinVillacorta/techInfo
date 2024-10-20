@@ -22,7 +22,14 @@ class ItemCatalog : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var componentAdapter: Adapter
     private val allCpuDataList = mutableListOf<ComponentData>()
+    private val allGpuDataList = mutableListOf<ComponentData>()
     private val allMotherboardDataList = mutableListOf<ComponentData>()
+    private val allRamDataList = mutableListOf<ComponentData>()
+    private val allPsuDataList = mutableListOf<ComponentData>()
+    private val allCaseDataList = mutableListOf<ComponentData>()
+    private val allCpuCoolerDataList = mutableListOf<ComponentData>()
+    private val allHddDataList = mutableListOf<ComponentData>()
+    private val allSsdDataList = mutableListOf<ComponentData>()
     private val filteredDataList = mutableListOf<ComponentData>()
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var searchView: SearchView
@@ -30,11 +37,7 @@ class ItemCatalog : Fragment() {
     private var componentName: String = ""
 
     companion object {
-        fun newInstance(
-            componentName: String,
-            selectedMotherboard: Motherboard? = null,
-            selectedProcessor: Processor? = null
-        ): ItemCatalog {
+        fun newInstance(componentName: String): ItemCatalog {
             val fragment = ItemCatalog()
             val bundle = Bundle()
             bundle.putString("componentName", componentName)
@@ -71,7 +74,7 @@ class ItemCatalog : Fragment() {
             // Send the selected component back to the BuildPC fragment
             parentFragmentManager.setFragmentResult("selectedComponent", bundle)
 
-            // Optionally, you can also navigate to a detailed ItemsInfo screen if needed
+            // Optionally, navigate to detailed ItemsInfo screen
             val itemInfoFragment = ItemsInfo.newInstance(component, position)
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, itemInfoFragment)
@@ -91,6 +94,7 @@ class ItemCatalog : Fragment() {
     private fun fetchAllComponentData(componentName: String) {
         Log.d("ItemCatalog", "Fetching data for: $componentName")  // Log data fetching
         swipeRefreshLayout.isRefreshing = true
+
         when (componentName.lowercase()) {
             "cpu" -> {
                 apiService.getProcessors().enqueue(object : Callback<List<Processor>> {
@@ -98,7 +102,6 @@ class ItemCatalog : Fragment() {
                         if (response.isSuccessful) {
                             allCpuDataList.clear()
                             response.body()?.forEach { processor ->
-                                Log.d("ItemCatalog", "Processor found: ${processor.processor_name}, Socket Type: ${processor.socket_type}")
                                 allCpuDataList.add(
                                     ComponentData(
                                         name = processor.processor_name,
@@ -107,8 +110,7 @@ class ItemCatalog : Fragment() {
                                     )
                                 )
                             }
-                            updateFilteredDataList() // Update filtered data after fetching
-                            Log.d("ItemCatalog", "Total CPUs fetched: ${allCpuDataList.size}")  // Log total CPUs fetched
+                            updateFilteredDataList("cpu")
                         } else {
                             Log.e("ItemCatalog", "Error fetching CPUs: ${response.errorBody()?.string()}")
                         }
@@ -121,13 +123,41 @@ class ItemCatalog : Fragment() {
                     }
                 })
             }
+
+            "gpu" -> {
+                apiService.getGpus().enqueue(object : Callback<List<Gpu>> {
+                    override fun onResponse(call: Call<List<Gpu>>, response: Response<List<Gpu>>) {
+                        if (response.isSuccessful) {
+                            allGpuDataList.clear()
+                            response.body()?.forEach { gpu ->
+                                allGpuDataList.add(
+                                    ComponentData(
+                                        name = gpu.gpu_name,
+                                        type = "GPU",
+                                        gpu = gpu
+                                    )
+                                )
+                            }
+                            updateFilteredDataList("gpu")
+                        } else {
+                            Log.e("ItemCatalog", "Error fetching GPUs: ${response.errorBody()?.string()}")
+                        }
+                        swipeRefreshLayout.isRefreshing = false
+                    }
+
+                    override fun onFailure(call: Call<List<Gpu>>, t: Throwable) {
+                        Log.e("ItemCatalog", "Request failed: ${t.localizedMessage}")
+                        swipeRefreshLayout.isRefreshing = false
+                    }
+                })
+            }
+
             "motherboard" -> {
                 apiService.getMotherboards().enqueue(object : Callback<List<Motherboard>> {
                     override fun onResponse(call: Call<List<Motherboard>>, response: Response<List<Motherboard>>) {
                         if (response.isSuccessful) {
                             allMotherboardDataList.clear()
                             response.body()?.forEach { motherboard ->
-                                Log.d("ItemCatalog", "Motherboard found: ${motherboard.motherboard_name}, Socket Type: ${motherboard.socket_type}")
                                 allMotherboardDataList.add(
                                     ComponentData(
                                         name = motherboard.motherboard_name,
@@ -136,8 +166,7 @@ class ItemCatalog : Fragment() {
                                     )
                                 )
                             }
-                            updateFilteredDataList() // Update filtered data after fetching
-                            Log.d("ItemCatalog", "Total Motherboards fetched: ${allMotherboardDataList.size}")  // Log total Motherboards fetched
+                            updateFilteredDataList("motherboard")
                         } else {
                             Log.e("ItemCatalog", "Error fetching Motherboards: ${response.errorBody()?.string()}")
                         }
@@ -150,18 +179,195 @@ class ItemCatalog : Fragment() {
                     }
                 })
             }
+
+            "ram" -> {
+                apiService.getRams().enqueue(object : Callback<List<Ram>> {
+                    override fun onResponse(call: Call<List<Ram>>, response: Response<List<Ram>>) {
+                        if (response.isSuccessful) {
+                            allRamDataList.clear()
+                            response.body()?.forEach { ram ->
+                                allRamDataList.add(
+                                    ComponentData(
+                                        name = ram.ram_name,
+                                        type = "RAM",
+                                        ram = ram
+                                    )
+                                )
+                            }
+                            updateFilteredDataList("ram")
+                        } else {
+                            Log.e("ItemCatalog", "Error fetching RAM: ${response.errorBody()?.string()}")
+                        }
+                        swipeRefreshLayout.isRefreshing = false
+                    }
+
+                    override fun onFailure(call: Call<List<Ram>>, t: Throwable) {
+                        Log.e("ItemCatalog", "Request failed: ${t.localizedMessage}")
+                        swipeRefreshLayout.isRefreshing = false
+                    }
+                })
+            }
+
+            "psu" -> {
+                apiService.getPowerSupplyUnits().enqueue(object : Callback<List<PowerSupplyUnit>> {
+                    override fun onResponse(call: Call<List<PowerSupplyUnit>>, response: Response<List<PowerSupplyUnit>>) {
+                        if (response.isSuccessful) {
+                            allPsuDataList.clear()
+                            response.body()?.forEach { psu ->
+                                allPsuDataList.add(
+                                    ComponentData(
+                                        name = psu.psu_name,
+                                        type = "PSU",
+                                        psu = psu
+                                    )
+                                )
+                            }
+                            updateFilteredDataList("psu")
+                        } else {
+                            Log.e("ItemCatalog", "Error fetching PSU: ${response.errorBody()?.string()}")
+                        }
+                        swipeRefreshLayout.isRefreshing = false
+                    }
+
+                    override fun onFailure(call: Call<List<PowerSupplyUnit>>, t: Throwable) {
+                        Log.e("ItemCatalog", "Request failed: ${t.localizedMessage}")
+                        swipeRefreshLayout.isRefreshing = false
+                    }
+                })
+            }
+
+            "case" -> {
+                apiService.getComputerCases().enqueue(object : Callback<List<Case>> {
+                    override fun onResponse(call: Call<List<Case>>, response: Response<List<Case>>) {
+                        if (response.isSuccessful) {
+                            allCaseDataList.clear()
+                            response.body()?.forEach { case ->
+                                allCaseDataList.add(
+                                    ComponentData(
+                                        name = case.case_name,
+                                        type = "Case",
+                                        case = case
+                                    )
+                                )
+                            }
+                            updateFilteredDataList("case")
+                        } else {
+                            Log.e("ItemCatalog", "Error fetching Cases: ${response.errorBody()?.string()}")
+                        }
+                        swipeRefreshLayout.isRefreshing = false
+                    }
+
+                    override fun onFailure(call: Call<List<Case>>, t: Throwable) {
+                        Log.e("ItemCatalog", "Request failed: ${t.localizedMessage}")
+                        swipeRefreshLayout.isRefreshing = false
+                    }
+                })
+            }
+
+            "cpu cooler" -> {
+                apiService.getCpuCoolers().enqueue(object : Callback<List<CpuCooler>> {
+                    override fun onResponse(call: Call<List<CpuCooler>>, response: Response<List<CpuCooler>>) {
+                        if (response.isSuccessful) {
+                            allCpuCoolerDataList.clear()
+                            response.body()?.forEach { cooler ->
+                                allCpuCoolerDataList.add(
+                                    ComponentData(
+                                        name = cooler.cooler_name,
+                                        type = "CPU Cooler",
+                                        cpuCooler = cooler
+                                    )
+                                )
+                            }
+                            updateFilteredDataList("cpu cooler")
+                        } else {
+                            Log.e("ItemCatalog", "Error fetching CPU Coolers: ${response.errorBody()?.string()}")
+                        }
+                        swipeRefreshLayout.isRefreshing = false
+                    }
+
+                    override fun onFailure(call: Call<List<CpuCooler>>, t: Throwable) {
+                        Log.e("ItemCatalog", "Request failed: ${t.localizedMessage}")
+                        swipeRefreshLayout.isRefreshing = false
+                    }
+                })
+            }
+
+            "ssd" -> {
+                apiService.getSsds().enqueue(object : Callback<List<Ssd>> {
+                    override fun onResponse(call: Call<List<Ssd>>, response: Response<List<Ssd>>) {
+                        if (response.isSuccessful) {
+                            allSsdDataList.clear()
+                            response.body()?.forEach { ssd ->
+                                allSsdDataList.add(
+                                    ComponentData(
+                                        name = ssd.ssd_name,
+                                        type = "SSD",
+                                        ssd = ssd
+                                    )
+                                )
+                            }
+                            updateFilteredDataList("ssd")
+                        } else {
+                            Log.e("ItemCatalog", "Error fetching SSDs: ${response.errorBody()?.string()}")
+                        }
+                        swipeRefreshLayout.isRefreshing = false
+                    }
+
+                    override fun onFailure(call: Call<List<Ssd>>, t: Throwable) {
+                        Log.e("ItemCatalog", "Request failed: ${t.localizedMessage}")
+                        swipeRefreshLayout.isRefreshing = false
+                    }
+                })
+            }
+
+            "hdd" -> {
+                apiService.getHdds().enqueue(object : Callback<List<Hdd>> {
+                    override fun onResponse(call: Call<List<Hdd>>, response: Response<List<Hdd>>) {
+                        if (response.isSuccessful) {
+                            allHddDataList.clear()
+                            response.body()?.forEach { hdd ->
+                                allHddDataList.add(
+                                    ComponentData(
+                                        name = hdd.hdd_name,
+                                        type = "HDD",
+                                        hdd = hdd
+                                    )
+                                )
+                            }
+                            updateFilteredDataList("hdd")
+                        } else {
+                            Log.e("ItemCatalog", "Error fetching HDDs: ${response.errorBody()?.string()}")
+                        }
+                        swipeRefreshLayout.isRefreshing = false
+                    }
+
+                    override fun onFailure(call: Call<List<Hdd>>, t: Throwable) {
+                        Log.e("ItemCatalog", "Request failed: ${t.localizedMessage}")
+                        swipeRefreshLayout.isRefreshing = false
+                    }
+                })
+            }
+
+            else -> {
+                Log.e("ItemCatalog", "Unknown component name: $componentName")
+                swipeRefreshLayout.isRefreshing = false
+            }
         }
     }
 
-    private fun updateFilteredDataList() {
+    private fun updateFilteredDataList(componentType: String) {
         filteredDataList.clear()
-        // Always show all items, not filtered by selected components
-        if (componentName.lowercase() == "cpu") {
-            filteredDataList.addAll(allCpuDataList)
-            Log.d("ItemCatalog", "Filtered CPU list updated, count: ${filteredDataList.size}")  // Log updated count of CPUs
-        } else if (componentName.lowercase() == "motherboard") {
-            filteredDataList.addAll(allMotherboardDataList)
-            Log.d("ItemCatalog", "Filtered Motherboard list updated, count: ${filteredDataList.size}")  // Log updated count of Motherboards
+
+        when (componentType) {
+            "cpu" -> filteredDataList.addAll(allCpuDataList)
+            "gpu" -> filteredDataList.addAll(allGpuDataList)
+            "motherboard" -> filteredDataList.addAll(allMotherboardDataList)
+            "ram" -> filteredDataList.addAll(allRamDataList)
+            "psu" -> filteredDataList.addAll(allPsuDataList)
+            "case" -> filteredDataList.addAll(allCaseDataList)
+            "cpu cooler" -> filteredDataList.addAll(allCpuCoolerDataList)
+            "ssd" -> filteredDataList.addAll(allSsdDataList)
+            "hdd" -> filteredDataList.addAll(allHddDataList)
         }
         componentAdapter.notifyDataSetChanged()
     }
@@ -173,24 +379,31 @@ class ItemCatalog : Fragment() {
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                filterComponents(newText)
+                filterData(newText)
                 return true
             }
         })
     }
 
-    private fun filterComponents(query: String?) {
+    private fun filterData(query: String?) {
         filteredDataList.clear()
-        if (query.isNullOrEmpty()) {
-            Log.d("ItemCatalog", "Query is empty, showing all components")  // Log empty query
-            updateFilteredDataList() // Show all components if the query is empty
+        val searchText = query?.lowercase()?.trim() ?: ""
+        if (searchText.isEmpty()) {
+            updateFilteredDataList(componentName.lowercase())
         } else {
-            val lowerCaseQuery = query.lowercase()
-            filteredDataList.addAll(
-                allCpuDataList.filter { it.name.lowercase().contains(lowerCaseQuery) } +
-                        allMotherboardDataList.filter { it.name.lowercase().contains(lowerCaseQuery) }
-            )
-            Log.d("ItemCatalog", "Filtered list based on query '$query', count: ${filteredDataList.size}")  // Log count of filtered items
+            val originalList = when (componentName.lowercase()) {
+                "cpu" -> allCpuDataList
+                "gpu" -> allGpuDataList
+                "motherboard" -> allMotherboardDataList
+                "ram" -> allRamDataList
+                "psu" -> allPsuDataList
+                "case" -> allCaseDataList
+                "cpu cooler" -> allCpuCoolerDataList
+                "ssd" -> allSsdDataList
+                "hdd" -> allHddDataList
+                else -> emptyList()
+            }
+            originalList.filterTo(filteredDataList) { it.name.lowercase().contains(searchText) }
         }
         componentAdapter.notifyDataSetChanged()
     }
