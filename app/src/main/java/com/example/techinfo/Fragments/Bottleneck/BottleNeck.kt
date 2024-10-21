@@ -122,8 +122,11 @@ class BottleNeck : Fragment() {
         bottleneckMessageTextView.text = bottleneckResponse.message
         bottleneckPercentageTextView.text = "Bottleneck Percentage: ${bottleneckResponse.percentage_difference}%"
 
-        // Set the bottleneck percentage to the ProgressBar
-        progressBar.progress = bottleneckResponse.percentage_difference.toInt()
+        // Convert the percentage to an integer by rounding to the nearest whole number
+        val roundedPercentage = Math.round(bottleneckResponse.percentage_difference).toInt()
+
+        // Set the rounded percentage to the ProgressBar
+        progressBar.progress = roundedPercentage
 
         // Create and show the AlertDialog
         AlertDialog.Builder(requireContext())
@@ -134,4 +137,6 @@ class BottleNeck : Fragment() {
             .create()
             .show()
     }
+
+
 }

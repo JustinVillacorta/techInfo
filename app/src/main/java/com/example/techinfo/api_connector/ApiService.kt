@@ -222,9 +222,9 @@ data class BottleneckRequest(
 
 data class BottleneckResponse(
     val bottleneck: String,
-    val cpuScore: Double,
-    val gpuScore: Double,
-    val resolution_modifier: Int,
+    val cpuScore: String,
+    val gpuScore: String,
+    val resolution_modifier: String,
     val percentage_difference: Double,
     val message: String
 )
