@@ -25,12 +25,10 @@ class Adapter(
             Log.d("Adapter", "Binding Component: ${component.name}, Part Details: ${component.partDetails}")
             componentNameTextView.text = if (component.partDetails.isNotEmpty()) component.partDetails else component.name
             componentImageView.setImageResource(getIconResource(component.type))
-            itemView.setBackgroundColor(if (component.isSelected) Color.LTGRAY else Color.WHITE)
 
             itemView.setOnClickListener {
                 itemClickListener(component, position)
                 component.isSelected = !component.isSelected
-                itemView.setBackgroundColor(if (component.isSelected) Color.LTGRAY else Color.WHITE)
                 notifyItemChanged(position)
             }
 
