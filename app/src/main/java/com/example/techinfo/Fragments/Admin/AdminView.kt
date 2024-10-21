@@ -19,7 +19,6 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class AdminView : Fragment() {
-
     private lateinit var recyclerViewAdmin: RecyclerView
     private lateinit var adminList: ArrayList<admin_data_class> // Full list of items
     private lateinit var filteredList: ArrayList<admin_data_class> // Filtered list for display
@@ -45,7 +44,6 @@ class AdminView : Fragment() {
         return view
     }
 
-    // Fetch processors data from the API
     private fun fetchProcessorsFromApi() {
         val apiService = RetrofitInstance.getApiService()
         val call = apiService.getProcessors()
@@ -55,47 +53,33 @@ class AdminView : Fragment() {
                 if (response.isSuccessful) {
                     val processors = response.body()
                     processors?.forEach { processor ->
-                        // Safely convert values
+                        // Safely convert the string values to Float
+                        val baseClockSpeed = processor.base_clock_speed?.toFloatOrNull() ?: 0.0f
+                        val maxClockSpeed = processor.max_turbo_boost_clock_speed?.toFloatOrNull() ?: 0.0f
 
-                        val power = processor.tdp?.let {
-                            try {
-                                it.toInt()
-                            } catch (e: NumberFormatException) {
-                                0
-                            }
-                        } ?: 0
-
-                        // Create admin data class for each processor
                         val adminItem = admin_data_class(
-                            processorId = processor.processor_id.toString(),  // processor_id as String
-                            ModelName = processor.processor_name,  // processor_name
-                            Specs = "Brand: ${processor.brand}, Socket: ${processor.socket_type}, " +
-                                    "Clock Speed: ${processor.base_clock_speed} GHz - ${processor.max_turbo_boost_clock_speed} GHz, " +
-                                    "TDP: ${processor.tdp}, Cache: ${processor.cache_size_mb}MB, " +
-                                    "Graphics: ${processor.integrated_graphics}",  // Specifications description
-                            Category = "CPU",  // Assuming CPU for category
-                            brand = processor.brand,  // brand
-                            socket_type = processor.socket_type,  // socket_type
-                            cores = processor.cores,  // cores
-                            threads = processor.threads,  // threads
-                            base_clock_speed = processor.base_clock_speed,  // base clock speed as String
-                            max_turbo_boost_clock_speed = processor.max_turbo_boost_clock_speed,  // max clock speed as String
-                            tdp = processor.tdp,  // tdp (thermal design power)
-                            cache_size_mb = processor.cache_size_mb,  // cache size in MB
-                            integrated_graphics = processor.integrated_graphics,  // integrated graphics
-                            compatible_chipsets = processor.compatible_chipsets,  // compatible chipsets
-                            link = processor.link ?: "",  // Handle null link with empty string
+                            processorId = processor.processor_id,
+                            ModelName = processor.processor_name,
+                            Specs = "Brand: ${processor.brand}, Socket: ${processor.socket_type}, Clock Speed: ${baseClockSpeed} GHz - ${maxClockSpeed} GHz",
+                            Category = "CPU",
+                            brand = processor.brand,
+                            socket_type = processor.socket_type,
+                            base_clock_speed = processor.base_clock_speed,
+                            max_turbo_boost_clock_speed = processor.max_turbo_boost_clock_speed,
+                            compatible_chipsets = processor.compatible_chipsets,
+                            link = processor.link ?: "",  // Provide a default value or handle null
+                            cache_size_mb = processor.cache_size_mb,
                             performance_score = processor.performance_score,
-                            created_at = processor.created_at ?: "",  // created_at timestamp, handle null
-                            updated_at = processor.updated_at ?: ""  // updated_at timestamp, handle null
+                            integrated_graphics = processor.integrated_graphics,
+                            tdp = processor.tdp,
+                            cores = processor.cores,
+                            threads = processor.threads,
+                            created_at = processor.created_at,
+                            updated_at = processor.updated_at
                         )
-
-
-                        adminList.add(adminItem)  // Add item to the full list
+                        adminList.add(adminItem)
                     }
-
-                    // Initially show all items
-                    filteredList.addAll(adminList)
+                    filteredList.addAll(adminList)  // Initially show all data
                     adminAdapter.notifyDataSetChanged()
                 } else {
                     Log.e("AdminView", "API Error: ${response.code()}")
@@ -112,14 +96,15 @@ class AdminView : Fragment() {
         })
     }
 
-    // Open dialog to edit an existing processor item
+
+    // Method to open the edit dialog for an existing item
     fun openEditDialog(item: admin_data_class, position: Int) {
-        if (isAdded) {
+        if (isAdded) {  // Ensure fragment is attached
             val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add_item, null)
             val modelNameEditText = dialogView.findViewById<EditText>(R.id.ModelNameEditText)
             val specsEditText = dialogView.findViewById<EditText>(R.id.SpecsEditText)
 
-            // Pre-fill EditTexts with existing values
+            // Pre-fill the EditTexts with current data
             modelNameEditText.setText(item.ModelName)
             specsEditText.setText(item.Specs)
 
@@ -135,39 +120,37 @@ class AdminView : Fragment() {
                     }
 
                     // Create a new Processor object for the update
-                    // Convert admin_data_class to Processor for API update
                     val updatedProcessor = Processor(
                         processor_id = item.processorId,
                         processor_name = updatedModelName,
                         brand = item.brand,
                         socket_type = item.socket_type,
+                        base_clock_speed = "%.2f".format(item.base_clock_speed),
+                        max_turbo_boost_clock_speed = "%.2f".format(item.max_turbo_boost_clock_speed),
                         compatible_chipsets = item.compatible_chipsets,
-                        cores = item.cores,
-                        threads = item.threads,
-                        base_clock_speed = item.base_clock_speed,
-                        max_turbo_boost_clock_speed = item.max_turbo_boost_clock_speed,
-                        tdp = item.tdp,
+                        link = item.link.toString(),
                         cache_size_mb = item.cache_size_mb,
-                        integrated_graphics = item.integrated_graphics,
-                        link = item.link ?: "",  // Default empty string if null
+                        cores = item.cores,
+                        integrated_graphics = item.integrated_graphics.toString(),
                         performance_score = item.performance_score,
+                        tdp = item.tdp,
+                        threads = item.threads,
                         created_at = item.created_at,
-                        updated_at = getCurrentDateTime()  // Dynamically set the updated timestamp
+                        updated_at = getCurrentDateTime()  // Dynamically get the current date-time
                     )
 
-
-                    // Update processor on the server
                     val apiService = RetrofitInstance.getApiService()
                     apiService.updateProcessor(item.processorId, updatedProcessor).enqueue(object : Callback<Processor> {
                         override fun onResponse(call: Call<Processor>, response: Response<Processor>) {
                             if (response.isSuccessful) {
+                                // Update the item using the copy function
                                 val updatedItem = item.copy(
                                     ModelName = updatedModelName,
                                     Specs = updatedSpecs,
                                     updated_at = getCurrentDateTime() // Update the timestamp if needed
                                 )
 
-                                adminList[position] = updatedItem  // Replace item in the list
+                                adminList[position] = updatedItem // Replace the old item with the updated item
                                 adminAdapter.notifyItemChanged(position)
                                 Toast.makeText(requireContext(), "Item updated successfully", Toast.LENGTH_SHORT).show()
                             } else {
@@ -192,9 +175,9 @@ class AdminView : Fragment() {
         }
     }
 
-    // Helper function to get the current date and time (modify as needed)
+    // Helper function to get the current date and time
     private fun getCurrentDateTime(): String {
-        // Example date-time (replace with dynamic value)
-        return "2024-10-19T12:00:00Z"
+        // Add logic here to generate the current date-time in the desired format
+        return "2024-10-19T12:00:00Z"  // Example, replace with dynamic value
     }
 }

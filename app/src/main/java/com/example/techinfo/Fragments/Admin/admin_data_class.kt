@@ -13,7 +13,7 @@ data class admin_data_class(
     val max_turbo_boost_clock_speed: String,  // Max clock speed, matches 'max_turbo_boost_clock_speed' in Processor class
     val tdp: String,          // Thermal design power, matches 'tdp' in Processor class
     val cache_size_mb: String,  // Cache size in MB, matches 'cache_size_mb' in Processor class
-    val integrated_graphics: String,  // Integrated graphics, matches 'integrated_graphics' in Processor class
+    val integrated_graphics: String? = null,  // Integrated graphics, matches 'integrated_graphics' in Processor class
     val compatible_chipsets: String,  // Compatible chipsets, matches 'compatible_chipsets' in Processor class
     val link: String?,        // Link (URL), nullable as in Processor class
     val performance_score: String,
