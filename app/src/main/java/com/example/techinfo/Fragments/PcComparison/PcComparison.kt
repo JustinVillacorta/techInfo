@@ -29,8 +29,8 @@ class PcComparison : Fragment() {
 
         // Initialize the list with data
         pcMetricsList = listOf(
-            PcbuildComparisonData("COMPUTING", -23, 31),
-            PcbuildComparisonData("RENDERING", -34, 51),
+            PcbuildComparisonData("COMPUTING", 23, 31),
+            PcbuildComparisonData("RENDERING", 34, 51),
             PcbuildComparisonData("MEMORY", 45, -21),
             PcbuildComparisonData("POWERCAP", 37, -59),
             PcbuildComparisonData("DATA STORAGE", 4, -7)

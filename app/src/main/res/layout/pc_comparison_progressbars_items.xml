@@ -44,7 +44,6 @@
                 android:progress="23"
                 />
 
-            <!-- Left Percentage -->
         </LinearLayout>
 
         <!-- Right Side (Build 2) -->
@@ -65,7 +64,6 @@
                 android:progress="31"
                 android:progressDrawable="@drawable/progressbar2_pccompare" />
 
-            <!-- Right Percentage -->
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

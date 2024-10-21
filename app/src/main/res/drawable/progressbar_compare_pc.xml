@@ -4,8 +4,8 @@
     <!-- Background for the progress bar track -->
     <item android:id="@android:id/background">
         <shape>
-            <solid android:color="@color/Red_progressbar"/>
-            <corners android:radius="15dp"/> <!-- Background color -->
+            <solid android:color="@color/pastel"/> <!-- Background color -->
+            <corners android:radius="60dp"/> <!-- Make sure this is rounded enough -->
         </shape>
     </item>
 
@@ -13,8 +13,8 @@
     <item android:id="@android:id/progress">
         <clip>
             <shape>
-                <solid android:color="@color/pastel"/>
-                <corners android:radius="15dp"/> <!-- Progress color -->
+                <solid android:color="@color/Red_progressbar"/> <!-- Progress color -->
+                <corners android:radius="600dp"/> <!-- Match the background's corner radius -->
             </shape>
         </clip>
     </item>

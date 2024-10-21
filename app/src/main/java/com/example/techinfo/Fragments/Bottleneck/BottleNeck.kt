@@ -1,47 +1,55 @@
-    package com.example.techinfo.Fragments.Bottleneck
+package com.example.techinfo.Fragments.Bottleneck
 
-    import android.os.Bundle
-    import android.view.LayoutInflater
-    import android.view.View
-    import android.view.ViewGroup
-    import android.widget.Button
-    import androidx.fragment.app.Fragment
-    import androidx.recyclerview.widget.LinearLayoutManager
-    import androidx.recyclerview.widget.RecyclerView
-    import com.example.techinfo.R
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.techinfo.R
 
-    class BottleNeck : Fragment() {
+class BottleNeck : Fragment() {
 
-        private lateinit var recyclerView: RecyclerView
-        private lateinit var itemAdapter: BottleneckAdaptor
-        private lateinit var bottleList: List<BottleneckData>
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var itemAdapter: BottleneckAdaptor
+    private lateinit var bottleList: List<BottleneckData>
 
-        override fun onCreateView(
-            inflater: LayoutInflater, container: ViewGroup?,
-            savedInstanceState: Bundle?
-        ): View? {
-            val view = inflater.inflate(R.layout.fragment_bottle_neck, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.fragment_bottle_neck, container, false)
 
-            recyclerView = view.findViewById(R.id.recyclerView_bottleneck)
+        recyclerView = view.findViewById(R.id.recyclerView_bottleneck)
 
-            // Sample data list
-            bottleList = listOf(
-                BottleneckData("Central Processing Unit"),
-                BottleneckData("Graphics Processing Unit"),
-                BottleneckData("Resolution")
-            )
+        // Sample data list
+        bottleList = listOf(
+            BottleneckData("Central Processing Unit"),
+            BottleneckData("Graphics Processing Unit"),
+            BottleneckData("Resolution")
+        )
 
-            // Initialize the adapter
-            itemAdapter = BottleneckAdaptor(bottleList)
+        // Initialize the adapter
+        itemAdapter = BottleneckAdaptor(bottleList)
 
-            // Set LayoutManager for the RecyclerView
-            recyclerView.layoutManager = LinearLayoutManager(requireContext())
-            recyclerView.adapter = itemAdapter
+        // Set LayoutManager for the RecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.adapter = itemAdapter
 
-            val ButtonIn: Button = view.findViewById(R.id.button)
-            ButtonIn.setOnClickListener {
-                // Gather selected options using the new method
-                val selectedOptions = itemAdapter.getSelectedOptions()
+        val ButtonIn: Button = view.findViewById(R.id.button)
+        ButtonIn.setOnClickListener {
+            // Gather selected options using the new method
+            val selectedOptions = itemAdapter.getSelectedOptions()
+
+            if (selectedOptions.size < 3) {
+                Toast.makeText(requireContext(), "Please select CPU, GPU, and Resolution", Toast.LENGTH_SHORT).show()
+            } else {
                 val selectedCpu = selectedOptions[0]
                 val selectedGpu = selectedOptions[1]
                 val selectedResolution = selectedOptions[2]
@@ -49,42 +57,63 @@
                 // Calculate the overall bottleneck percentage
                 val overallBottleneckPercentage = calculateOverallBottleneck(selectedCpu, selectedGpu, selectedResolution)
 
-                // Pass the overall bottleneck percentage to the next fragment
-                val fragment = bottleneck_calculator.newInstance(overallBottleneckPercentage)
-                val transaction = fragmentManager?.beginTransaction()
-                transaction?.replace(R.id.fragment_container, fragment)?.commit()
+                // Show the bottleneck result in a dialog
+                showBottleneckDialog(overallBottleneckPercentage)
             }
-
-            return view
         }
 
-        private fun calculateOverallBottleneck(cpu: String?, gpu: String?, resolution: String?): Int {
-            val cpuPerformance = when (cpu) {
-                "Intel Core i9-13900K" -> 10
-                "AMD Ryzen 9 7950X" -> 10
-                "Intel Core i7-13700K" -> 8
-                "AMD Ryzen 7 7800X" -> 8
-                "Intel Core i5-13600K" -> 6
-                else -> 0
-            }
-
-            val gpuPerformance = when (gpu) {
-                "NVIDIA GeForce RTX 4090" -> 10
-                "AMD Radeon RX 7900 XTX" -> 10
-                "NVIDIA GeForce RTX 4080" -> 9
-                "AMD Radeon RX 6800 XT" -> 8
-                "NVIDIA GeForce RTX 3070" -> 6
-                else -> 0
-            }
-
-            val resolutionImpact = when (resolution) {
-                "4K" -> 3
-                "1440p" -> 2
-                "1080p" -> 1
-                else -> 0
-            }
-
-            val totalPerformance = cpuPerformance + gpuPerformance - resolutionImpact
-            return (100 * (totalPerformance.coerceIn(0, 10))) / 10 // Scale to 0-100
-        }
+        return view
     }
+
+    private fun calculateOverallBottleneck(cpu: String?, gpu: String?, resolution: String?): Int {
+        val cpuPerformance = when (cpu) {
+            "Intel Core i9-13900K" -> 10
+            "AMD Ryzen 9 7950X" -> 10
+            "Intel Core i7-13700K" -> 8
+            "AMD Ryzen 7 7800X" -> 8
+            "Intel Core i5-13600K" -> 6
+            else -> 0
+        }
+
+        val gpuPerformance = when (gpu) {
+            "NVIDIA GeForce RTX 4090" -> 10
+            "AMD Radeon RX 7900 XTX" -> 10
+            "NVIDIA GeForce RTX 4080" -> 9
+            "AMD Radeon RX 6800 XT" -> 8
+            "NVIDIA GeForce RTX 3070" -> 6
+            else -> 0
+        }
+
+        val resolutionImpact = when (resolution) {
+            "4K" -> 3
+            "1440p" -> 2
+            "1080p" -> 1
+            else -> 0
+        }
+
+        val totalPerformance = cpuPerformance + gpuPerformance - resolutionImpact
+        return (100 * (totalPerformance.coerceIn(0, 10))) / 10 // Scale to 0-100
+    }
+
+    private fun showBottleneckDialog(overallBottleneckPercentage: Int) {
+        // Inflate the custom layout for the AlertDialog
+        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.bottleneck_calculator_dialog, null)
+
+        // Initialize the views in the custom layout
+        val progressBar = dialogView.findViewById<ProgressBar>(R.id.progressbar)
+        val bottleneckTextView = dialogView.findViewById<TextView>(R.id.bottleneckTitleTextView)
+        val bottleneckpercentageTextView = dialogView.findViewById<TextView>(R.id.bottleneckPercentageTextView)
+
+        // Set the bottleneck percentage to the ProgressBar and TextView
+        progressBar.progress = overallBottleneckPercentage
+        bottleneckpercentageTextView.text = "Bottleneck Percentage: $overallBottleneckPercentage%"
+
+        // Create and show the AlertDialog
+        AlertDialog.Builder(requireContext())
+            .setView(dialogView)
+            .setPositiveButton("OK", null) // Close button
+            .create()
+            .show()
+    }
+
+}
