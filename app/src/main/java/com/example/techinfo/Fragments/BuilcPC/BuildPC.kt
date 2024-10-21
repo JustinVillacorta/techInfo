@@ -160,7 +160,7 @@ class BuildPC : Fragment() {
     }
 
     private fun getAllSelectedComponents(): Map<String, String> {
-        // Return only the names of the selected components
+        // Return the names of the selected components
         return selectedComponentsMap.mapValues { it.value.name }
     }
 
@@ -179,6 +179,25 @@ class BuildPC : Fragment() {
         val hddName = selectedComponents["HDD"] ?: ""
         val ssdName = selectedComponents["SSD"] ?: ""
 
+        // Check for missing components before proceeding
+        val missingComponents = mutableListOf<String>()
+        if (processorName.isEmpty()) missingComponents.add("CPU")
+        if (motherboardName.isEmpty()) missingComponents.add("Motherboard")
+        if (ramName.isEmpty()) missingComponents.add("RAM")
+        if (gpuName.isEmpty()) missingComponents.add("GPU")
+        if (psuName.isEmpty()) missingComponents.add("PSU")
+        if (caseName.isEmpty()) missingComponents.add("Case")
+        if (coolerName.isEmpty()) missingComponents.add("CPU Cooler")
+        if (hddName.isEmpty()) missingComponents.add("HDD")
+        if (ssdName.isEmpty()) missingComponents.add("SSD")
+
+        // If there are missing components, show an error message in the dialog
+        if (missingComponents.isNotEmpty()) {
+            val errorMessages = missingComponents.joinToString("\n") { "$it is missing" }
+            showAlertDialog(errorMessages)
+            return // Exit if there are missing components
+        }
+
         // Use ApiService to check compatibility
         val apiService = RetrofitInstance.getApiService()
         val call = apiService.checkCompatibility(
@@ -195,8 +214,8 @@ class BuildPC : Fragment() {
                     if (compatibilityResponse?.is_compatible == true) {
                         Toast.makeText(requireContext(), "Components are compatible!", Toast.LENGTH_SHORT).show()
                     } else {
-                        val alertDialogFragment = AlertDialog_Buildpc(compatibilityResponse)
-                        alertDialogFragment.show(parentFragmentManager, "alertDialog")
+                        val issues = compatibilityResponse?.issues?.joinToString("\n\n")
+                        showAlertDialog(issues ?: "No compatibility issues.")
                     }
                 } else {
                     Toast.makeText(requireContext(), "Error checking compatibility", Toast.LENGTH_SHORT).show()
@@ -207,5 +226,11 @@ class BuildPC : Fragment() {
                 Toast.makeText(requireContext(), "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    // Show the error messages in the AlertDialog_Buildpc
+    private fun showAlertDialog(message: String) {
+        val alertDialogFragment = AlertDialog_Buildpc(message)
+        alertDialogFragment.show(parentFragmentManager, "alertDialog")
     }
 }

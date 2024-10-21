@@ -7,11 +7,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import com.example.techinfo.R
-import com.example.techinfo.api_connector.CompatibilityResponse
 
-class AlertDialog_Buildpc(private val compatibilityResponse: CompatibilityResponse?) : DialogFragment() {
-
-    private var issues: List<String>? = null
+class AlertDialog_Buildpc(private val message: String) : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
@@ -25,18 +22,15 @@ class AlertDialog_Buildpc(private val compatibilityResponse: CompatibilityRespon
     ): View? {
         val view = inflater.inflate(R.layout.fragment_alert_dialog__buildpc, container, false)
 
-        // Get the issues directly from the compatibilityResponse
-        issues = compatibilityResponse?.issues
-
         // Set up the "OK" button
         val okbtn: Button = view.findViewById(R.id.okbtn)
         okbtn.setOnClickListener {
             dismiss() // Dismiss the dialog when "OK" is clicked
         }
 
-        // Display the issues in the dialog
+        // Display the issues or error message in the dialog
         val dialogMessage: TextView = view.findViewById(R.id.dialogMessage)
-        dialogMessage.text = issues?.joinToString("\n\n") ?: "No compatibility issues."
+        dialogMessage.text = message
 
         return view
     }

@@ -191,6 +191,14 @@ data class SelectedComponents(
     val ssd: String?
 )
 
+// Data class to represent the validation error response
+data class CompatibilityErrorResponse(
+    val error: Boolean,
+    val message: String,
+    val errors: Map<String, List<String>> // Map of field names to validation error messages
+)
+
+
 data class TroubleShoot_data(
     val title: String,
     val id: String
@@ -272,4 +280,17 @@ interface ApiService {
         @Query("hdd_name") hddName: String,
         @Query("ssd_name") ssdName: String
     ): Call<CompatibilityResponse> // Use a different return type if the API returns a response body
+    // Call to handle validation error
+    @GET("compatibility_checker")
+    fun checkCompatibilityWithValidationError(
+        @Query("processor_name") processorName: String?,
+        @Query("motherboard_name") motherboardName: String?,
+        @Query("ram_name") ramName: String?,
+        @Query("gpu_name") gpuName: String?,
+        @Query("psu_name") psuName: String?,
+        @Query("case_name") caseName: String?,
+        @Query("cooler_name") coolerName: String?,
+        @Query("hdd_name") hddName: String?,
+        @Query("ssd_name") ssdName: String?
+    ): Call<CompatibilityErrorResponse> // Error response for validation issues
 }
