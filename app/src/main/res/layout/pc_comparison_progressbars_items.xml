@@ -12,8 +12,8 @@
         android:id="@+id/metricName"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="COMPUTING"
-        android:textColor="@android:color/black"
+        android:text="PROCESSING"
+        android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold" />
 
@@ -38,21 +38,13 @@
                 android:id="@+id/progressLeft"
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
+                android:progressDrawable="@drawable/progressbar_compare_pc"
                 android:max="100"
                 android:progress="23"
-                android:progressTint="@android:color/holo_red_light" />
+                />
 
             <!-- Left Percentage -->
-            <TextView
-                android:id="@+id/percentageLeft"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingTop="4dp"
-                android:text="-23%"
-                android:textColor="@android:color/holo_red_light"
-                android:textSize="16sp" />
         </LinearLayout>
 
         <!-- Right Side (Build 2) -->
@@ -68,21 +60,12 @@
                 android:id="@+id/progressRight"
                 style="@android:style/Widget.ProgressBar.Horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="35dp"
                 android:max="100"
                 android:progress="31"
-                android:progressTint="@android:color/holo_green_light" />
+                android:progressDrawable="@drawable/progressbar2_pccompare" />
 
             <!-- Right Percentage -->
-            <TextView
-                android:id="@+id/percentageRight"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:paddingTop="4dp"
-                android:text="+31%"
-                android:textColor="@android:color/holo_green_light"
-                android:textSize="16sp" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

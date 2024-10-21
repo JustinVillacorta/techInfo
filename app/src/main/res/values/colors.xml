@@ -9,4 +9,7 @@
     <color name="blue">#0000FF</color>
     <color name="toolbar">#ADD8E6</color>
     <color name="background">#0B6AB0</color>
+    <color name="Red_progressbar">#C86464</color>
+    <color name="Green_progressbar">#85F494</color>
+    <color name="cardview">#F2DADA</color>
 </resources>

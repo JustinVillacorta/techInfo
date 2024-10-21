@@ -5,14 +5,17 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import com.example.techinfo.R
+import com.example.techinfo.api_connector.CompatibilityResponse
 
-class AlertDialog_Buildpc : DialogFragment() {
+class AlertDialog_Buildpc(private val compatibilityResponse: CompatibilityResponse?) : DialogFragment() {
+
+    private var issues: List<String>? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        // Use a custom style to make the dialog background transparent
         val dialog = super.onCreateDialog(savedInstanceState)
-        dialog.setCancelable(false) // Optional: Make dialog non-cancelable
+        dialog.setCancelable(false)
         return dialog
     }
 
@@ -20,23 +23,26 @@ class AlertDialog_Buildpc : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for the dialog (CardView-based)
         val view = inflater.inflate(R.layout.fragment_alert_dialog__buildpc, container, false)
 
-        // Find and set up the "OK" button in the CardView
-        val okbtn: Button = view.findViewById(R.id.okbtn)
+        // Get the issues directly from the compatibilityResponse
+        issues = compatibilityResponse?.issues
 
-        // Set up button click listener to dismiss the dialog
+        // Set up the "OK" button
+        val okbtn: Button = view.findViewById(R.id.okbtn)
         okbtn.setOnClickListener {
             dismiss() // Dismiss the dialog when "OK" is clicked
         }
+
+        // Display the issues in the dialog
+        val dialogMessage: TextView = view.findViewById(R.id.dialogMessage)
+        dialogMessage.text = issues?.joinToString("\n\n") ?: "No compatibility issues."
 
         return view
     }
 
     override fun onStart() {
         super.onStart()
-        // Make sure dialog is styled correctly
         dialog?.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 }

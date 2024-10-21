@@ -195,7 +195,7 @@ class BuildPC : Fragment() {
                     if (compatibilityResponse?.is_compatible == true) {
                         Toast.makeText(requireContext(), "Components are compatible!", Toast.LENGTH_SHORT).show()
                     } else {
-                        val alertDialogFragment = AlertDialog_Buildpc()
+                        val alertDialogFragment = AlertDialog_Buildpc(compatibilityResponse)
                         alertDialogFragment.show(parentFragmentManager, "alertDialog")
                     }
                 } else {

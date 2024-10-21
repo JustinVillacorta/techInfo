@@ -15,11 +15,6 @@
         android:padding="16dp">
 
         <!-- Title or header of the dialog -->
-
-        <!-- Content section -->
-
-        <!-- Buttons layout (single button) -->
-
         <TextView
             android:id="@+id/dialogTitle"
             android:layout_width="wrap_content"
@@ -34,21 +29,27 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/dialogMessage"
-            android:layout_width="298dp"
-            android:layout_height="49dp"
-            android:layout_marginTop="24dp"
-            android:paddingBottom="16dp"
-            android:text="your chosen parts are wrong
-"
-            android:textColor="@android:color/black"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.489"
+        <!-- ScrollView for dialogMessage -->
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/dialogTitle"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dialogTitle" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/okbtn"
+            android:layout_marginTop="16dp">
 
+            <TextView
+                android:id="@+id/dialogMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Your chosen parts are wrong"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+        </ScrollView>
+
+        <!-- OK Button -->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/okbtn"
             android:layout_width="wrap_content"
@@ -60,7 +61,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dialogMessage"
+            app:layout_constraintTop_toBottomOf="@id/scrollView"
             app:layout_constraintVertical_bias="1.0" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

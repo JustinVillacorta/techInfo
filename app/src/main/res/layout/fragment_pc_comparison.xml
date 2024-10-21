@@ -8,59 +8,96 @@
     android:background="@color/background"
     tools:context=".Fragments.PcComparison.PcComparison">
 
-    <!-- Build 1 Dropdown -->
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/ComponentsDropDown"
-        style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+    <!-- CardView with dropdowns -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView3"
+        android:layout_width="371dp"
+        android:layout_height="57dp"
+        android:layout_margin="16dp"
+        app:cardBackgroundColor="@color/cardview"
+        app:cardCornerRadius="30dp"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- Inner ConstraintLayout for dropdowns -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- Build 1 Dropdown -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/ComponentsDropDown"
+                style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:hint="Build 1"
+                app:boxCornerRadiusBottomEnd="0dp"
+                app:boxCornerRadiusBottomStart="0dp"
+                app:boxCornerRadiusTopEnd="30dp"
+                app:boxCornerRadiusTopStart="30dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/Parts2DropDown"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <AutoCompleteTextView
+                    android:id="@+id/Parts1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/background"
+                    android:gravity="center"
+                    android:inputType="none"
+                    android:text="Build 1"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Build 2 Dropdown -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/Parts2DropDown"
+                style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:hint="Build 2"
+                app:boxCornerRadiusBottomEnd="0dp"
+                app:boxCornerRadiusBottomStart="0dp"
+                app:boxCornerRadiusTopEnd="30dp"
+                app:boxCornerRadiusTopStart="30dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/ComponentsDropDown"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <AutoCompleteTextView
+                    android:id="@+id/Parts2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/background"
+                    android:gravity="center"
+                    android:inputType="none"
+                    android:text="Build 2"
+                    android:textColor="@android:color/white"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- RecyclerView below the CardView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="0dp"
-    android:layout_height="64dp"
-    android:layout_marginStart="34dp"
-    android:layout_marginTop="54dp"
-    android:layout_marginBottom="30dp"
-    android:hint="Builds"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintEnd_toStartOf="@+id/Parts2DropDown">
-    <AutoCompleteTextView
-        android:id="@+id/Parts1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:inputType="none"
-        android:text="Builds1" />
-</com.google.android.material.textfield.TextInputLayout>
-
-    <!-- Build 2 Dropdown -->
-<com.google.android.material.textfield.TextInputLayout
-android:id="@+id/Parts2DropDown"
-style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
-android:layout_width="0dp"
-    android:layout_height="64dp"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="54dp"
-    android:layout_marginEnd="32dp"
-    android:layout_marginBottom="30dp"
-    android:hint="Builds"
-    app:layout_constraintStart_toEndOf="@+id/ComponentsDropDown"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintEnd_toEndOf="parent">
-
-<AutoCompleteTextView
-android:id="@+id/Parts2"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:inputType="none"
-android:text="Builds2" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-
-<androidx.recyclerview.widget.RecyclerView
-android:id="@+id/recyclerView"
-android:layout_width="0dp"
-    android:layout_height="0dp"
-    android:layout_margin="16dp"
-    android:scrollbars="vertical"
-    app:layout_constraintTop_toBottomOf="@+id/ComponentsDropDown"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        android:layout_height="0dp"
+        android:layout_margin="16dp"
+        android:scrollbars="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/cardView3"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

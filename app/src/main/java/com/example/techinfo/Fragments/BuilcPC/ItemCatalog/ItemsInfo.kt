@@ -156,8 +156,7 @@ class ItemsInfo : Fragment() {
 
                 }?: "No details available for case"
             }
-
-            "Cpucooler" ->{
+            "cpu cooler" ->{
                 component.cpuCooler?.let {
                     """
                  cooler_name: ${it.cooler_name}
@@ -170,7 +169,7 @@ class ItemsInfo : Fragment() {
                 }?: "No details available for Cpu cooler"
             }
 
-            "Hdd" ->{
+            "hdd" ->{
                 component.hdd?.let {
                     """
                  hdd_name: ${it.hdd_name}

@@ -13,9 +13,7 @@ class PCBuildComparisonAdapter(private val metricsList: List<PcbuildComparisonDa
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val metricName: TextView = itemView.findViewById(R.id.metricName)
         val progressLeft: ProgressBar = itemView.findViewById(R.id.progressLeft)
-        val percentageLeft: TextView = itemView.findViewById(R.id.percentageLeft)
         val progressRight: ProgressBar = itemView.findViewById(R.id.progressRight)
-        val percentageRight: TextView = itemView.findViewById(R.id.percentageRight)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -28,9 +26,9 @@ class PCBuildComparisonAdapter(private val metricsList: List<PcbuildComparisonDa
 
         holder.metricName.text = metric.metricName
         holder.progressLeft.progress = metric.percentageLeft
-        holder.percentageLeft.text = "${metric.percentageLeft}%"
+
         holder.progressRight.progress = metric.percentageRight
-        holder.percentageRight.text = "${metric.percentageRight}%"
+
     }
 
     override fun getItemCount(): Int {
