@@ -9,10 +9,71 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.techinfo.R
+import com.example.techinfo.api_connector.ApiService
+import com.example.techinfo.api_connector.*
+import com.example.techinfo.api_connector.RetrofitInstance
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class BottleneckAdaptor(
     private val bottleList: List<BottleneckData>
 ) : RecyclerView.Adapter<BottleneckAdaptor.onViewHolder>() {
+
+    private var processorsList: List<String> = emptyList()
+    private var gpusList: List<String> = emptyList()
+    private var resolutionsList: List<String> = emptyList()
+
+    init {
+        fetchProcessors()
+        fetchGpus()
+        fetchResolutions()
+    }
+
+    private fun fetchProcessors() {
+        RetrofitInstance.getApiService().getProcessors().enqueue(object : Callback<List<Processor>> {
+            override fun onResponse(call: Call<List<Processor>>, response: Response<List<Processor>>) {
+                if (response.isSuccessful) {
+                    processorsList = response.body()?.map { it.processor_name } ?: emptyList()
+                    notifyDataSetChanged()  // Notify adapter to update when the data is received
+                }
+            }
+
+            override fun onFailure(call: Call<List<Processor>>, t: Throwable) {
+                // Handle failure
+            }
+        })
+    }
+
+    private fun fetchGpus() {
+        RetrofitInstance.getApiService().getGpus().enqueue(object : Callback<List<Gpu>> {
+            override fun onResponse(call: Call<List<Gpu>>, response: Response<List<Gpu>>) {
+                if (response.isSuccessful) {
+                    gpusList = response.body()?.map { it.gpu_name } ?: emptyList()
+                    notifyDataSetChanged()
+                }
+            }
+
+            override fun onFailure(call: Call<List<Gpu>>, t: Throwable) {
+                // Handle failure
+            }
+        })
+    }
+
+    private fun fetchResolutions() {
+        RetrofitInstance.getApiService().getResolution().enqueue(object : Callback<List<Resolution>> {
+            override fun onResponse(call: Call<List<Resolution>>, response: Response<List<Resolution>>) {
+                if (response.isSuccessful) {
+                    resolutionsList = response.body()?.map { it.resolutions_name } ?: emptyList()
+                    notifyDataSetChanged()
+                }
+            }
+
+            override fun onFailure(call: Call<List<Resolution>>, t: Throwable) {
+                // Handle failure
+            }
+        })
+    }
 
     class onViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textView: TextView = itemView.findViewById(R.id.hardware_label)
@@ -31,24 +92,11 @@ class BottleneckAdaptor(
         holder.textView.text = currentItem.name
         holder.imageView.setImageResource(R.drawable.ic_launcher_foreground) // Placeholder image
 
-        // Set dropdown options based on item type
         val options = when (currentItem.name) {
-            "Central Processing Unit" -> arrayOf(
-                "Intel Core i9-13900K",
-                "AMD Ryzen 9 7950X",
-                "Intel Core i7-13700K",
-                "AMD Ryzen 7 7800X",
-                "Intel Core i5-13600K"
-            )
-            "Graphics Processing Unit" -> arrayOf(
-                "NVIDIA GeForce RTX 4090",
-                "AMD Radeon RX 7900 XTX",
-                "NVIDIA GeForce RTX 4080",
-                "AMD Radeon RX 6800 XT",
-                "NVIDIA GeForce RTX 3070"
-            )
-            "Resolution" -> arrayOf("1080p", "1440p", "4K")
-            else -> emptyArray() // Fallback for any other cases
+            "Central Processing Unit" -> processorsList
+            "Graphics Processing Unit" -> gpusList
+            "Resolution" -> resolutionsList
+            else -> emptyList()
         }
 
         val arrayAdapter = ArrayAdapter(holder.itemView.context, R.layout.bottleneck_drop_down, options)

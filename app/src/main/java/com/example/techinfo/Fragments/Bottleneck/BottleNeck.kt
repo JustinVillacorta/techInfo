@@ -13,6 +13,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.techinfo.R
+import com.example.techinfo.api_connector.BottleneckRequest
+import com.example.techinfo.api_connector.BottleneckResponse
+import com.example.techinfo.api_connector.RetrofitInstance
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class BottleNeck : Fragment() {
 
@@ -47,73 +53,85 @@ class BottleNeck : Fragment() {
             // Gather selected options using the new method
             val selectedOptions = itemAdapter.getSelectedOptions()
 
-            if (selectedOptions.size < 3) {
+            if (selectedOptions.size < 3 || selectedOptions.contains(null)) {
                 Toast.makeText(requireContext(), "Please select CPU, GPU, and Resolution", Toast.LENGTH_SHORT).show()
             } else {
-                val selectedCpu = selectedOptions[0]
-                val selectedGpu = selectedOptions[1]
-                val selectedResolution = selectedOptions[2]
+                val selectedCpu = selectedOptions[0] ?: ""
+                val selectedGpu = selectedOptions[1] ?: ""
+                val selectedResolution = selectedOptions[2] ?: ""
 
-                // Calculate the overall bottleneck percentage
-                val overallBottleneckPercentage = calculateOverallBottleneck(selectedCpu, selectedGpu, selectedResolution)
+                // Create the data object to send via POST
+                val bottleneckRequest = BottleneckRequest(
+                    processor_name = selectedCpu,
+                    gpu_name = selectedGpu,
+                    resolutions_name = selectedResolution
+                )
 
-                // Show the bottleneck result in a dialog
-                showBottleneckDialog(overallBottleneckPercentage)
+                // Call the POST API
+                postBottleneckData(bottleneckRequest)
             }
         }
 
         return view
     }
 
-    private fun calculateOverallBottleneck(cpu: String?, gpu: String?, resolution: String?): Int {
-        val cpuPerformance = when (cpu) {
-            "Intel Core i9-13900K" -> 10
-            "AMD Ryzen 9 7950X" -> 10
-            "Intel Core i7-13700K" -> 8
-            "AMD Ryzen 7 7800X" -> 8
-            "Intel Core i5-13600K" -> 6
-            else -> 0
-        }
+    // Send the POST request with the selected data
+    private fun postBottleneckData(bottleneckRequest: BottleneckRequest) {
+        // Using RetrofitInstance to call the API
+        RetrofitInstance.getApiService().postBottleneckData(bottleneckRequest)
+            .enqueue(object : Callback<BottleneckResponse> {
+                override fun onResponse(call: Call<BottleneckResponse>, response: Response<BottleneckResponse>) {
+                    if (response.isSuccessful) {
+                        val bottleneckResponse = response.body()
 
-        val gpuPerformance = when (gpu) {
-            "NVIDIA GeForce RTX 4090" -> 10
-            "AMD Radeon RX 7900 XTX" -> 10
-            "NVIDIA GeForce RTX 4080" -> 9
-            "AMD Radeon RX 6800 XT" -> 8
-            "NVIDIA GeForce RTX 3070" -> 6
-            else -> 0
-        }
+                        // Update the UI with the response data
+                        if (bottleneckResponse != null) {
+                            // Set the message in the bottleneckMessageTextView
+                            val bottleneckMessageTextView = view?.findViewById<TextView>(R.id.bottleneckMessageTextView)
+                            bottleneckMessageTextView?.text = bottleneckResponse.message
 
-        val resolutionImpact = when (resolution) {
-            "4K" -> 3
-            "1440p" -> 2
-            "1080p" -> 1
-            else -> 0
-        }
+                            // Set the percentage difference in the bottleneckPercentageTextView
+                            val bottleneckPercentageTextView = view?.findViewById<TextView>(R.id.bottleneckPercentageTextView)
+                            bottleneckPercentageTextView?.text = "Percentage Difference: ${bottleneckResponse.percentage_difference}%"
 
-        val totalPerformance = cpuPerformance + gpuPerformance - resolutionImpact
-        return (100 * (totalPerformance.coerceIn(0, 10))) / 10 // Scale to 0-100
+                            // Show the AlertDialog with the bottleneck information
+                            showBottleneckDialog(bottleneckResponse)  // Corrected method call
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), "Failed to get bottleneck data", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<BottleneckResponse>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
     }
 
-    private fun showBottleneckDialog(overallBottleneckPercentage: Int) {
+    // Show the AlertDialog with the bottleneck information
+    private fun showBottleneckDialog(bottleneckResponse: BottleneckResponse) {
         // Inflate the custom layout for the AlertDialog
         val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.bottleneck_calculator_dialog, null)
 
         // Initialize the views in the custom layout
         val progressBar = dialogView.findViewById<ProgressBar>(R.id.progressbar)
-        val bottleneckTextView = dialogView.findViewById<TextView>(R.id.bottleneckTitleTextView)
-        val bottleneckpercentageTextView = dialogView.findViewById<TextView>(R.id.bottleneckPercentageTextView)
+        val bottleneckMessageTextView = dialogView.findViewById<TextView>(R.id.bottleneckMessageTextView)
+        val bottleneckPercentageTextView = dialogView.findViewById<TextView>(R.id.bottleneckPercentageTextView)
 
-        // Set the bottleneck percentage to the ProgressBar and TextView
-        progressBar.progress = overallBottleneckPercentage
-        bottleneckpercentageTextView.text = "Bottleneck Percentage: $overallBottleneckPercentage%"
+        // Set the bottleneck message and percentage difference in the TextViews
+        bottleneckMessageTextView.text = bottleneckResponse.message
+        bottleneckPercentageTextView.text = "Bottleneck Percentage: ${bottleneckResponse.percentage_difference}%"
+
+        // Set the bottleneck percentage to the ProgressBar
+        progressBar.progress = bottleneckResponse.percentage_difference.toInt()
 
         // Create and show the AlertDialog
         AlertDialog.Builder(requireContext())
             .setView(dialogView)
-            .setPositiveButton("OK", null) // Close button
+            .setPositiveButton("OK") { dialog, _ ->
+                dialog.dismiss()
+            }
             .create()
             .show()
     }
-
 }

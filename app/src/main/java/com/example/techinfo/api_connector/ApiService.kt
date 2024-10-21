@@ -42,6 +42,15 @@ data class PasswordResetRequest(
         val updated_at: String
     ) : Serializable  // Make it Serializable
 
+// Resolution model
+data class Resolution(
+    val screen_resolutions_id: String,
+    val resolution_size: String,
+    val resolutions_name: String,
+    val created_at: String,
+    val updated_at: String
+) : Serializable
+
 // GPU model
 data class Gpu(
     val gpu_id: Int,
@@ -205,6 +214,22 @@ data class CompatibilityErrorResponse(
     val errors: Map<String, List<String>> // Map of field names to validation error messages
 )
 
+data class BottleneckRequest(
+    val processor_name: String,
+    val gpu_name: String,
+    val resolutions_name: String,
+)
+
+data class BottleneckResponse(
+    val bottleneck: String,
+    val cpuScore: Double,
+    val gpuScore: Double,
+    val resolution_modifier: Int,
+    val percentage_difference: Double,
+    val message: String
+)
+
+
 
 data class TroubleShoot_data(
     val title: String,
@@ -254,6 +279,9 @@ interface ApiService {
     @GET("gpuses")
     fun getGpus(): Call<List<Gpu>>
 
+    @GET("screen_resolutions")
+    fun getResolution(): Call<List<Resolution>>
+
     @GET("rams")
     fun getRams(): Call<List<Ram>>
 
@@ -300,4 +328,8 @@ interface ApiService {
         @Query("hdd_name") hddName: String?,
         @Query("ssd_name") ssdName: String?
     ): Call<CompatibilityErrorResponse> // Error response for validation issues
+
+    @POST("bottleneck")
+    fun postBottleneckData(@Body data: BottleneckRequest): Call<BottleneckResponse>
+
 }
