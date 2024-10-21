@@ -1,6 +1,7 @@
 package com.example.techinfo.Fragments.BuildPC
 
 import AlertDialog_Buildpc
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -20,6 +21,9 @@ import com.example.techinfo.api_connector.RetrofitInstance
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 class BuildPC : Fragment() {
 
@@ -27,10 +31,8 @@ class BuildPC : Fragment() {
     private lateinit var componentAdapter: Adapter
     private lateinit var buildButton: Button
 
-    // Map to store the selected components
     private val selectedComponentsMap = mutableMapOf<String, ComponentData>()
 
-    // Initialize the components list with placeholder data
     private val componentDataList = mutableListOf(
         ComponentData("CPU", "CPU"),
         ComponentData("GPU", "GPU"),
@@ -43,7 +45,6 @@ class BuildPC : Fragment() {
         ComponentData("CPU Cooler", "CPU Cooler")
     )
 
-    // ProgressBar references
     private lateinit var cpuProgressBar: ProgressBar
     private lateinit var gpuProgressBar: ProgressBar
     private lateinit var memoryProgressBar: ProgressBar
@@ -60,7 +61,6 @@ class BuildPC : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize RecyclerView and its adapter
         recyclerView = view.findViewById(R.id.componentsRecyclerView)
         componentAdapter = Adapter(componentDataList) { component, position ->
             val componentName = component.name
@@ -78,7 +78,6 @@ class BuildPC : Fragment() {
             adapter = componentAdapter
         }
 
-        // Listen for the result when a component is selected from ItemCatalog
         parentFragmentManager.setFragmentResultListener("selectedComponent", this) { _, bundle ->
             val selectedComponent = bundle.getSerializable("selectedComponent") as ComponentData
             val type = bundle.getString("type") ?: ""
@@ -88,25 +87,21 @@ class BuildPC : Fragment() {
         buildButton = view.findViewById(R.id.BuildBTN)
         buildButton.setOnClickListener {
             Toast.makeText(requireContext(), "Building your PC...", Toast.LENGTH_SHORT).show()
-            checkComponentCompatibility()  // Call compatibility check when button is pressed
+            checkComponentCompatibility()
         }
 
-        // Initialize ProgressBars
         cpuProgressBar = view.findViewById(R.id.progressbarCpu)
         gpuProgressBar = view.findViewById(R.id.progressbarGpu)
         memoryProgressBar = view.findViewById(R.id.progressbarMemory)
         storageProgressBar = view.findViewById(R.id.progressbarStorage)
         psuProgressBar = view.findViewById(R.id.progressbarPsu)
 
-        // Set initial progress values
         ProgressBars()
 
-        // Restore previously selected components (if any)
         restoreSelectedComponents()
     }
 
     private fun ProgressBars() {
-        // Set initial values for the progress bars (0 to 100)
         cpuProgressBar.progress = 0
         gpuProgressBar.progress = 0
         memoryProgressBar.progress = 0
@@ -115,69 +110,49 @@ class BuildPC : Fragment() {
     }
 
     private fun updateSelectedComponent(type: String, component: ComponentData) {
-        // Store the selected component in the map based on its type
         selectedComponentsMap[type] = component
-
-        // Find the position of the component type in the list
         val position = componentDataList.indexOfFirst { it.type.equals(type, ignoreCase = true) }
-
         if (position != -1) {
-            // Replace the placeholder with the selected component in the list
             componentDataList[position] = component
-            componentAdapter.notifyItemChanged(position) // Refresh only the updated item
+            componentAdapter.notifyItemChanged(position)
         } else {
             Log.e("BuildPC", "Component type not found: $type")
         }
 
-        // Provide feedback to the user
         Toast.makeText(requireContext(), "${component.name} selected for ${component.type}", Toast.LENGTH_SHORT).show()
 
-        // Update progress bars based on the selected component
         updateProgressBars()
 
-        // Fetch performance score for selected CPU, GPU, RAM, SSD, HDD, and PSU
-        fetchPerformanceScore()  // Fetch performance scores for all components (can be optimized for specific components if needed)
+        fetchPerformanceScore()
     }
 
     private fun updateProgressBars() {
-        // Update the progress of each progress bar based on the selected components
-        cpuProgressBar.progress = selectedComponentsMap["CPU"]?.let { 0 } ?: 0
-        gpuProgressBar.progress = selectedComponentsMap["GPU"]?.let { 0 } ?: 0
-        memoryProgressBar.progress = selectedComponentsMap["RAM"]?.let { 0 } ?: 0
-
-        // Combine the SSD and HDD progress for the STORAGE bar
-        storageProgressBar.progress = 0
-        val ssdProgress = selectedComponentsMap["SSD"]?.let { 0 } ?: 0
-        val hddProgress = selectedComponentsMap["HDD"]?.let { 0 } ?: 0
-        storageProgressBar.progress = ssdProgress + hddProgress
-
-        psuProgressBar.progress = selectedComponentsMap["PSU"]?.let { 0 } ?: 0
+        cpuProgressBar.progress = if (selectedComponentsMap["CPU"] != null) 100 else 0
+        gpuProgressBar.progress = if (selectedComponentsMap["GPU"] != null) 100 else 0
+        memoryProgressBar.progress = if (selectedComponentsMap["RAM"] != null) 100 else 0
+        storageProgressBar.progress = if (selectedComponentsMap["SSD"] != null || selectedComponentsMap["HDD"] != null) 100 else 0
+        psuProgressBar.progress = if (selectedComponentsMap["PSU"] != null) 100 else 0
     }
 
-    // This method restores previously selected components in the UI after returning to BuildPC
     private fun restoreSelectedComponents() {
         for ((type, component) in selectedComponentsMap) {
             val position = componentDataList.indexOfFirst { it.type.equals(type, ignoreCase = true) }
             if (position != -1) {
                 componentDataList[position] = component
-                componentAdapter.notifyItemChanged(position) // Refresh only the updated item
+                componentAdapter.notifyItemChanged(position)
             }
         }
 
-        // After restoring components, update the progress bars
         updateProgressBars()
     }
 
     private fun getAllSelectedComponents(): Map<String, String> {
-        // Return the names of the selected components
         return selectedComponentsMap.mapValues { it.value.name }
     }
 
     private fun checkComponentCompatibility() {
-        // Get the selected components' names
         val selectedComponents = getAllSelectedComponents()
 
-        // Extract the component names from the selected map
         val processorName = selectedComponents["CPU"] ?: ""
         val motherboardName = selectedComponents["Motherboard"] ?: ""
         val ramName = selectedComponents["RAM"] ?: ""
@@ -188,7 +163,6 @@ class BuildPC : Fragment() {
         val hddName = selectedComponents["HDD"] ?: ""
         val ssdName = selectedComponents["SSD"] ?: ""
 
-        // Check for missing components before proceeding
         val missingComponents = mutableListOf<String>()
         if (processorName.isEmpty()) missingComponents.add("CPU")
         if (motherboardName.isEmpty()) missingComponents.add("Motherboard")
@@ -198,28 +172,24 @@ class BuildPC : Fragment() {
         if (caseName.isEmpty()) missingComponents.add("Case")
         if (coolerName.isEmpty()) missingComponents.add("CPU Cooler")
 
-        // If there are missing components, show an error message in the dialog
         if (missingComponents.isNotEmpty()) {
             val errorMessages = missingComponents.joinToString("\n") { "$it is missing" }
             showAlertDialog(errorMessages)
-            return // Exit if there are missing components
+            return
         }
 
-        // Use ApiService to check compatibility
         val apiService = RetrofitInstance.getApiService()
         val call = apiService.checkCompatibility(
             processorName, motherboardName, ramName, gpuName, psuName, caseName, coolerName, hddName, ssdName
         )
 
-        // Make the API call asynchronously
         call.enqueue(object : Callback<CompatibilityResponse> {
             override fun onResponse(call: Call<CompatibilityResponse>, response: Response<CompatibilityResponse>) {
                 if (response.isSuccessful) {
                     val compatibilityResponse = response.body()
-
-                    // Handle the response: display compatibility issues if any
                     if (compatibilityResponse?.is_compatible == true) {
                         Toast.makeText(requireContext(), "Components are compatible!", Toast.LENGTH_SHORT).show()
+                        saveSelectedComponents(processorName, gpuName, ramName, ssdName, hddName, psuName, coolerName, caseName, motherboardName)
                     } else {
                         val issues = compatibilityResponse?.issues?.joinToString("\n\n")
                         showAlertDialog(issues ?: "No compatibility issues.")
@@ -376,6 +346,52 @@ class BuildPC : Fragment() {
                     Toast.makeText(requireContext(), "Error fetching PSU data: ${t.message}", Toast.LENGTH_SHORT).show()
                 }
             })
+        }
+    }
+
+    private fun saveSelectedComponents(processorName: String, gpuName: String, ramName: String, ssdName: String, hddName: String, psuName: String, coolerName: String, caseName: String, motherboardName: String) {
+        // Directory where builds will be saved
+        val buildsDir = File(requireContext().filesDir, "PC_Builds")
+
+        // Create the directory if it doesn't exist
+        if (!buildsDir.exists()) {
+            buildsDir.mkdirs()
+        }
+
+        // Get the list of existing build files
+        val existingBuilds = buildsDir.listFiles { _, name -> name.startsWith("Build") }?.toList() ?: emptyList()
+
+        // Determine the next build number (auto-incrementing)
+        val nextBuildNumber = if (existingBuilds.isEmpty()) 1 else {
+            val lastBuildFile = existingBuilds.maxByOrNull {
+                // Extract the number from the filename by removing "Build " and ".txt"
+                it.name.substringAfter("Build ").removeSuffix(".txt").toIntOrNull() ?: 0
+            }
+            val lastBuildNumber = lastBuildFile?.name?.substringAfter("Build ")?.removeSuffix(".txt")?.toIntOrNull() ?: 0
+            lastBuildNumber + 1
+        }
+
+        // Define the new build file name (e.g., Build 1, Build 2, etc.)
+        val newBuildFileName = "Build $nextBuildNumber.txt"
+        val newBuildFile = File(buildsDir, newBuildFileName)
+
+        try {
+            val fos = FileOutputStream(newBuildFile)
+            fos.write("CPU: $processorName\n".toByteArray())
+            fos.write("GPU: $gpuName\n".toByteArray())
+            fos.write("RAM: $ramName\n".toByteArray())
+            fos.write("SSD: $ssdName\n".toByteArray())
+            fos.write("HDD: $hddName\n".toByteArray())
+            fos.write("PSU: $psuName\n".toByteArray())
+            fos.write("Case: $caseName\n".toByteArray())
+            fos.write("Motherboard: $motherboardName\n".toByteArray())
+            fos.write("CPU Cooler: $coolerName\n".toByteArray())
+            fos.close()
+
+            Toast.makeText(requireContext(), "PC build saved as $newBuildFileName!", Toast.LENGTH_SHORT).show()
+        } catch (e: IOException) {
+            Log.e("BuildPC", "Error saving build", e)
+            Toast.makeText(requireContext(), "Error saving build", Toast.LENGTH_SHORT).show()
         }
     }
 }
