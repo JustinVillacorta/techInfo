@@ -95,7 +95,7 @@ class BottleNeck : Fragment() {
                             bottleneckPercentageTextView?.text = "Percentage Difference: ${bottleneckResponse.percentage_difference}%"
 
                             // Show the AlertDialog with the bottleneck information
-                            showBottleneckDialog(bottleneckResponse)  // Corrected method call
+                            showBottleneckDialog(bottleneckResponse)
                         }
                     } else {
                         Toast.makeText(requireContext(), "Failed to get bottleneck data", Toast.LENGTH_SHORT).show()
@@ -140,12 +140,14 @@ class BottleNeck : Fragment() {
         progressBar.progress = roundedPercentage
 
         // Create and show the AlertDialog
-        AlertDialog.Builder(requireContext())
+        val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
-            .setPositiveButton("OK") { dialog, _ ->
-                dialog.dismiss()
-            }
             .create()
-            .show()
+
+        // Show the dialog
+        dialog.show()
+
+        // Set the background of the dialog to transparent
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 }

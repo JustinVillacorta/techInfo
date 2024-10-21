@@ -1,49 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="24dp">
-
-    <!-- TextView to display the title "Bottleneck Percentage" -->
-    <TextView
-        android:id="@+id/bottleneckTitleTextView"
+    android:layout_margin="16dp"
+    app:cardCornerRadius="30dp"
+    app:cardElevation="10dp"
+    android:background="@android:color/white">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:text="Bottleneck Results"
-        android:layout_marginBottom="8dp"/>
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <!-- ProgressBar for the bottleneck percentage -->
-    <ProgressBar
-        android:id="@+id/progressbar"
-        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-        android:layout_width="364dp"
-        android:layout_height="190dp"
-        android:max="100"
-        android:layout_marginBottom="16dp" />
+        <!-- TextView to display the title "Bottleneck Percentage" -->
+        <TextView
+            android:id="@+id/bottleneckTitleTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:text="Bottleneck Results"
+            android:layout_marginBottom="8dp"/>
 
-    <!-- TextView to display the actual percentage number below the progress bar -->
-    <TextView
-        android:id="@+id/bottleneckPercentageTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:text="0%"
-        android:layout_marginBottom="16dp"/>
+        <!-- ProgressBar for the bottleneck percentage -->
+        <ProgressBar
+            android:id="@+id/progressbar"
+            style="@android:style/Widget.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:progressDrawable="@drawable/progressbar_custom"
+            android:layout_marginBottom="16dp"
+            android:max="100" />
 
-    <!-- TextView to display a custom message -->
-    <TextView
-        android:id="@+id/bottleneckMessageTextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textSize="16sp"
-        android:textStyle="normal"
-        android:text="Your system is running smoothly" /> <!-- Add a custom message here -->
+        <!-- TextView to display the actual percentage number below the progress bar -->
+        <TextView
+            android:id="@+id/bottleneckPercentageTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:text="0%"
+            android:layout_marginBottom="16dp"/>
 
-</LinearLayout>
+        <!-- TextView to display a custom message -->
+        <TextView
+            android:id="@+id/bottleneckMessageTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textStyle="normal"
+            android:text="Your system is running smoothly" /> <!-- Add a custom message here -->
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

@@ -28,8 +28,8 @@ class Adapter(
             // Display the part details or name
             componentNameTextView.text = if (component.partDetails.isNotEmpty()) component.partDetails else component.name
 
-            // Placeholder image (You can later replace this with actual images)
-            componentImageView.setImageResource(R.drawable.ic_launcher_foreground)
+            // Set the icon based on component type
+            componentImageView.setImageResource(getIconResource(component.type))
 
             // Set up item click listener
             itemView.setOnClickListener {
@@ -64,4 +64,20 @@ class Adapter(
 
     // Return the total number of items in the list
     override fun getItemCount() = componentList.size
+
+    // Function to get the icon resource based on component type
+    private fun getIconResource(componentType: String): Int {
+        return when (componentType) {
+            "CPU" -> R.drawable.cpu // Replace with your actual drawable resource
+            "GPU" -> R.drawable.gpu
+            "RAM" -> R.drawable.ram
+            "SSD" -> R.drawable.ssd
+            "HDD" -> R.drawable.hdd
+            "PSU" -> R.drawable.psu
+            "Case" -> R.drawable.computercase
+            "Motherboard" -> R.drawable.motherboard
+            "CPU Cooler" -> R.drawable.cooler
+            else -> R.drawable.baseline_buildpc_24 // Default icon
+        }
+    }
 }
