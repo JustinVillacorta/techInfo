@@ -7,68 +7,82 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.RecyclerView
 import com.example.techinfo.Fragments.BuildPC.ComponentData
 import com.example.techinfo.R
 
 class Adapter(
-    private val componentList: MutableList<ComponentData>, // List of component data
-    private val itemClickListener: (ComponentData, Int) -> Unit // Listener for item clicks
+    private val componentList: MutableList<ComponentData>,
+    private val itemClickListener: (ComponentData, Int) -> Unit
 ) : RecyclerView.Adapter<Adapter.ComponentViewHolder>() {
 
-    // ViewHolder that binds data to views
     inner class ComponentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val componentImageView: ImageView = view.findViewById(R.id.image) // Image for the component
-        val componentNameTextView: TextView = view.findViewById(R.id.details) // Text for the component name
+        val componentImageView: ImageView = view.findViewById(R.id.image)
+        val componentNameTextView: TextView = view.findViewById(R.id.details)
 
         fun bind(component: ComponentData, position: Int) {
-            // Log the component data to verify it's passed correctly
             Log.d("Adapter", "Binding Component: ${component.name}, Part Details: ${component.partDetails}")
-
-            // Display the part details or name
             componentNameTextView.text = if (component.partDetails.isNotEmpty()) component.partDetails else component.name
-
-            // Set the icon based on component type
             componentImageView.setImageResource(getIconResource(component.type))
+            itemView.setBackgroundColor(if (component.isSelected) Color.LTGRAY else Color.WHITE)
 
-            // Set up item click listener
             itemView.setOnClickListener {
-                itemClickListener(component, position) // Pass the component and position to listener
-
-                // Toggle selection state
+                itemClickListener(component, position)
                 component.isSelected = !component.isSelected
-
-                // Change the background color to show selection
-                itemView.setBackgroundColor(
-                    if (component.isSelected) Color.LTGRAY else Color.WHITE
-                )
-
-                // Notify adapter to refresh the specific item
+                itemView.setBackgroundColor(if (component.isSelected) Color.LTGRAY else Color.WHITE)
                 notifyItemChanged(position)
+            }
+
+            // Set up long click listener for unselecting items
+            itemView.setOnLongClickListener {
+                showUnselectConfirmationDialog(component, position)
+                true // Indicate that the long click was handled
+            }
+        }
+
+        private fun showUnselectConfirmationDialog(component: ComponentData, position: Int) {
+            AlertDialog.Builder(itemView.context)
+                .setTitle("Unselect Item")
+                .setMessage("Are you sure you want to unselect ${component.name}?")
+                .setPositiveButton("Yes") { dialog, which ->
+                    unselectItem(position)
+                    dialog.dismiss()
+                }
+                .setNegativeButton("No") { dialog, which ->
+                    dialog.dismiss()
+                }
+                .create()
+                .show()
+        }
+
+        private fun unselectItem(position: Int) {
+            val component = componentList[position]
+            if (component.isSelected) {
+                component.isSelected = false // Unselect the item
+                notifyItemChanged(position) // Notify the adapter to refresh the item
             }
         }
     }
 
-    // Create new ViewHolder instances from layout
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ComponentViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.recycler_item, parent, false) // Inflate your recycler_item.xml layout
+            .inflate(R.layout.recycler_item, parent, false)
         return ComponentViewHolder(view)
     }
 
-    // Bind data to the ViewHolder
     override fun onBindViewHolder(holder: ComponentViewHolder, position: Int) {
         Log.d("Adapter", "onBindViewHolder - Position: $position")
-        holder.bind(componentList[position], position) // Bind the data to each item
+        holder.bind(componentList[position], position)
     }
 
-    // Return the total number of items in the list
+
+
     override fun getItemCount() = componentList.size
 
-    // Function to get the icon resource based on component type
     private fun getIconResource(componentType: String): Int {
         return when (componentType) {
-            "CPU" -> R.drawable.cpu // Replace with your actual drawable resource
+            "CPU" -> R.drawable.cpu
             "GPU" -> R.drawable.gpu
             "RAM" -> R.drawable.ram
             "SSD" -> R.drawable.ssd
@@ -77,7 +91,7 @@ class Adapter(
             "Case" -> R.drawable.computercase
             "Motherboard" -> R.drawable.motherboard
             "CPU Cooler" -> R.drawable.cooler
-            else -> R.drawable.baseline_buildpc_24 // Default icon
+            else -> R.drawable.baseline_buildpc_24
         }
     }
 }
