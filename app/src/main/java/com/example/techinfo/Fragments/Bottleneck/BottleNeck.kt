@@ -119,7 +119,18 @@ class BottleNeck : Fragment() {
         val bottleneckPercentageTextView = dialogView.findViewById<TextView>(R.id.bottleneckPercentageTextView)
 
         // Set the bottleneck message and percentage difference in the TextViews
-        bottleneckMessageTextView.text = bottleneckResponse.message
+        val formattedMessage = """
+        SCORE:
+        
+        CPU Score: ${bottleneckResponse.cpuScore}
+        GPU Score: ${bottleneckResponse.gpuScore}
+        
+        MESSAGE:
+        
+        ${bottleneckResponse.message}
+    """.trimIndent()
+
+        bottleneckMessageTextView.text = formattedMessage
         bottleneckPercentageTextView.text = "Bottleneck Percentage: ${bottleneckResponse.percentage_difference}%"
 
         // Convert the percentage to an integer by rounding to the nearest whole number
@@ -137,6 +148,4 @@ class BottleNeck : Fragment() {
             .create()
             .show()
     }
-
-
 }
