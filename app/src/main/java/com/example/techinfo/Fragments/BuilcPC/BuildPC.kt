@@ -188,8 +188,6 @@ class BuildPC : Fragment() {
         if (psuName.isEmpty()) missingComponents.add("PSU")
         if (caseName.isEmpty()) missingComponents.add("Case")
         if (coolerName.isEmpty()) missingComponents.add("CPU Cooler")
-        if (hddName.isEmpty()) missingComponents.add("HDD")
-        if (ssdName.isEmpty()) missingComponents.add("SSD")
 
         // If there are missing components, show an error message in the dialog
         if (missingComponents.isNotEmpty()) {
