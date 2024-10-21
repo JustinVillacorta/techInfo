@@ -74,9 +74,6 @@ class ItemsInfo : Fragment() {
                     TDP: ${it.tdp}
                     Cache Size MB: ${it.cache_size_mb}
                     Integrated Graphics: ${it.integrated_graphics}
-                    Link: ${it.link}
-                    Created At: ${it.created_at}
-                    Updated At: ${it.updated_at}
                     """.trimIndent()
                 } ?: "No details available for Processor."
             }
