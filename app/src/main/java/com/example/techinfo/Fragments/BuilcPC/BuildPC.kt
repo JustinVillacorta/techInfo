@@ -127,11 +127,18 @@ class BuildPC : Fragment() {
     }
 
     private fun updateProgressBars() {
-        cpuProgressBar.progress = if (selectedComponentsMap["CPU"] != null) 100 else 0
-        gpuProgressBar.progress = if (selectedComponentsMap["GPU"] != null) 100 else 0
-        memoryProgressBar.progress = if (selectedComponentsMap["RAM"] != null) 100 else 0
-        storageProgressBar.progress = if (selectedComponentsMap["SSD"] != null || selectedComponentsMap["HDD"] != null) 100 else 0
-        psuProgressBar.progress = if (selectedComponentsMap["PSU"] != null) 100 else 0
+        // Update the progress of each progress bar based on the selected components
+        cpuProgressBar.progress = selectedComponentsMap["CPU"]?.let { 0 } ?: 0
+        gpuProgressBar.progress = selectedComponentsMap["GPU"]?.let { 0 } ?: 0
+        memoryProgressBar.progress = selectedComponentsMap["RAM"]?.let { 0 } ?: 0
+
+        // Combine the SSD and HDD progress for the STORAGE bar
+        storageProgressBar.progress = 0
+        val ssdProgress = selectedComponentsMap["SSD"]?.let { 0 } ?: 0
+        val hddProgress = selectedComponentsMap["HDD"]?.let { 0 } ?: 0
+        storageProgressBar.progress = ssdProgress + hddProgress
+
+        psuProgressBar.progress = selectedComponentsMap["PSU"]?.let { 0 } ?: 0
     }
 
     private fun restoreSelectedComponents() {
