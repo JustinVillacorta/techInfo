@@ -134,15 +134,24 @@ class BuildPC : Fragment() {
 
         // Update progress bars based on the selected component
         updateProgressBars()
+
+        // Fetch performance score for selected CPU, GPU, RAM, SSD, HDD, and PSU
+        fetchPerformanceScore()  // Fetch performance scores for all components (can be optimized for specific components if needed)
     }
 
     private fun updateProgressBars() {
         // Update the progress of each progress bar based on the selected components
-        cpuProgressBar.progress = selectedComponentsMap["CPU"]?.let { 100 } ?: 0
-        gpuProgressBar.progress = selectedComponentsMap["GPU"]?.let { 100 } ?: 0
-        memoryProgressBar.progress = selectedComponentsMap["RAM"]?.let { 100 } ?: 0
-        storageProgressBar.progress = (selectedComponentsMap["SSD"]?.let { 50 } ?: 0) + (selectedComponentsMap["HDD"]?.let { 50 } ?: 0)
-        psuProgressBar.progress = selectedComponentsMap["PSU"]?.let { 100 } ?: 0
+        cpuProgressBar.progress = selectedComponentsMap["CPU"]?.let { 0 } ?: 0
+        gpuProgressBar.progress = selectedComponentsMap["GPU"]?.let { 0 } ?: 0
+        memoryProgressBar.progress = selectedComponentsMap["RAM"]?.let { 0 } ?: 0
+
+        // Combine the SSD and HDD progress for the STORAGE bar
+        storageProgressBar.progress = 0
+        val ssdProgress = selectedComponentsMap["SSD"]?.let { 0 } ?: 0
+        val hddProgress = selectedComponentsMap["HDD"]?.let { 0 } ?: 0
+        storageProgressBar.progress = ssdProgress + hddProgress
+
+        psuProgressBar.progress = selectedComponentsMap["PSU"]?.let { 0 } ?: 0
     }
 
     // This method restores previously selected components in the UI after returning to BuildPC
@@ -212,23 +221,161 @@ class BuildPC : Fragment() {
                     if (compatibilityResponse?.is_compatible == true) {
                         Toast.makeText(requireContext(), "Components are compatible!", Toast.LENGTH_SHORT).show()
                     } else {
-                        val issues = compatibilityResponse?.issues?.joinToString("\n\n")
-                        showAlertDialog(issues ?: "No compatibility issues.")
+                        showAlertDialog("Some components are not compatible.")
                     }
                 } else {
-                    Toast.makeText(requireContext(), "Error checking compatibility", Toast.LENGTH_SHORT).show()
+                    showAlertDialog("Failed to check compatibility.")
                 }
             }
 
             override fun onFailure(call: Call<CompatibilityResponse>, t: Throwable) {
-                Toast.makeText(requireContext(), "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
+                // Handle failure
+                showAlertDialog("Error: ${t.message}")
             }
         })
     }
 
-    // Show the error messages in the AlertDialog_Buildpc
     private fun showAlertDialog(message: String) {
-        val alertDialogFragment = AlertDialog_Buildpc(message)
-        alertDialogFragment.show(parentFragmentManager, "alertDialog")
+        val alertDialog = AlertDialog_Buildpc(message)
+        alertDialog.show(parentFragmentManager, "errorDialog")
+    }
+
+    private fun fetchPerformanceScore() {
+        val selectedComponents = getAllSelectedComponents()
+
+        val cpuName = selectedComponents["CPU"] ?: ""
+        val gpuName = selectedComponents["GPU"] ?: ""
+        val ramName = selectedComponents["RAM"] ?: ""
+        val ssdName = selectedComponents["SSD"] ?: ""
+        val hddName = selectedComponents["HDD"] ?: ""
+        val psuName = selectedComponents["PSU"] ?: ""
+
+        val apiService = RetrofitInstance.getApiService()
+
+        // Fetch CPU performance score
+        if (cpuName.isNotEmpty()) {
+            val cpuCall = apiService.getProcessors()
+            cpuCall.enqueue(object : Callback<List<Processor>> {
+                override fun onResponse(call: Call<List<Processor>>, response: Response<List<Processor>>) {
+                    if (response.isSuccessful) {
+                        val selectedCpu = response.body()?.find { it.processor_name == cpuName }
+                        selectedCpu?.let {
+                            cpuProgressBar.progress = it.performance_score.toInt()  // Update the CPU progress bar
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), "Failed to fetch CPU data", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<List<Processor>>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Error fetching CPU data: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+
+        // Fetch GPU performance score
+        if (gpuName.isNotEmpty()) {
+            val gpuCall = apiService.getGpus()
+            gpuCall.enqueue(object : Callback<List<Gpu>> {
+                override fun onResponse(call: Call<List<Gpu>>, response: Response<List<Gpu>>) {
+                    if (response.isSuccessful) {
+                        val selectedGpu = response.body()?.find { it.gpu_name == gpuName }
+                        selectedGpu?.let {
+                            gpuProgressBar.progress = it.performance_score.toInt()  // Update the GPU progress bar
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), "Failed to fetch GPU data", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<List<Gpu>>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Error fetching GPU data: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+
+        // Fetch RAM performance score
+        if (ramName.isNotEmpty()) {
+            val ramCall = apiService.getRams()
+            ramCall.enqueue(object : Callback<List<Ram>> {
+                override fun onResponse(call: Call<List<Ram>>, response: Response<List<Ram>>) {
+                    if (response.isSuccessful) {
+                        val selectedRam = response.body()?.find { it.ram_name == ramName }
+                        selectedRam?.let {
+                            memoryProgressBar.progress = it.performance_score.toInt()  // Update the RAM progress bar
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), "Failed to fetch RAM data", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<List<Ram>>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Error fetching RAM data: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+
+        // Fetch SSD performance score
+        if (ssdName.isNotEmpty()) {
+            val ssdCall = apiService.getSsds()
+            ssdCall.enqueue(object : Callback<List<Ssd>> {
+                override fun onResponse(call: Call<List<Ssd>>, response: Response<List<Ssd>>) {
+                    if (response.isSuccessful) {
+                        val selectedSsd = response.body()?.find { it.ssd_name == ssdName }
+                        selectedSsd?.let {
+                            storageProgressBar.progress = it.performance_score.toInt()  // Update the storage progress bar
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), "Failed to fetch SSD data", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<List<Ssd>>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Error fetching SSD data: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+
+        // Fetch HDD performance score
+        if (hddName.isNotEmpty()) {
+            val hddCall = apiService.getHdds()
+            hddCall.enqueue(object : Callback<List<Hdd>> {
+                override fun onResponse(call: Call<List<Hdd>>, response: Response<List<Hdd>>) {
+                    if (response.isSuccessful) {
+                        val selectedHdd = response.body()?.find { it.hdd_name == hddName }
+                        selectedHdd?.let {
+                            storageProgressBar.progress = it.performance_score.toInt()  // Update the storage progress bar
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), "Failed to fetch HDD data", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<List<Hdd>>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Error fetching HDD data: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
+
+        // Fetch PSU performance score
+        if (psuName.isNotEmpty()) {
+            val psuCall = apiService.getPowerSupplyUnits()
+            psuCall.enqueue(object : Callback<List<PowerSupplyUnit>> {
+                override fun onResponse(call: Call<List<PowerSupplyUnit>>, response: Response<List<PowerSupplyUnit>>) {
+                    if (response.isSuccessful) {
+                        val selectedPsu = response.body()?.find { it.psu_name == psuName }
+                        selectedPsu?.let {
+                            psuProgressBar.progress = it.performance_score.toInt()  // Update the PSU progress bar
+                        }
+                    } else {
+                        Toast.makeText(requireContext(), "Failed to fetch PSU data", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
+                override fun onFailure(call: Call<List<PowerSupplyUnit>>, t: Throwable) {
+                    Toast.makeText(requireContext(), "Error fetching PSU data: ${t.message}", Toast.LENGTH_SHORT).show()
+                }
+            })
+        }
     }
 }

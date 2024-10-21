@@ -16,6 +16,7 @@ data class admin_data_class(
     val integrated_graphics: String,  // Integrated graphics, matches 'integrated_graphics' in Processor class
     val compatible_chipsets: String,  // Compatible chipsets, matches 'compatible_chipsets' in Processor class
     val link: String?,        // Link (URL), nullable as in Processor class
+    val performance_score: String,
     val created_at: String,   // Created timestamp, matches 'created_at' in Processor class
     var updated_at: String    // Updated timestamp, matches 'updated_at' in Processor class
 )

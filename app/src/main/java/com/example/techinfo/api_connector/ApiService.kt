@@ -37,6 +37,7 @@ data class PasswordResetRequest(
         val cache_size_mb: String,
         val integrated_graphics: String,
         val link: String,
+        val performance_score: String,
         val created_at: String,
         val updated_at: String
     ) : Serializable  // Make it Serializable
@@ -63,6 +64,7 @@ data class Gpu(
     val required_8_pin_connectors: String,
     val required_12_pin_connectors: String,
     val link: String?,
+    val performance_score: String,
     val created_at: String,
     val updated_at: String
 ) : Serializable
@@ -87,6 +89,7 @@ data class Motherboard(
     val has_m2_slot: Int,             // Whether it has an M.2 slot (1 for Yes, 0 for No)
     val gpu_interface: String,        // GPU interface type (e.g., PCIe 4.0)
     val form_factor: String,          // Form factor (e.g., ATX, Micro-ATX)
+    val performance_score: String,
     val created_at: String,           // Creation timestamp
     val updated_at: String            // Last updated timestamp
 ) : Serializable  // Ensure class implements Serializable interface
@@ -100,6 +103,7 @@ data class Ram(
     val ram_speed_mhz: String,
     val power_consumption: String,
     val link: String?,
+    val performance_score: String,
     val created_at: String,
     val updated_at: String
 ) : Serializable  // Make it Serializable
@@ -116,6 +120,7 @@ data class PowerSupplyUnit(
     val gpu_12_pin_connectors: Int,           // Number of 12-pin connectors
     val efficiency_rating: String,            // Efficiency rating (e.g., "80+ Gold")
     val has_required_connectors: Int,         // Whether it has the required connectors
+    val performance_score: String,
     val created_at: String,                   // Creation timestamp
     val updated_at: String                    // Last updated timestamp
 ) : Serializable  // Make it Serializable
@@ -158,6 +163,7 @@ data class Hdd(
     val capacity_gb: String,
     val link: String?,
     val created_at: String,
+    val performance_score: String,
     val updated_at: String
 ) : Serializable  // Make it Serializable
 
@@ -168,6 +174,7 @@ data class Ssd(
     val capacity_gb: String,
     val interface_type: String,
     val link: String?,
+    val performance_score: String,
     val created_at: String,
     val updated_at: String
 ) : Serializable  // Make it Serializable

@@ -85,6 +85,7 @@ class AdminView : Fragment() {
                             integrated_graphics = processor.integrated_graphics,  // integrated graphics
                             compatible_chipsets = processor.compatible_chipsets,  // compatible chipsets
                             link = processor.link ?: "",  // Handle null link with empty string
+                            performance_score = processor.performance_score,
                             created_at = processor.created_at ?: "",  // created_at timestamp, handle null
                             updated_at = processor.updated_at ?: ""  // updated_at timestamp, handle null
                         )
@@ -149,6 +150,7 @@ class AdminView : Fragment() {
                         cache_size_mb = item.cache_size_mb,
                         integrated_graphics = item.integrated_graphics,
                         link = item.link ?: "",  // Default empty string if null
+                        performance_score = item.performance_score,
                         created_at = item.created_at,
                         updated_at = getCurrentDateTime()  // Dynamically set the updated timestamp
                     )
