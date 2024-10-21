@@ -39,9 +39,45 @@ class AdminView : Fragment() {
         recyclerViewAdmin.layoutManager = LinearLayoutManager(requireContext())
         recyclerViewAdmin.adapter = adminAdapter
 
+        val fab = view.findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.Add)
+
+        fab.setOnClickListener {
+            openAddDialog()  // Call the method to open the add dialog
+        }
+
         fetchProcessorsFromApi()
 
         return view
+    }
+
+    private fun openAddDialog() {
+        if (isAdded) {  // Ensure fragment is attached
+            val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.pc_parts_add, null)
+
+            // Find RecyclerView in the dialog layout
+            val recyclerView = dialogView.findViewById<RecyclerView>(R.id.modelsRecyclerView)
+            recyclerView.layoutManager = LinearLayoutManager(requireContext())
+
+            // Sample data for the adapter (replace this with your real data)
+            val dataList = listOf(
+                update_and_add_data_class("Model 1", "Specs 1"),
+                update_and_add_data_class("Model 2", "Specs 2")
+            )
+
+            val adapter = update_and_add_adapter(dataList)
+            recyclerView.adapter = adapter
+
+            // Build the AlertDialog
+            AlertDialog.Builder(requireContext())
+                .setView(dialogView)
+                .setPositiveButton("Save") { dialog, _ ->
+                    // Handle save logic here
+                    dialog.dismiss()
+                }
+                .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+                .create()
+                .show()
+        }
     }
 
     private fun fetchProcessorsFromApi() {
