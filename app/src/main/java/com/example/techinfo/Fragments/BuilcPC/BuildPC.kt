@@ -221,16 +221,16 @@ class BuildPC : Fragment() {
                     if (compatibilityResponse?.is_compatible == true) {
                         Toast.makeText(requireContext(), "Components are compatible!", Toast.LENGTH_SHORT).show()
                     } else {
-                        showAlertDialog("Some components are not compatible.")
+                        val issues = compatibilityResponse?.issues?.joinToString("\n\n")
+                        showAlertDialog(issues ?: "No compatibility issues.")
                     }
                 } else {
-                    showAlertDialog("Failed to check compatibility.")
+                    Toast.makeText(requireContext(), "Error checking compatibility", Toast.LENGTH_SHORT).show()
                 }
             }
 
             override fun onFailure(call: Call<CompatibilityResponse>, t: Throwable) {
-                // Handle failure
-                showAlertDialog("Error: ${t.message}")
+                Toast.makeText(requireContext(), "Network error: ${t.message}", Toast.LENGTH_SHORT).show()
             }
         })
     }
