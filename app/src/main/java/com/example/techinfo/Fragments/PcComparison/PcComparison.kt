@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.techinfo.R
+import java.io.File
 
 class PcComparison : Fragment() {
     private lateinit var recyclerView: RecyclerView
@@ -45,8 +46,18 @@ class PcComparison : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val builds = resources.getStringArray(R.array.Builds)
-        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, builds)
+
+        // Get the list of all .txt files in the "PC_Builds" directory
+        val buildsDirectory = File(requireContext().filesDir, "PC_Builds")
+        val txtFiles = buildsDirectory.listFiles { file -> file.isFile && file.name.endsWith(".txt") }
+
+        // If there are .txt files, map them to an array of filenames without the .txt extension
+        val buildFileNames = txtFiles?.map { it.name.substringBeforeLast(".txt") }?.toTypedArray() ?: emptyArray()
+
+        // Create the ArrayAdapter using the filenames without the .txt extension
+        val arrayAdapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, buildFileNames)
+
+        // Set the adapter to both AutoCompleteTextViews
         view.findViewById<AutoCompleteTextView>(R.id.Parts1).setAdapter(arrayAdapter)
         view.findViewById<AutoCompleteTextView>(R.id.Parts2).setAdapter(arrayAdapter)
     }
