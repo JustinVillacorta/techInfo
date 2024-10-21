@@ -23,19 +23,23 @@ data class PasswordResetRequest(
 )
 
 // Processor model
-data class Processor(
-    val processor_id: Int,
-    val processor_name: String,
-    val brand: String,
-    val socket_type: String,
-    val compatible_chipsets: String,
-    val power: String,
-    val base_clock_speed: String,  // Keep this as String for initial response
-    val max_clock_speed: String,   // Keep this as String for initial response
-    val link: String,
-    val created_at: String,
-    val updated_at: String
-) : Serializable  // Make it Serializable
+    data class Processor(
+        val processor_id: String,
+        val processor_name: String,
+        val brand: String,
+        val socket_type: String,
+        val compatible_chipsets: String,
+        val cores: String,
+        val threads: String,
+        val base_clock_speed: String,
+        val max_turbo_boost_clock_speed: String,
+        val tdp: String,
+        val cache_size_mb: String,
+        val integrated_graphics: String,
+        val link: String,
+        val created_at: String,
+        val updated_at: String
+    ) : Serializable  // Make it Serializable
 
 // GPU model
 data class Gpu(
@@ -226,7 +230,7 @@ interface ApiService {
 
     // PUT method to update a processor
     @PUT("processors/{id}")
-    fun updateProcessor(@Path("id") processorId: Int, @Body processor: Processor): Call<Processor>
+    fun updateProcessor(@Path("id") processorId: String, @Body processor: Processor): Call<Processor>
 
     // Component APIs
     @GET("processors")
@@ -269,4 +273,3 @@ interface ApiService {
         @Query("ssd_name") ssdName: String
     ): Call<CompatibilityResponse> // Use a different return type if the API returns a response body
 }
-

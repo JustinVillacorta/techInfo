@@ -6,6 +6,7 @@ import java.io.Serializable
 data class ComponentData(
     var name: String,                    // Name of the component
     var type: String,                    // Type of the component (e.g., "CPU", "GPU", etc.)
+    val performanceScore: Int = 0,
     var partDetails: String = "",        // Name of Models
     var isSelected: Boolean = false,     // Whether the component is selected or not
     val processor: Processor? = null,    // For Processor (can be a list or single)

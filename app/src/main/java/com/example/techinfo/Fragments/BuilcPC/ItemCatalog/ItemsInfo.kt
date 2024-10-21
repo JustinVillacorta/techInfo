@@ -66,34 +66,42 @@ class ItemsInfo : Fragment() {
                     """
                     Brand: ${it.brand}
                     Socket Type: ${it.socket_type}
-                    Power: ${it.power}W
-                    Base Clock Speed: ${it.base_clock_speed} GHz
-                    Max Clock Speed: ${it.max_clock_speed} GHz
+                    Compatible Chipsets: ${it.compatible_chipsets}
+                    Cores: ${it.cores}
+                    Threads: ${it.threads}
+                    Base Clock Speed: ${it.base_clock_speed}
+                    Max Turbo Boost Clock Speed: ${it.max_turbo_boost_clock_speed}
+                    TDP: ${it.tdp}
+                    Cache Size MB: ${it.cache_size_mb}
+                    Integrated Graphics: ${it.integrated_graphics}
+                    Link: ${it.link}
+                    Created At: ${it.created_at}
+                    Updated At: ${it.updated_at}
                     """.trimIndent()
                 } ?: "No details available for Processor."
             }
+
             "gpu" -> {
                 component.gpu?.let {
                     """
                     Brand: ${it.brand}
                     GPU Name: ${it.gpu_name}
                     Cuda Cores: ${it.cuda_cores}
-                    Compute Units: ${it.compute_units}
-                    Stream Processors: ${it.stream_processors}
-                    Game Clock Ghz: ${it.game_clock_ghz}
+                    Compute Units: ${it.compute_units ?: "N/A"}
+                    Stream Processors: ${it.stream_processors ?: "N/A"}
+                    Game Clock Ghz: ${it.game_clock_ghz ?: "N/A"}
                     Base Clock Ghz: ${it.base_clock_ghz}
                     Boost Clock Ghz: ${it.boost_clock_ghz}
                     Memory Size Gb: ${it.memory_size_gb}
                     Memory Type: ${it.memory_type}
                     Memory Interface Bits: ${it.memory_interface_bits}
-                    Interface Type: ${it.interface_type}
                     GPU Length (mm): ${it.gpu_length_mm}
                     TDP Wattage: ${it.tdp_wattage}
                     Required Power: ${it.required_power}W
-                 
                     """.trimIndent()
                 } ?: "No details available for GPU."
             }
+
             "motherboard" -> {
                 component.motherboard?.let {
                     """
@@ -196,13 +204,6 @@ class ItemsInfo : Fragment() {
 
             else -> "Component details are unavailable for this type."
         }
-
-        // Set the creation and update times (check if these fields are available in your model)
-        val createdTimeTextView = view.findViewById<TextView>(R.id.createdTimeTextView)
-        createdTimeTextView.text = "Created At: ${component.processor?. created_at ?: "N/A"}"  // Adjust field name as needed
-
-        val updatedTimeTextView = view.findViewById<TextView>(R.id.updatedTimeTextView)
-        updatedTimeTextView.text = "Updated At: ${component.processor?. created_at?: "N/A"}"  // Adjust field name as needed
 
 
         view.findViewById<Button>(R.id.okButton).setOnClickListener {
