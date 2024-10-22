@@ -9,17 +9,16 @@ import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.techinfo.R
 
 class admin_adapter(val context: Context, val adminList: ArrayList<admin_data_class>) : RecyclerView.Adapter<admin_adapter.AdminViewHolder>() {
+
     inner class AdminViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         val ModelName: TextView = view.findViewById(R.id.Model_Name)
         val Specs: TextView = view.findViewById(R.id.SpecsContent)
         val articleMenu: ImageView = view.findViewById(R.id.mMenus)
-
 
         init {
             articleMenu.setOnClickListener {
@@ -92,8 +91,6 @@ class admin_adapter(val context: Context, val adminList: ArrayList<admin_data_cl
         // Show the popup menu
         popupMenu.show()
     }
-
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdminViewHolder {
         val inflater = LayoutInflater.from(parent.context)

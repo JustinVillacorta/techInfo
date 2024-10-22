@@ -1,36 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp"
-    android:background="@color/white">
+    android:background="@android:color/white">
 
     <!-- Dropdown for models selection -->
-<com.google.android.material.textfield.TextInputLayout
-android:id="@+id/Category"
-style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
-android:layout_width="match_parent"
-android:layout_height="0dp"
-android:hint="Models"
-    android:layout_weight="0.064">
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/Category"
+        style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Models"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-<AutoCompleteTextView
-    android:id="@+id/Models_info"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:inputType="none"
-    android:text="All" />
-</com.google.android.material.textfield.TextInputLayout>
+        <AutoCompleteTextView
+            android:id="@+id/Models_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:text="All" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-
-<androidx.recyclerview.widget.RecyclerView
-android:id="@+id/modelsRecyclerView"
-android:layout_width="match_parent"
-android:layout_height="0dp"
-    android:layout_weight="1"
-    android:layout_marginTop="16dp"
-    android:scrollbars="vertical" />
-
-    </LinearLayout>
+    <!-- RecyclerView for displaying models -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/modelsRecyclerView"
+        android:layout_width="305dp"
+        android:layout_height="443dp"
+        android:layout_marginTop="16dp"
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/Category"
+        app:layout_constraintVertical_bias="0.0" />
+</androidx.constraintlayout.widget.ConstraintLayout>

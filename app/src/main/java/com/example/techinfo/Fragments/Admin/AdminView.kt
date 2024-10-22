@@ -112,14 +112,10 @@ class AdminView : Fragment() {
                 if (response.isSuccessful) {
                     val processors = response.body()
                     processors?.forEach { processor ->
-                        // Safely convert the string values to Float
-                        val baseClockSpeed = processor.base_clock_speed?.toFloatOrNull() ?: 0.0f
-                        val maxClockSpeed = processor.max_turbo_boost_clock_speed?.toFloatOrNull() ?: 0.0f
-
                         val adminItem = admin_data_class(
                             processorId = processor.processor_id,
                             ModelName = processor.processor_name,
-                            Specs = "Brand: ${processor.brand}, Socket: ${processor.socket_type}, Clock Speed: ${baseClockSpeed} GHz - ${maxClockSpeed} GHz",
+                            Specs = "Brand: ${processor.brand}, Socket: ${processor.socket_type}, Clock Speed: ${processor.base_clock_speed} GHz - ${processor.max_turbo_boost_clock_speed} GHz",
                             Category = "CPU",
                             brand = processor.brand,
                             socket_type = processor.socket_type,
@@ -155,7 +151,6 @@ class AdminView : Fragment() {
         })
     }
 
-
     // Method to open the edit dialog for an existing item
     fun openEditDialog(item: admin_data_class, position: Int) {
         if (isAdded) {  // Ensure fragment is attached
@@ -178,53 +173,16 @@ class AdminView : Fragment() {
                         return@setPositiveButton
                     }
 
-                    // Create a new Processor object for the update
-                    val updatedProcessor = Processor(
-                        processor_id = item.processorId,
-                        processor_name = updatedModelName,
-                        brand = item.brand,
-                        socket_type = item.socket_type,
-                        base_clock_speed = "%.2f".format(item.base_clock_speed),
-                        max_turbo_boost_clock_speed = "%.2f".format(item.max_turbo_boost_clock_speed),
-                        compatible_chipsets = item.compatible_chipsets,
-                        link = item.link.toString(),
-                        cache_size_mb = item.cache_size_mb,
-                        cores = item.cores,
-                        integrated_graphics = item.integrated_graphics.toString(),
-                        performance_score = item.performance_score,
-                        tdp = item.tdp,
-                        threads = item.threads,
-                        created_at = item.created_at,
-                        updated_at = getCurrentDateTime()  // Dynamically get the current date-time
+                    // Update logic to update the item
+                    val updatedItem = item.copy(
+                        ModelName = updatedModelName,
+                        Specs = updatedSpecs,
+                        updated_at = getCurrentDateTime() // Update the timestamp if needed
                     )
 
-                    val apiService = RetrofitInstance.getApiService()
-                    apiService.updateProcessor(item.processorId, updatedProcessor).enqueue(object : Callback<Processor> {
-                        override fun onResponse(call: Call<Processor>, response: Response<Processor>) {
-                            if (response.isSuccessful) {
-                                // Update the item using the copy function
-                                val updatedItem = item.copy(
-                                    ModelName = updatedModelName,
-                                    Specs = updatedSpecs,
-                                    updated_at = getCurrentDateTime() // Update the timestamp if needed
-                                )
-
-                                adminList[position] = updatedItem // Replace the old item with the updated item
-                                adminAdapter.notifyItemChanged(position)
-                                Toast.makeText(requireContext(), "Item updated successfully", Toast.LENGTH_SHORT).show()
-                            } else {
-                                Toast.makeText(requireContext(), "Failed to update on server", Toast.LENGTH_SHORT).show()
-                            }
-                        }
-
-                        override fun onFailure(call: Call<Processor>, t: Throwable) {
-                            if (isAdded) {
-                                Toast.makeText(requireContext(), "Error: ${t.message}", Toast.LENGTH_SHORT).show()
-                            } else {
-                                Log.e("AdminView", "Fragment not attached: ${t.message}")
-                            }
-                        }
-                    })
+                    adminList[position] = updatedItem // Replace the old item with the updated item
+                    adminAdapter.notifyItemChanged(position)
+                    Toast.makeText(requireContext(), "Item updated successfully", Toast.LENGTH_SHORT).show()
 
                     dialog.dismiss()
                 }
