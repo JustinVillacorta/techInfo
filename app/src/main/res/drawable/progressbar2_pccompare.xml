@@ -4,7 +4,7 @@
     <!-- Background for the progress bar track -->
     <item android:id="@android:id/background">
         <shape>
-            <solid android:color="@color/Green_progressbar"/>
+            <solid android:color="@color/pastel"/>
             <corners android:radius="15dp"/> <!-- Background color -->
         </shape>
     </item>
@@ -13,7 +13,7 @@
     <item android:id="@android:id/progress">
         <clip>
             <shape>
-                <solid android:color="@color/pastel"/>
+                <solid android:color="@color/Green_progressbar"/>
                 <corners android:radius="15dp"/> <!-- Progress color -->
             </shape>
         </clip>

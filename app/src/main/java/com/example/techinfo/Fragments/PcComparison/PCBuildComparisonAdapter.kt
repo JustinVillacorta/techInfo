@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.techinfo.R
 
-class PCBuildComparisonAdapter(private val metricsList: List<PcbuildComparisonData>) : RecyclerView.Adapter<PCBuildComparisonAdapter.ViewHolder>() {
+class PCBuildComparisonAdapter(private var metricsList: List<PcbuildComparisonData>) : RecyclerView.Adapter<PCBuildComparisonAdapter.ViewHolder>() {
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val metricName: TextView = itemView.findViewById(R.id.metricName)
@@ -25,13 +25,17 @@ class PCBuildComparisonAdapter(private val metricsList: List<PcbuildComparisonDa
         val metric = metricsList[position]
 
         holder.metricName.text = metric.metricName
-        holder.progressLeft.progress = metric.percentageLeft
-
-        holder.progressRight.progress = metric.percentageRight
-
+        holder.progressLeft.progress = metric.percentageLeft.toInt()
+        holder.progressRight.progress = metric.percentageRight.toInt()
     }
 
     override fun getItemCount(): Int {
         return metricsList.size
+    }
+
+    // Method to update the metrics and refresh the RecyclerView
+    fun updateMetrics(newMetricsList: List<PcbuildComparisonData>) {
+        metricsList = newMetricsList
+        notifyDataSetChanged() // Notify the adapter to refresh the view
     }
 }
