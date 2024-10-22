@@ -1,6 +1,7 @@
 package com.example.techinfo.Fragments.BuildPC
 
 import AlertDialog_Buildpc
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -62,7 +64,7 @@ class BuildPC : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView = view.findViewById(R.id.componentsRecyclerView)
-        componentAdapter = Adapter(componentDataList) { component, position ->
+        componentAdapter = Adapter(componentDataList, { component, position ->
             val componentName = component.name
             if (componentName.isNotEmpty()) {
                 val partCatalogFragment = ItemCatalog.newInstance(component.type)
@@ -71,12 +73,13 @@ class BuildPC : Fragment() {
                     .addToBackStack(null)
                     .commit()
             }
-        }
+        }, isInBuildPCFragment = true) // Pass true to indicate it's in BuildPC fragment
 
         recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = componentAdapter
         }
+
 
         parentFragmentManager.setFragmentResultListener("selectedComponent", this) { _, bundle ->
             val selectedComponent = bundle.getSerializable("selectedComponent") as ComponentData
@@ -108,6 +111,28 @@ class BuildPC : Fragment() {
         storageProgressBar.progress = 0
         psuProgressBar.progress = 0
     }
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            showExitConfirmationDialog()
+        }
+    }
+
+    private fun showExitConfirmationDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Exit")
+            .setMessage("Are you sure you want to exit the app?")
+            .setPositiveButton("Yes") { dialog, _ ->
+                requireActivity().finish() // Finish the activity to exit the app
+                dialog.dismiss()
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss() // Dismiss the dialog
+            }
+            .create()
+            .show()
+    }
+
 
     private fun updateSelectedComponent(type: String, component: ComponentData) {
         selectedComponentsMap[type] = component
@@ -127,23 +152,30 @@ class BuildPC : Fragment() {
     }
 
     private fun updateProgressBars() {
-        cpuProgressBar.progress = if (selectedComponentsMap["CPU"] != null) 100 else 0
-        gpuProgressBar.progress = if (selectedComponentsMap["GPU"] != null) 100 else 0
-        memoryProgressBar.progress = if (selectedComponentsMap["RAM"] != null) 100 else 0
-        storageProgressBar.progress = if (selectedComponentsMap["SSD"] != null || selectedComponentsMap["HDD"] != null) 100 else 0
-        psuProgressBar.progress = if (selectedComponentsMap["PSU"] != null) 100 else 0
+        // Update the progress of each progress bar based on the selected components
+        cpuProgressBar.progress = selectedComponentsMap["CPU"]?.let { 0 } ?: 0
+        gpuProgressBar.progress = selectedComponentsMap["GPU"]?.let { 0 } ?: 0
+        memoryProgressBar.progress = selectedComponentsMap["RAM"]?.let { 0 } ?: 0
+
+        // Combine the SSD and HDD progress for the STORAGE bar
+        storageProgressBar.progress = 0
+        val ssdProgress = selectedComponentsMap["SSD"]?.let { 0 } ?: 0
+        val hddProgress = selectedComponentsMap["HDD"]?.let { 0 } ?: 0
+        storageProgressBar.progress = ssdProgress + hddProgress
+
+        psuProgressBar.progress = selectedComponentsMap["PSU"]?.let { 0 } ?: 0
     }
 
     private fun restoreSelectedComponents() {
         for ((type, component) in selectedComponentsMap) {
             val position = componentDataList.indexOfFirst { it.type.equals(type, ignoreCase = true) }
             if (position != -1) {
-                componentDataList[position] = component
+                componentDataList[position] = component ?: ComponentData(type, "") // Use a placeholder if unselected
                 componentAdapter.notifyItemChanged(position)
             }
         }
 
-        updateProgressBars()
+        updateProgressBars() // Make sure to update progress bars after restoring
     }
 
     private fun getAllSelectedComponents(): Map<String, String> {
