@@ -9,13 +9,13 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/Models"
         style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="119dp"
+        android:layout_height="53dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:hint="Models"
-        app:layout_constraintBottom_toTopOf="@id/guideline1"
-        app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/guideline4"
-        app:layout_constraintTop_toTopOf="@+id/guideline3">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <AutoCompleteTextView
             android:id="@+id/filter"
@@ -36,76 +36,13 @@
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addbtn"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="57dp"
+        android:layout_height="100dp"
         android:clickable="true"
+        android:layout_marginBottom="35dp"
+        android:layout_marginRight="35dp"
         android:src="@drawable/baseline_add_24"
-        app:layout_constraintBottom_toTopOf="@id/guidelinebutton3"
-        app:layout_constraintEnd_toStartOf="@+id/guidelinebutton2"
-        app:layout_constraintStart_toEndOf="@+id/guidelinebutton4"
-        app:layout_constraintTop_toBottomOf="@id/guidelinebutton1" />
-
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.09" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="1dp"
-        app:layout_constraintGuide_percent="0.97"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="1dp"
-        app:layout_constraintGuide_percent="0.02"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="1dp"
-        app:layout_constraintGuide_percent="0.66"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelinebutton1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.91" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelinebutton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="1dp"
-        app:layout_constraintGuide_percent="0.95"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelinebutton3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="1dp"
-        app:layout_constraintGuide_percent="0.98"/>
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guidelinebutton4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_begin="1dp"
-        app:layout_constraintGuide_percent="0.81"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
