@@ -11,10 +11,9 @@
 <com.google.android.material.textfield.TextInputLayout
 android:id="@+id/Category"
 style="@style/Widget.Material3.TextInputLayout.FilledBox.Dense.ExposedDropdownMenu"
-android:layout_width="match_parent"
-android:layout_height="0dp"
-android:hint="Models"
-    android:layout_weight="0.064">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:hint="Models">>
 
 <AutoCompleteTextView
     android:id="@+id/Models_info"
