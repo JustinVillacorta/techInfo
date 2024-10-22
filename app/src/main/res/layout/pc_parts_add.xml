@@ -25,7 +25,9 @@
             android:id="@+id/Models_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="none"
+            android:inputType="text"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:text="All" />
     </com.google.android.material.textfield.TextInputLayout>
 
