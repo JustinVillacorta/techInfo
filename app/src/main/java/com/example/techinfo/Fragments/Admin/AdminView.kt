@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -78,6 +79,28 @@ class AdminView : Fragment() {
                 .create()
                 .show()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            showExitConfirmationDialog()
+        }
+    }
+
+    private fun showExitConfirmationDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Exit")
+            .setMessage("Are you sure you want to exit the app?")
+            .setPositiveButton("Yes") { dialog, _ ->
+                requireActivity().finish() // Finish the activity to exit the app
+                dialog.dismiss()
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss() // Dismiss the dialog
+            }
+            .create()
+            .show()
     }
 
     private fun fetchProcessorsFromApi() {
