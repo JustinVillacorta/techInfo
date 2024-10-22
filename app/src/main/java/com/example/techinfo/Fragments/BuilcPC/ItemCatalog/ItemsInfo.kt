@@ -49,7 +49,7 @@ class ItemsInfo : Fragment() {
 
         // Set the image (if available)
         val imageView = view.findViewById<ImageView>(R.id.videoThumbnailImageView)
-        val imageUrl = component.gpu?.link ?: component.processor?.link ?: "default_image_url"  // Adjust as needed
+        val imageUrl = component.psu?.link ?: component.hdd?.link ?: component.cpuCooler?.link ?: component.motherboard?.link ?: component.case?.link ?: component.ssd?.link ?: component.ram?.link ?: component.gpu?.link ?: component.processor?.link ?: "default_image_url"  // Adjust as needed
         Glide.with(this)
             .load(imageUrl)
             .into(imageView)

@@ -129,6 +129,7 @@ data class PowerSupplyUnit(
     val efficiency_rating: String,            // Efficiency rating (e.g., "80+ Gold")
     val has_required_connectors: Int,         // Whether it has the required connectors
     val performance_score: String,
+    val link: String?,
     val created_at: String,                   // Creation timestamp
     val updated_at: String                    // Last updated timestamp
 ) : Serializable  // Make it Serializable
@@ -146,6 +147,7 @@ data class Case(
     val current_ssd_count: Int,           // Current number of installed SSDs
     val airflow_rating: String,           // Airflow rating (e.g., low, medium, high)
     val max_cooler_height_mm: String,     // Maximum CPU cooler height in mm
+    val link: String?,
     val created_at: String,               // Creation timestamp
     val updated_at: String                // Last updated timestamp
 ) : Serializable  // Make it Serializable
@@ -285,10 +287,6 @@ interface ApiService {
     // Request to reset password with OTP and new password
     @POST("admin/reset-password")
     fun resetPassword(@Body request: PasswordResetRequest): Call<Void>
-
-    // PUT method to update a processor
-    @PUT("processors/{id}")
-    fun updateProcessor(@Path("id") processorId: String, @Body processor: Processor): Call<Processor>
 
     // Component APIs
     @GET("processors")
