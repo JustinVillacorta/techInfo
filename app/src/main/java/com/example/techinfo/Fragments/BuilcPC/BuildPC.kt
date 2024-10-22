@@ -1,6 +1,7 @@
 package com.example.techinfo.Fragments.BuildPC
 
 import AlertDialog_Buildpc
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
@@ -10,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -109,6 +111,28 @@ class BuildPC : Fragment() {
         storageProgressBar.progress = 0
         psuProgressBar.progress = 0
     }
+    override fun onResume() {
+        super.onResume()
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            showExitConfirmationDialog()
+        }
+    }
+
+    private fun showExitConfirmationDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Exit")
+            .setMessage("Are you sure you want to exit the app?")
+            .setPositiveButton("Yes") { dialog, _ ->
+                requireActivity().finish() // Finish the activity to exit the app
+                dialog.dismiss()
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss() // Dismiss the dialog
+            }
+            .create()
+            .show()
+    }
+
 
     private fun updateSelectedComponent(type: String, component: ComponentData) {
         selectedComponentsMap[type] = component
