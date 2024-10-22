@@ -62,7 +62,7 @@ class BuildPC : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         recyclerView = view.findViewById(R.id.componentsRecyclerView)
-        componentAdapter = Adapter(componentDataList) { component, position ->
+        componentAdapter = Adapter(componentDataList, { component, position ->
             val componentName = component.name
             if (componentName.isNotEmpty()) {
                 val partCatalogFragment = ItemCatalog.newInstance(component.type)
@@ -71,12 +71,13 @@ class BuildPC : Fragment() {
                     .addToBackStack(null)
                     .commit()
             }
-        }
+        }, isInBuildPCFragment = true) // Pass true to indicate it's in BuildPC fragment
 
         recyclerView.apply {
             layoutManager = LinearLayoutManager(requireContext())
             adapter = componentAdapter
         }
+
 
         parentFragmentManager.setFragmentResultListener("selectedComponent", this) { _, bundle ->
             val selectedComponent = bundle.getSerializable("selectedComponent") as ComponentData
@@ -145,12 +146,12 @@ class BuildPC : Fragment() {
         for ((type, component) in selectedComponentsMap) {
             val position = componentDataList.indexOfFirst { it.type.equals(type, ignoreCase = true) }
             if (position != -1) {
-                componentDataList[position] = component
+                componentDataList[position] = component ?: ComponentData(type, "") // Use a placeholder if unselected
                 componentAdapter.notifyItemChanged(position)
             }
         }
 
-        updateProgressBars()
+        updateProgressBars() // Make sure to update progress bars after restoring
     }
 
     private fun getAllSelectedComponents(): Map<String, String> {

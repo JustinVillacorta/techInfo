@@ -14,7 +14,8 @@ import com.example.techinfo.R
 
 class Adapter(
     private val componentList: MutableList<ComponentData>,
-    private val itemClickListener: (ComponentData, Int) -> Unit
+    private val itemClickListener: (ComponentData, Int) -> Unit,
+    private val isInBuildPCFragment: Boolean // Flag to indicate if this is the BuildPC fragment
 ) : RecyclerView.Adapter<Adapter.ComponentViewHolder>() {
 
     inner class ComponentViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -25,17 +26,18 @@ class Adapter(
             Log.d("Adapter", "Binding Component: ${component.name}, Part Details: ${component.partDetails}")
             componentNameTextView.text = if (component.partDetails.isNotEmpty()) component.partDetails else component.name
             componentImageView.setImageResource(getIconResource(component.type))
-
             itemView.setOnClickListener {
-                itemClickListener(component, position)
                 component.isSelected = !component.isSelected
+                itemClickListener(component, position)
                 notifyItemChanged(position)
             }
 
-            // Set up long click listener for unselecting items
-            itemView.setOnLongClickListener {
-                showUnselectConfirmationDialog(component, position)
-                true // Indicate that the long click was handled
+            // Set up long click listener for unselecting items only if in BuildPC fragment
+            if (isInBuildPCFragment) {
+                itemView.setOnLongClickListener {
+                    showUnselectConfirmationDialog(component, position)
+                    true // Indicate that the long click was handled
+                }
             }
         }
 
@@ -43,11 +45,11 @@ class Adapter(
             AlertDialog.Builder(itemView.context)
                 .setTitle("Unselect Item")
                 .setMessage("Are you sure you want to unselect ${component.name}?")
-                .setPositiveButton("Yes") { dialog, which ->
+                .setPositiveButton("Yes") { dialog, _ ->
                     unselectItem(position)
                     dialog.dismiss()
                 }
-                .setNegativeButton("No") { dialog, which ->
+                .setNegativeButton("No") { dialog, _ ->
                     dialog.dismiss()
                 }
                 .create()
@@ -73,8 +75,6 @@ class Adapter(
         Log.d("Adapter", "onBindViewHolder - Position: $position")
         holder.bind(componentList[position], position)
     }
-
-
 
     override fun getItemCount() = componentList.size
 

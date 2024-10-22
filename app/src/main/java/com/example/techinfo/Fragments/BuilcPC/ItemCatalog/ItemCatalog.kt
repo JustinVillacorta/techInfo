@@ -65,10 +65,11 @@ class ItemCatalog : Fragment() {
 
         fetchAllComponentData(componentName)
 
-        componentAdapter = Adapter(filteredDataList) { component: ComponentData, position: Int ->
+        componentAdapter = Adapter(filteredDataList, { component: ComponentData, position: Int ->
+            // Your click handling code here
             val bundle = Bundle().apply {
                 putSerializable("selectedComponent", component)
-                putString("type", component.type)  // Pass the type (CPU, GPU, etc.)
+                putString("type", component.type) // Pass the type (CPU, GPU, etc.)
             }
 
             // Send the selected component back to the BuildPC fragment
@@ -80,7 +81,7 @@ class ItemCatalog : Fragment() {
                 .replace(R.id.fragment_container, itemInfoFragment)
                 .addToBackStack(null)
                 .commit()
-        }
+        }, true) // Ensure you pass the correct value for isInBuildPCFragment
         recyclerView.adapter = componentAdapter
 
         setupSearchView()
